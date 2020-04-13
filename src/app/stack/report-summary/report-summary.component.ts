@@ -36,7 +36,7 @@ import { ReportSummaryUtils } from '../utils/report-summary-utils';
 })
 export class ReportSummaryComponent implements OnInit, OnChanges {
     @Input() report: ResultInformationModel;
-    @Output('onCardClick') onCardClick = new EventEmitter<any>();
+    @Output('onCardClick') onCardClick :EventEmitter<any> = new EventEmitter();
 
     public reportSummaryCards: Array<MReportSummaryCard> = [];
 
@@ -164,6 +164,9 @@ export class ReportSummaryComponent implements OnInit, OnChanges {
     private updateCards(): void {
         let cards: Array<MReportSummaryCard> = [];
         if (this.report) {
+
+            console.log("updateCards report ====>", this.report);
+            
             cards[0] = this.getSecurityReportCard();
             cards[1] = this.getLicensesReportCard();
             cards[2] = this.getInsightsReportCard();

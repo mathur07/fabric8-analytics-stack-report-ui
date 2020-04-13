@@ -22,7 +22,7 @@ export class MTab {
 export class MReportSummaryInfoEntry {
     public infoText: string;
     public infoValue: any;
-    public infoType: string = 'text'; // Defaults to text, can also have chart
+    public infoType: string = "text"; // Defaults to text, can also have chart
     public config?: any; // Can be made as a class later. It can have chart type, values and other related configurations
 }
 
@@ -58,7 +58,7 @@ export class MGithub {
         public stars: number = -1,
         public usage: number = -1,
         public users: Array<any>,
-        public lastUpdated: string = 'N/A'
+        public lastUpdated: string = "N/A"
     ) {}
 }
 
@@ -74,10 +74,7 @@ export class MCrowdSourcing {
 }
 
 export class MSecurityIssue {
-    constructor(
-        public cvss: string,
-        public cve: string
-    ) {}
+    constructor(public cvss: string, public cve: string) {}
 }
 
 export class MSecurityDetails {
@@ -107,17 +104,14 @@ export class MLicenseInformation {
 }
 
 export class MWorkItem {
-    constructor(
-        public isWorkItemCreated = false,
-        public url?: string
-    ) {}
+    constructor(public isWorkItemCreated = false, public url?: string) {}
 }
 
 export class MComponentInformation {
     constructor(
         public name: string,
-        public currentVersion: string = 'NA',
-        public latestVersion: string = 'NA',
+        public currentVersion: string = "NA",
+        public latestVersion: string = "NA",
         public securityDetails: MSecurityDetails = null,
         public hasSecurityIssue: boolean,
         public isUsageOutlier: boolean,
@@ -147,10 +141,7 @@ export class MStackLicenseConflictDetails {
 }
 
 export class MConflictsWithInLicenses {
-    constructor(
-        public license1: string,
-        public license2: string
-    ) {}
+    constructor(public license1: string, public license2: string) {}
 }
 
 export class MLicensesAffected {
@@ -176,7 +167,8 @@ export class MRecommendationInformation {
 export class MComponentDetails {
     constructor(
         public componentInformation: MComponentInformation = null,
-        public recommendationInformation: MRecommendationInformation = null
+        public recommendationInformation: MRecommendationInformation = null,
+        public transitives: Array<MReportInformation> = null
     ) {}
 }
 

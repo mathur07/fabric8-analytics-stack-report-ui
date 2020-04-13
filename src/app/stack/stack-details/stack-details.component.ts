@@ -107,14 +107,21 @@ export class StackDetailsComponent implements OnChanges {
      * New Stack Report Revamp - Begin
      */
     public handleCardClick(cardDetails: any): void {
+
+        console.log("===========>>> cardDetails ===========>>>" ,cardDetails);
+        
+        
         this.genericInformation = new MGenericStackInformation(
             this.stackId,
             this.getBaseUrl(this.stack),
             this.gatewayConfig && this.gatewayConfig['access_token']
         );
+
         this.cardDetails = cardDetails;
+
         if (this.gatewayConfig && this.gatewayConfig.user_key) {
             this.stackAnalysisService.userKey = this.gatewayConfig.user_key;
+            
         }
     }
     /**
@@ -139,6 +146,9 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     public tabSelection(tab: any): void {
+        console.log("tab  =====>");
+        console.log(tab);
+
         if (tab) {
             tab['active'] = true;
             let currentIndex: number = tab['index'];
@@ -182,6 +192,10 @@ export class StackDetailsComponent implements OnChanges {
                 companion: '[' + companion + ' additional dependencies are often used by ' +
                     'similar stacks]'
             };
+
+            console.log("analysis object ====>>> ",this.analysis);
+            
+
             this.componentLevelInformation = {
                 recommendations: recommendations,
                 dependencies: tab.content.user_stack_info.analyzed_dependencies,
@@ -189,11 +203,11 @@ export class StackDetailsComponent implements OnChanges {
                 licenseAnalysis: tab.content.user_stack_info.license_analysis
             };
             // Select the first card by default
-            if (SaveState && SaveState.ELEMENTS && SaveState.ELEMENTS.length > 0) {
-                if (SaveState.ELEMENTS[currentIndex * 4]) {
-                    SaveState.ELEMENTS[currentIndex * 4].click();
-                }
-            }
+            // if (SaveState && SaveState.ELEMENTS && SaveState.ELEMENTS.length > 0) {
+            //     if (SaveState.ELEMENTS[currentIndex * 4]) {
+            //         SaveState.ELEMENTS[currentIndex * 4].click();
+            //     }
+            // }
         }
     }
 
@@ -203,7 +217,7 @@ export class StackDetailsComponent implements OnChanges {
         }
     }
 
-    ngOnChanges(): void {
+    ngOnChanges(): void {        
         if (this.stack && this.stack !== this.cache) {
             this.cache = this.stack;
             this.resetFields();
@@ -295,10 +309,11 @@ export class StackDetailsComponent implements OnChanges {
             }
             let resultInformation: Observable < StackReportModel > = getStackReportModel(data);
             resultInformation.subscribe((response) => {
-                let result: Array < ResultInformationModel > = response.result;
+                let result: Array < ResultInformationModel > = response.result;                
                 this.totalManifests = result.length;
                 if (this.totalManifests > 0) {
                     this.userStackInformationArray = result.map((r) => r.user_stack_info);
+
                     result.forEach((r, index) => {
                         let warning: any = this.ifManifestHasWarning(r);
                         let tab = {
@@ -311,9 +326,12 @@ export class StackDetailsComponent implements OnChanges {
                         this.tabs.push(tab);
                         this.recommendationsArray.push(r.recommendation);
                     });
+                    
                     this.modalHeader = 'Updated just now';
                     this.dataLoaded = true;
                     this.tabSelection(this.tabs[0]);
+
+                  
                 }
             });
         } else if (data && data.hasOwnProperty('error')) {
@@ -369,6 +387,10 @@ export class StackDetailsComponent implements OnChanges {
                                         }
                                 
                                 this.subPolling = analysis.subscribe((data) => {
+                                    console.log("Stack response =>>>>>>>");
+                                    console.log(data);
+                                    
+                                    
                                     this.handleResponse(data);
                                 },
                                 error => {

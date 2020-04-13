@@ -53,7 +53,7 @@ import {
     encapsulation: ViewEncapsulation.None,
     templateUrl: './card-details.component.html'
 })
-export class CardDetailsComponent implements OnInit, OnChanges {
+export class CardDetailsComponent implements OnChanges {
     @Input() cardDetails: any;
     @Input() genericInformation: MGenericStackInformation;
     @Input() repoInfo: any;
@@ -94,12 +94,16 @@ export class CardDetailsComponent implements OnInit, OnChanges {
         }
     };
 
-    ngOnInit() {
-        this.paint();
-    }
+    // ngOnInit() {
+    //     this.paint();
+    // }
 
     ngOnChanges(changes: SimpleChanges) {
         let summary: any = changes['cardDetails'];
+        console.log("summary.currentValue ===>",summary.currentValue);
+        console.log("summary.previousValue ===>",summary.previousValue);
+        
+        
         if (summary) {
             this.cardDetails = <any> summary.currentValue;
             if (this.cardDetails && this.cardDetails.report) {
@@ -277,13 +281,16 @@ export class CardDetailsComponent implements OnInit, OnChanges {
         );
 
         let compDetails: Array<MComponentDetails> = [];
+
         switch (cardType) {
+
             case 'security':
+
                 genericReport.identifier = 'security';
                 genericReport.name = 'Security Issues';
                 // reportInformations.push(genericReport);
 
-                const effectedDirects: Array<MComponentDetails> = this.getDirectDependencySecurityDetails(genericReport.componentDetails);
+                const effectedDirects: Array<MComponentDetails> = this.getDirectDependencySecurityDetails(genericReport.componentDetails);                
                 reportInformations.push(new MReportInformation(
                     'comp-direct-security',
                     'Direct Dependencies with Security Issues',
@@ -291,20 +298,20 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                     this.fillColumnHeaders(cardType, 2),
                     effectedDirects
                 ));
-                const effectedTransitives: Array<MComponentDetails> = this.getTransitiveDependencySecurityDetails(genericReport.componentDetails);
-                if (effectedTransitives && effectedTransitives.length > 0) {
-                    // filter-out transitives which is also listed as direct
-                    const effectedPureTransitives = effectedTransitives.filter(t => !effectedDirects.find(d => (d.componentInformation.name === t.componentInformation.name && d.componentInformation.currentVersion === t.componentInformation.currentVersion)));
-                    if (effectedPureTransitives.length > 0) {
-                        reportInformations.push(new MReportInformation(
-                            'comp-trans-security',
-                            'Transitive Dependencies with Security Issues',
-                            'component',
-                            this.fillColumnHeaders(cardType, 3),
-                            effectedPureTransitives
-                        ));
-                    }
-                }
+                // const effectedTransitives: Array<MComponentDetails> = this.getTransitiveDependencySecurityDetails(genericReport.componentDetails);
+                // if (effectedTransitives && effectedTransitives.length > 0) {
+                //     // filter-out transitives which is also listed as direct
+                //     const effectedPureTransitives = effectedTransitives.filter(t => !effectedDirects.find(d => (d.componentInformation.name === t.componentInformation.name && d.componentInformation.currentVersion === t.componentInformation.currentVersion)));
+                //     if (effectedPureTransitives.length > 0) {
+                //         reportInformations.push(new MReportInformation(
+                //             'comp-trans-security',
+                //             'Transitive Dependencies with Security Issues',
+                //             'component',
+                //             this.fillColumnHeaders(cardType, 3),
+                //             effectedPureTransitives
+                //         ));
+                //     }
+                // }
                 break;
             case 'insights':
                 compDetails = this.getCompanionComponentDetails();
@@ -416,16 +423,32 @@ export class CardDetailsComponent implements OnInit, OnChanges {
     }
 
     private getDirectDependencySecurityDetails(componentDetails: any): Array<MComponentDetails> {
+        console.log("componentDetails =======>>>>",componentDetails);
+        
         let directDependencies: Array<MComponentDetails> = [];
         componentDetails.forEach(element => {
             if (!element.componentInformation.hasOwnProperty('transitive') || !element.componentInformation.transitive) {
                 directDependencies.push(element);
             }
         });
+
+        let transitiveDependencies: Array<MComponentDetails> = [];
+        componentDetails.forEach(element => {
+            if (element.componentInformation.hasOwnProperty('transitive') || element.componentInformation.transitive) {
+                transitiveDependencies.push(element);
+            }
+        });
+        const effectedPureTransitives = transitiveDependencies.filter(t => !directDependencies.find(d => (d.componentInformation.name === t.componentInformation.name && d.componentInformation.currentVersion === t.componentInformation.currentVersion)));
+     
+        effectedPureTransitives.forEach(element =>{
+            directDependencies.push(element)
+        })
         return directDependencies;
     }
 
     private getTransitiveDependencySecurityDetails(componentDetails: any): Array<MComponentDetails> {
+        console.log("*************componentDetails************",componentDetails);
+        
         let transitiveDependencies: Array<MComponentDetails> = [];
         componentDetails.forEach(element => {
             if (element.componentInformation.hasOwnProperty('transitive') && element.componentInformation.transitive &&
@@ -985,6 +1008,9 @@ export class CardDetailsComponent implements OnInit, OnChanges {
         this.tabs = [];
         if (this.report && this.whatCard) {
             let reports: Array<MReportInformation> = this.getUIReportInformations(this.whatCard);
+            
+            console.log("reports================?????????>>>>>>>",reports);
+            
             this.details = new MCardDetails();
             let { title, description } = this.getTitleAndDescription(this.whatCard);
 
@@ -1000,6 +1026,8 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                     ));
                 });
             }
+            console.log("$$$$$$$$$$$$$$$ TABS $$$$$$$$$$ in card-details",this.tabs);
+            
             if (this.tabs[0]) {
                 this.tabs[0].active = true;
             }
