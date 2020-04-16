@@ -1,8 +1,7 @@
 <div class="analytics-snippet-information">
     <h4>Details of the dependency: <span class="component-name" [innerText]="component?.name"></span></h4>
     <div *ngIf="component?.transitive;else component_version">
-        <div
-            [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
+        <div [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
             <div class="col-xs-6">
                 <p class="info-head">Affected Direct Dependency</p>
                 <div *ngFor="let affectedDep of component.transitive.affected_direct_deps" class="side">
@@ -19,34 +18,31 @@
     </div>
     <ng-template #component_version>
         <div *ngIf="!component.action;else companion_component">
-            <div
-                [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
-                <div class="col-xs-6">
-                    <p class="info-head">Current Version</p>
-                    <p [innerText]="component?.currentVersion"></p>
-                </div>
-                <div class="col-xs-6">
-                    <p class="info-head">Latest Version</p>
-                    <p [innerText]="component?.latestVersion"></p>
-                </div>
-            </div>
-        </div>
-        <ng-template #companion_component>
-            <div
-                [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
-                <div [ngClass]="{'col-xs-6': component?.currentVersion !== '-----'}"
-                    *ngIf="component?.currentVersion !== '-----'">
-                    <p class="info-head">Current Version</p>
-                    <p [innerText]="component?.currentVersion"></p>
-                </div>
-                <div [ngClass]="{'col-xs-12': component?.currentVersion === '-----'}">
-                    <p class="info-head">Recommended Version</p>
-                    <p [innerText]="component?.latestVersion"></p>
+                <div [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
+                    <div class="col-xs-6">
+                        <p class="info-head">Current Version</p>
+                        <p [innerText]="component?.currentVersion"></p>
+                    </div>
+                    <div class="col-xs-6">
+                        <p class="info-head">Latest Version</p>
+                        <p [innerText]="component?.latestVersion"></p>
+                    </div>
                 </div>
             </div>
-        </ng-template>
+            <ng-template #companion_component>
+                <div [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
+                    <div [ngClass]="{'col-xs-6': component?.currentVersion !== '-----'}" *ngIf="component?.currentVersion !== '-----'">
+                        <p class="info-head">Current Version</p>
+                        <p [innerText]="component?.currentVersion"></p>
+                    </div>
+                    <div [ngClass]="{'col-xs-12': component?.currentVersion === '-----'}">
+                        <p class="info-head">Recommended Version</p>
+                        <p [innerText]="component?.latestVersion"></p>
+                    </div>
+                </div>
+            </ng-template>
     </ng-template>
-
+    
     <div *ngIf="view === 'normal'" class="github-osio-box">
         <div class="github left">
             <div class="box-header">
@@ -59,7 +55,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="lastUpdatedGH.lastUpdated !== 'N/A'" class="date-class">
+        <div *ngIf="lastUpdatedGH.lastUpdated !== 'N/A'" class= "date-class">
             <div class="box-header">
                 Last Updated:
             </div>
@@ -82,9 +78,8 @@
         </div>
     </div>
     <div class="common-table component-tags">
-        <div class="common-wrapper"
-            *ngIf="component?.securityDetails?.cveList && component?.securityDetails?.cveList?.length > 0">
-            <span class="info-head">CVE ID(s):</span>
+        <div class="common-wrapper" *ngIf="component?.securityDetails?.cveList && component?.securityDetails?.cveList?.length > 0">
+            <span class="info-head">CVE ID(s):</span> 
             <span class="common-container tags-container">
                 <span [innerText]="cve" *ngFor="let cve of component?.securityDetails?.cveList"></span>
             </span>
@@ -103,31 +98,13 @@
     </div>
     <div class="common-table component-tags">
         <div class="common-wrapper">
-            <span class="info-head">Tags:</span>
-            <span *ngIf="component?.crowdSourcing?.tags && component?.crowdSourcing?.tags?.length > 0"
-                class="common-container tags-container">
+            <span class="info-head">Tags:</span> 
+            <span *ngIf="component?.crowdSourcing?.tags && component?.crowdSourcing?.tags?.length > 0" class="common-container tags-container">
                 <span [innerText]="tag" *ngFor="let tag of component?.crowdSourcing?.tags"></span>
             </span>
-            <span *ngIf="!component?.crowdSourcing?.tags || component?.crowdSourcing?.tags?.length === 0"
-                class="common-container tags-container">
+            <span *ngIf="!component?.crowdSourcing?.tags || component?.crowdSourcing?.tags?.length === 0" class="common-container tags-container">
                 -----
             </span>
-        </div>
-    </div>
-    <div class="common-table component-tags"
-        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0">
-        <div class="common-wrapper">
-            <span class="info-head">Show Transitives with Vulnerabilities</span>
-            <span [innerHtml]="component?.allTransitiveDependencies.length" class="badge"></span>
-
-            <!-- <span *ngIf="component?.crowdSourcing?.tags && component?.crowdSourcing?.tags?.length > 0"
-                class="common-container tags-container">
-                <span [innerText]="tag" *ngFor="let tag of component?.crowdSourcing?.tags"></span>
-            </span>
-            <span *ngIf="!component?.crowdSourcing?.tags || component?.crowdSourcing?.tags?.length === 0"
-                class="common-container tags-container">
-                -----
-            </span> -->
         </div>
     </div>
     <div *ngIf="view === 'split'" class="github-osio-box">

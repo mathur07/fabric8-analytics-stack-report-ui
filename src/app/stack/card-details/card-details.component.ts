@@ -44,8 +44,7 @@ import {
     MStackLicenseConflictDetails,
     MLicenseInformation,
     MComponentFeedback,
-    MFeedbackTemplate,
-    MTransitiveDetails
+    MFeedbackTemplate
 } from '../models/ui.model';
 
 @Component({
@@ -54,17 +53,16 @@ import {
     encapsulation: ViewEncapsulation.None,
     templateUrl: './card-details.component.html'
 })
-export class CardDetailsComponent implements OnChanges {
+export class CardDetailsComponent implements OnInit, OnChanges {
     @Input() cardDetails: any;
     @Input() genericInformation: MGenericStackInformation;
     @Input() repoInfo: any;
     public report: ResultInformationModel;
     public whatCard: string;
     public details: MCardDetails = null;
+    public dictionary: Object = null;
 
     public tabs: Array<MTab> = [];
-
-    public directDependenciesWithTransitveDetailsObj;
 
     public USER_ACTION: any = {
         'security': 'Log a bug',
@@ -97,13 +95,12 @@ export class CardDetailsComponent implements OnChanges {
         }
     };
 
-    // ngOnInit() {
-    //     this.paint();
-    // }
+    ngOnInit() {
+        this.paint();
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         let summary: any = changes['cardDetails'];
-
         if (summary) {
             this.cardDetails = <any>summary.currentValue;
             if (this.cardDetails && this.cardDetails.report) {
@@ -121,7 +118,7 @@ export class CardDetailsComponent implements OnChanges {
         if (component) {
             switch (cardType) {
                 case 'security':
-                    processFlag = (component.securityDetails && component.securityDetails.totalIssues > 0) || (component.allTransitiveDependencies && component.allTransitiveDependencies.length > 0);
+                    processFlag = component.securityDetails && component.securityDetails.totalIssues > 0;
                     break;
                 case 'insights':
                     processFlag = component.isUsageOutlier;
@@ -234,7 +231,7 @@ export class CardDetailsComponent implements OnChanges {
                     action = component.recommendation.componentInformation.action;
                 }
             } else {
-                if (component.securityDetails && component.securityDetails.totalIssues > 0 || (component.allTransitiveDependencies && component.allTransitiveDependencies.length > 0)) {
+                if (component.securityDetails && component.securityDetails.totalIssues > 0) {
                     action = this.USER_ACTION.security;
                 }
             }
@@ -243,9 +240,6 @@ export class CardDetailsComponent implements OnChanges {
     }
 
     private getUIReportInformations(cardType: string): Array<MReportInformation> {
-
-
-
         let reportInformations: Array<MReportInformation> = [];
         let componentDetails: Array<MComponentDetails> = [];
         let componentInformation: MComponentInformation = null;
@@ -257,78 +251,16 @@ export class CardDetailsComponent implements OnChanges {
         let headers: Array<MComponentHeaderColumn> = this.fillColumnHeaders(cardType);
         let compInfoType: string = 'component';
         let components: Array<ComponentInformationModel> = null;
-
         if (this.report.user_stack_info
             && this.report.user_stack_info.analyzed_dependencies
             && this.report.user_stack_info.analyzed_dependencies.length > 0) {
             components = this.report.user_stack_info.analyzed_dependencies;
         }
-
-
-        const depDict = new Object();
-        const transitiveDeps = new Array();;
-        components.forEach(dep => {
-            if (!dep.hasOwnProperty('transitive')) {
-                let uidofDep = dep.name + "-" + dep.version;
-                depDict[uidofDep] = null;
-            }
-            // else if (dep.hasOwnProperty('transitive')) {
-            //     transitiveDeps.push(dep);
-            // }
-        });
-
-        components.forEach(dep => {
-            if (dep.hasOwnProperty('transitive')) {
-                transitiveDeps.push(dep);
-            }
-        });
-
-
-        transitiveDeps.forEach(dep => {
-
-            if (dep.transitive && dep.transitive.isTransitive) {
-                let affectedDirectDeps = dep.transitive.affected_direct_deps;
-
-                affectedDirectDeps.forEach(dirDep => {
-                    let uidDirDep = dirDep.package + "-" + dirDep.version;
-
-                    if (depDict[uidDirDep] == null) {
-                        depDict[uidDirDep] = [dep];
-                    } else {
-                        depDict[uidDirDep].push(dep);
-                    }
-
-                });
-            }
-        });
-
-        const directDependenciesWithTransitveDetailsObj = new Object();
-
-        for (var key of Object.keys(depDict)) {
-            if (depDict[key] != null) {
-                directDependenciesWithTransitveDetailsObj[key] = depDict[key];
-            }
-        }
-
-
-        this.directDependenciesWithTransitveDetailsObj = directDependenciesWithTransitveDetailsObj
-
-
+        console.log("components", components);
 
         if (components) {
-            const dependenciesWithTransitve = this.directDependenciesWithTransitveDetailsObj
-
             components.forEach((component: ComponentInformationModel) => {
-
-                let allTransitiveDependencies = null;
-
-                if (dependenciesWithTransitve.hasOwnProperty(component.name + "-" + component.version)) {
-                    allTransitiveDependencies = dependenciesWithTransitve[component.name + "-" + component.version];
-
-                }
-
-                componentInformation = this.getComponentInformation(component, allTransitiveDependencies);
-
+                componentInformation = this.getComponentInformation(component);
                 if (this.canInclude(cardType, componentInformation)) {
                     componentInformation.action = this.decideAction(componentInformation);
                     componentDetails.push(new MComponentDetails(
@@ -348,39 +280,34 @@ export class CardDetailsComponent implements OnChanges {
         );
 
         let compDetails: Array<MComponentDetails> = [];
-
         switch (cardType) {
-
             case 'security':
-
                 genericReport.identifier = 'security';
                 genericReport.name = 'Security Issues';
                 // reportInformations.push(genericReport);
 
                 const effectedDirects: Array<MComponentDetails> = this.getDirectDependencySecurityDetails(genericReport.componentDetails);
-                console.log("effectedDirects========>>>>",effectedDirects);
-                
                 reportInformations.push(new MReportInformation(
                     'comp-direct-security',
-                    'Dependencies with Public Vulnerabilities',
+                    'Direct Dependencies with Security Issues',
                     'component',
                     this.fillColumnHeaders(cardType, 2),
                     effectedDirects
                 ));
-                // const effectedTransitives: Array<MComponentDetails> = this.getTransitiveDependencySecurityDetails(genericReport.componentDetails);
-                // if (effectedTransitives && effectedTransitives.length > 0) {
-                //     // filter-out transitives which is also listed as direct
-                //     const effectedPureTransitives = effectedTransitives.filter(t => !effectedDirects.find(d => (d.componentInformation.name === t.componentInformation.name && d.componentInformation.currentVersion === t.componentInformation.currentVersion)));
-                //     if (effectedPureTransitives.length > 0) {
-                //         reportInformations.push(new MReportInformation(
-                //             'comp-trans-security',
-                //             'Transitive Dependencies with Security Issues',
-                //             'component',
-                //             this.fillColumnHeaders(cardType, 3),
-                //             effectedPureTransitives
-                //         ));
-                //     }
-                // }
+                const effectedTransitives: Array<MComponentDetails> = this.getTransitiveDependencySecurityDetails(genericReport.componentDetails);
+                if (effectedTransitives && effectedTransitives.length > 0) {
+                    // filter-out transitives which is also listed as direct
+                    const effectedPureTransitives = effectedTransitives.filter(t => !effectedDirects.find(d => (d.componentInformation.name === t.componentInformation.name && d.componentInformation.currentVersion === t.componentInformation.currentVersion)));
+                    if (effectedPureTransitives.length > 0) {
+                        reportInformations.push(new MReportInformation(
+                            'comp-trans-security',
+                            'Transitive Dependencies with Security Issues',
+                            'component',
+                            this.fillColumnHeaders(cardType, 3),
+                            effectedPureTransitives
+                        ));
+                    }
+                }
                 break;
             case 'insights':
                 compDetails = this.getCompanionComponentDetails();
@@ -492,72 +419,16 @@ export class CardDetailsComponent implements OnChanges {
     }
 
     private getDirectDependencySecurityDetails(componentDetails: any): Array<MComponentDetails> {
-
         let directDependencies: Array<MComponentDetails> = [];
-
         componentDetails.forEach(element => {
             if (!element.componentInformation.hasOwnProperty('transitive') || !element.componentInformation.transitive) {
                 directDependencies.push(element);
-            } 
+            }
         });
-
-        // let transitiveDependencies: Array<MComponentDetails> = [];
-        // componentDetails.forEach(element => {
-        //     if (element.componentInformation.hasOwnProperty('transitive') || element.componentInformation.transitive) {
-        //         transitiveDependencies.push(element);
-        //     }
-        // });
-        // const effectedPureTransitives = transitiveDependencies.filter(t => !directDependencies.find(d => (d.componentInformation.name === t.componentInformation.name && d.componentInformation.currentVersion === t.componentInformation.currentVersion)));
-
-        // effectedPureTransitives.forEach(element =>{
-        //     directDependencies.push(element)
-        // })
-
-
-        // componentDetails.forEach(element => {
-            // if (element.componentInformation.transitive == null) {
-            //     console.log("element<<<<<<<<<<<<<<<<<<<<<<<<<<==========>>", element);
-            //     dependencies.push(element);
-
-            // }
-            // else if (element.componentInformation.transitive !== null && element.componentInformation.transitive.isTransitive) {
-            //     let affected_direct_deps = element.componentInformation.transitive.affected_direct_deps;
-
-            //     element.componentInformation.transitive = null;
-            //     affected_direct_deps.forEach(add => {
-            //         let directFromTransitiveInfo: MComponentInformation = new MComponentInformation(add.package, add.version, null, null, null, null, null, null, null, null, null, 'Log a bug', null, null, null, null, null, null, null, null)
-
-            //         let directFromTransitiveComponentDetails: MComponentDetails = new MComponentDetails(directFromTransitiveInfo, null, element.componentInformation);
-            //         console.log("directFromTransitiveComponentDetails<<<<<<<<<<<<<<<<<<<<<<<<<<==========>>", directFromTransitiveComponentDetails);
-
-
-            //         dependencies.push(directFromTransitiveComponentDetails);
-
-            //     });
-            // }
-            // console.log("element<<<<<<<<<<<<<<<<<<<<<<<<<<==========>>", element);
-            // dependencies.push(element);
-
-
-
-        // });
-
-        // const seen = new Set();
-        // const filteredDependenciesArr = dependencies.filter(el => {
-        //     const duplicate = seen.has(el.componentInformation.name);
-        //     seen.add(el.componentInformation.name);
-        //     return !duplicate;
-        // });
-        // console.log("--------------------------------------------------------------");
-        // console.log("filteredDependenciesArr=======================>>>>", filteredDependenciesArr);
-        // console.log("--------------------------------------------------------------");
-
-
         return directDependencies;
     }
 
     private getTransitiveDependencySecurityDetails(componentDetails: any): Array<MComponentDetails> {
-
         let transitiveDependencies: Array<MComponentDetails> = [];
         componentDetails.forEach(element => {
             if (element.componentInformation.hasOwnProperty('transitive') && element.componentInformation.transitive &&
@@ -690,7 +561,7 @@ export class CardDetailsComponent implements OnChanges {
         return null;
     }
 
-    private getComponentInformation(component: ComponentInformationModel, allTransitiveDependencies?: any): MComponentInformation {
+    private getComponentInformation(component: ComponentInformationModel): MComponentInformation {
         if (component) {
             let currentVersion: string = component.version;
             let latestVersion: string = component.latest_version;
@@ -702,8 +573,6 @@ export class CardDetailsComponent implements OnChanges {
             let recommendation: RecommendationsModel = this.report.recommendation;
             let recommendationInformation: MRecommendationInformation = null;
             let usageOutliers: Array<OutlierInformationModel> = null;
-            var allTransitiveDependencies : any = allTransitiveDependencies;
- 
             if (recommendation) {
                 usageOutliers = recommendation.usage_outliers;
                 if (usageOutliers) {
@@ -716,7 +585,6 @@ export class CardDetailsComponent implements OnChanges {
                     }
                 }
                 if (recommendation.alternate && recommendation.alternate.length > 0) {
-
                     let alternates: Array<ComponentInformationModel> = recommendation.alternate;
                     let alternatesLen: number = alternates.length;
                     for (let i = 0; i < alternatesLen; ++i) {
@@ -793,8 +661,7 @@ export class CardDetailsComponent implements OnChanges {
                 component.ecosystem,
                 this.report.manifest_file_path,
                 null,
-                transitive,
-                allTransitiveDependencies
+                transitive
             );
         }
         return null;
@@ -982,11 +849,6 @@ export class CardDetailsComponent implements OnChanges {
                     'CVE ID of highest CVSS score',
                     'float-left medium'
                 ));
-                headers.push(new MComponentHeaderColumn(
-                    'transitive',
-                    'Transitive Count',
-                    'float-left small'
-                ));
                 // headers.push(new MComponentHeaderColumn(
                 //     'action',
                 //     'Action',
@@ -1122,12 +984,75 @@ export class CardDetailsComponent implements OnChanges {
         return headers;
     }
 
+    // mComponentDetails->McomponentInformation
+    private createDictionary(report: ResultInformationModel, whatCard: string): Object {
+        if (whatCard === 'security') {
+            let components: Array<ComponentInformationModel> = null;
+            if (report.user_stack_info
+                && report.user_stack_info.analyzed_dependencies
+                && report.user_stack_info.analyzed_dependencies.length > 0) {
+                components = report.user_stack_info.analyzed_dependencies;
+            }
+
+            const depDict = new Object();
+            const transitiveDeps = new Array();
+            components.forEach(dep => {
+                if (!dep.hasOwnProperty('transitive')) {
+                    let uidofDep = dep.name + "-" + dep.version;
+                    depDict[uidofDep] = null;
+                }
+            });
+
+            components.forEach(dep => {
+                if (dep.hasOwnProperty('transitive')) {
+                    transitiveDeps.push(dep);
+                }
+            });
+
+            transitiveDeps.forEach(dep => {
+
+                if (dep.transitive && dep.transitive.isTransitive) {
+                    let affectedDirectDeps = dep.transitive.affected_direct_deps;
+
+                    affectedDirectDeps.forEach(dirDep => {
+                        let uidDirDep = dirDep.package + "-" + dirDep.version;
+
+                        if (depDict[uidDirDep] == null) {
+                            depDict[uidDirDep] = [new MComponentDetails(
+                                this.getComponentInformation(dep),
+                                null)]
+                        } else {
+                            depDict[uidDirDep].push(new MComponentDetails(
+                                this.getComponentInformation(dep),
+                                null));
+                        }
+
+                    });
+                }
+            });
+
+
+            const directDependenciesWithTransitveDetailsObj = new Object();
+
+            for (var key of Object.keys(depDict)) {
+                if (depDict[key] != null) {
+                    directDependenciesWithTransitveDetailsObj[key] = depDict[key];
+                }
+            }
+
+            return directDependenciesWithTransitveDetailsObj;
+
+        } else {
+            return null;
+        }
+    }
+
     private paint(): void {
         this.tabs = [];
         if (this.report && this.whatCard) {
+            console.log(this.report, this.whatCard);
+            this.dictionary = this.createDictionary(this.report, this.whatCard);
             let reports: Array<MReportInformation> = this.getUIReportInformations(this.whatCard);
-
-
             this.details = new MCardDetails();
             let { title, description } = this.getTitleAndDescription(this.whatCard);
 
@@ -1143,7 +1068,6 @@ export class CardDetailsComponent implements OnChanges {
                     ));
                 });
             }
-
             if (this.tabs[0]) {
                 this.tabs[0].active = true;
             }

@@ -1,36 +1,24 @@
 <div class="col-xs-12 analytics-card-details">
-
-    <div>
-        <div class="col-xs-10">
-            <h2 [innerText]="details?.title"></h2>
-            <p [innerText]="details?.titleDescription"></p>
-        </div>
-        <div class="col-xs-2" ><h2>h</h2></div>
-    </div>
-
-
-    <div class="col-xs-12" *ngIf="details?.reportInformations && details?.reportInformations.length === 1">
+    <h2 [innerText]="details?.title"></h2>
+    <p [innerText]="details?.titleDescription"></p>
+    <div *ngIf="details?.reportInformations && details?.reportInformations.length > 1">
         <tabset>
-            <tab *ngFor="let tabz of tabs" (select)="tabz.active = true"
+            <tab *ngFor="let tabz of tabs"
+                (select)="tabz.active = true"
                 [customClass]="tabz.active ? 'active-menu-item' : 'inactive-menu'">
                 <ng-template tabHeading>
                     <span [innerHtml]="tabz.title"></span>
                     <span [innerHtml]="tabz?.content?.componentDetails?.length || '0'" class="badge"></span>
                 </ng-template>
-
-                <report-information [genericInformation]="genericInformation" [report]="tabz.content"
-                    [repoInfo]="repoInfo"></report-information>
+                <report-information [genericInformation]="genericInformation" [report]="tabz.content" [repoInfo]="repoInfo"></report-information>
 
             </tab>
         </tabset>
     </div>
-
-    <!-- <div *ngIf="details?.reportInformations && details?.reportInformations.length === 1">
+    <div *ngIf="details?.reportInformations && details?.reportInformations.length === 1">
         <report-information [genericInformation]="genericInformation" [report]="details?.reportInformations[0]" [repoInfo]="repoInfo"></report-information>
-    </div> -->
-
-
-    <div class="col-xs-12" *ngIf="details?.reportInformations && details?.reportInformations.length === 0">
+    </div>
+    <div *ngIf="details?.reportInformations && details?.reportInformations.length === 0">
         <!-- Handle no information scenario -->
     </div>
 </div>

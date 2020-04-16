@@ -74,7 +74,7 @@
     "run:app": "httpster -d ./dist -p 3333",
     "semantic-release": "semantic-release pre && npm run build:prod && cp -r .git dist && npm publish dist/ && semantic-release post",
     "server:dev:hmr": "npm run server:dev -- --inline --hot",
-    "server:dev": "webpack-dev-server --port 8090 --config config/webpack.dev.js --progress --profile --watch --content-base src/",
+    "server:dev": "webpack-dev-server --port 8070 --config config/webpack.dev.js --progress --profile --watch --content-base src/",
     "server:prod": "http-server dist --cors",
     "server": "npm run server:dev",
     "start:hmr": "npm run server:dev:hmr",
