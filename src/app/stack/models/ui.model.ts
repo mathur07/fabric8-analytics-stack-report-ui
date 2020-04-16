@@ -16,7 +16,7 @@ export class MTab {
         public title: string,
         public content: MReportInformation,
         public active: boolean = false
-    ) {}
+    ) { }
 }
 
 export class MReportSummaryInfoEntry {
@@ -46,7 +46,7 @@ export class MProgressMeter {
         public bgColor: string,
         public footerText: string,
         public width: number
-    ) {}
+    ) { }
 }
 
 /** Bottom Section */
@@ -59,22 +59,22 @@ export class MGithub {
         public usage: number = -1,
         public users: Array<any>,
         public lastUpdated: string = "N/A"
-    ) {}
+    ) { }
 }
 
 export class MOsio {
-    constructor(usage: number = -1) {}
+    constructor(usage: number = -1) { }
 }
 
 export class MCrowdSourcing {
     constructor(
         public tags: Array<string>,
         public canSuggestTags: boolean = true
-    ) {}
+    ) { }
 }
 
 export class MSecurityIssue {
-    constructor(public cvss: string, public cve: string) {}
+    constructor(public cvss: string, public cve: string) { }
 }
 
 export class MSecurityDetails {
@@ -83,14 +83,14 @@ export class MSecurityDetails {
         public progressReport: MProgressMeter = null,
         public totalIssues: number = null,
         public cveList = []
-    ) {}
+    ) { }
 }
 
 export class MTransitiveDetails {
     constructor(
         public affected_direct_dep = [],
         public isTransitive?: boolean
-    ) {}
+    ) { }
 }
 
 export class MLicenseInformation {
@@ -100,11 +100,11 @@ export class MLicenseInformation {
         public hasLicenseIssue: boolean,
         public licensesAffected: Array<MLicensesAffected> = null,
         public conflictingLicense: Array<any> = null
-    ) {}
+    ) { }
 }
 
 export class MWorkItem {
-    constructor(public isWorkItemCreated = false, public url?: string) {}
+    constructor(public isWorkItemCreated = false, public url?: string) { }
 }
 
 export class MComponentInformation {
@@ -128,8 +128,9 @@ export class MComponentInformation {
         public ecosystem: string,
         public manifestFilePath?: string,
         public workItem = new MWorkItem(),
-        public transitive?: any
-    ) {}
+        public transitive?: any,
+        public allTransitiveDependencies?: any
+    ) { }
 }
 
 export class MStackLicenseConflictDetails {
@@ -137,11 +138,11 @@ export class MStackLicenseConflictDetails {
         public conflictedWithLicense: string,
         public conflictedWithComponent: string,
         public conflictedForLicense: string
-    ) {}
+    ) { }
 }
 
 export class MConflictsWithInLicenses {
-    constructor(public license1: string, public license2: string) {}
+    constructor(public license1: string, public license2: string) { }
 }
 
 export class MLicensesAffected {
@@ -149,7 +150,7 @@ export class MLicensesAffected {
         public affectedLicenses: Array<MConflictsWithInLicenses> = null,
         public conflictType: string,
         public conflictDetails: Array<MStackLicenseConflictDetails> = null
-    ) {}
+    ) { }
 }
 
 export class MRecommendationInformation {
@@ -161,15 +162,14 @@ export class MRecommendationInformation {
         public componentInformation: MComponentInformation,
         public manifestFilePath?: string,
         public workItem = new MWorkItem()
-    ) {}
+    ) { }
 }
 
 export class MComponentDetails {
     constructor(
         public componentInformation: MComponentInformation = null,
-        public recommendationInformation: MRecommendationInformation = null,
-        public transitives: Array<MReportInformation> = null
-    ) {}
+        public recommendationInformation: MRecommendationInformation = null
+    ) { }
 }
 
 export class MComponentHeaderColumn {
@@ -179,7 +179,7 @@ export class MComponentHeaderColumn {
         public className: string,
         public isSortable: boolean = false,
         public isDragable: boolean = false
-    ) {}
+    ) { }
 }
 
 export class MReportInformation {
@@ -189,7 +189,7 @@ export class MReportInformation {
         public type: string,
         public headers: Array<MComponentHeaderColumn>,
         public componentDetails: Array<any>
-    ) {}
+    ) { }
 }
 
 export class MCardDetails {
@@ -204,7 +204,7 @@ export class MGenericStackInformation {
         public stackId: string,
         public baseUrl: string,
         public access_token: string = null
-    ) {}
+    ) { }
 }
 
 export class MFeedbackTemplate {
@@ -214,13 +214,13 @@ export class MFeedbackTemplate {
         public package_name: string,
         public feedback_type: boolean = null,
         public ecosystem: string
-    ) {}
+    ) { }
 }
 
 export class MComponentFeedback {
     constructor(
         public feedbackTemplate: MFeedbackTemplate,
         public baseUrl: string
-    ) {}
+    ) { }
 }
 /** Bottom Section */
