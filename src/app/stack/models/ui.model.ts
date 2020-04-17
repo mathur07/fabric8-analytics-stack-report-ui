@@ -135,7 +135,8 @@ export class MComponentInformation {
         public manifestFilePath?: string,
         public workItem = new MWorkItem(),
         public transitive?: any,
-        public allTransitiveDependencies?: MComponentDetails
+        public allTransitiveDependencies?: Array<MComponentDetails>,
+        public transitiveInfo?: MReportInformation
     ) {}
 }
 

@@ -116,6 +116,28 @@
     </div>
 
 
+    <div class="common-table component-tags"
+        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0">
+        <div class="common-wrapper">
+            <span class="info-head">Show Transitives with Vulnerabilities</span>
+            <span [innerHtml]="component?.allTransitiveDependencies.length" class="badge"></span>
+
+            <report-information [report]="component.transitiveInfo"></report-information>
+            <!-- <span *ngIf="component?.crowdSourcing?.tags && component?.crowdSourcing?.tags?.length > 0"
+            class="common-container tags-container">
+            <span [innerText]="tag" *ngFor="let tag of component?.crowdSourcing?.tags"></span>
+        </span>
+        <span *ngIf="!component?.crowdSourcing?.tags || component?.crowdSourcing?.tags?.length === 0"
+            class="common-container tags-container">
+            -----
+        </span> -->
+        </div>
+    </div>
+
+    <!-- <report-information [genericInformation]="genericInformation" [report]="tabz.content" [repoInfo]="repoInfo"></report-information> -->
+
+    
+
     <div *ngIf="view === 'split'" class="github-osio-box">
         <div class="github left">
             <div class="box-header">

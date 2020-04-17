@@ -46,6 +46,7 @@ import {
     MComponentFeedback,
     MFeedbackTemplate
 } from '../models/ui.model';
+import { element } from 'protractor';
 
 @Component({
     selector: 'card-details',
@@ -118,7 +119,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
         if (component) {
             switch (cardType) {
                 case 'security':
-                    processFlag = (component.securityDetails && component.securityDetails.totalIssues > 0) || (component.allTransitiveDependencies);
+                    processFlag = (component.securityDetails && component.securityDetails.totalIssues > 0) || (component.allTransitiveDependencies && component.allTransitiveDependencies.length > 0);
                     break;
                 case 'insights':
                     processFlag = component.isUsageOutlier;
@@ -275,11 +276,12 @@ export class CardDetailsComponent implements OnInit, OnChanges {
 
             components.forEach((component: ComponentInformationModel) => {
 
-                let allTransitiveDependencies: MComponentDetails = null;
+                let allTransitiveDependencies: Array<MComponentDetails> = null;
 
                 if (cardType == 'security' && dependenciesWithTransitve.hasOwnProperty(component.name + "-" + component.version) && dependenciesWithTransitve.hasOwnProperty(component.name + "-" + component.version) !== null) {
                     allTransitiveDependencies = dependenciesWithTransitve[component.name + "-" + component.version];
                     componentInformation = this.getComponentInformation(component, allTransitiveDependencies);
+                    console.log("componentInformation===>>>", componentInformation);
                 } else {
 
                     componentInformation = this.getComponentInformation(component);
@@ -311,7 +313,23 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                 // reportInformations.push(genericReport);
 
                 const effectedDirects: Array<MComponentDetails> = this.getDirectDependencySecurityDetails(genericReport.componentDetails);
-                console.log("effectedDirects=======>>>>>>",effectedDirects);
+
+                effectedDirects.forEach(element => {
+                    if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
+                        element.componentInformation.transitiveInfo = new MReportInformation(
+                            'comp-direct-security',
+                            'Direct Dependencies with Security Issues',
+                            'component',
+                            this.fillColumnHeaders(cardType, 2),
+                            element.componentInformation.allTransitiveDependencies
+                        )
+
+                    }
+                });
+
+                console.log("effectedDirects=======>>>>>>", effectedDirects);
+
+
                 reportInformations.push(new MReportInformation(
                     'comp-direct-security',
                     'Direct Dependencies with Security Issues',
@@ -586,7 +604,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
         return null;
     }
 
-    private getComponentInformation(component: ComponentInformationModel, allTransitiveDependencies?: MComponentDetails): MComponentInformation {
+    private getComponentInformation(component: ComponentInformationModel, allTransitiveDependencies?: Array<MComponentDetails>): MComponentInformation {
         if (component) {
             let currentVersion: string = component.version;
             let latestVersion: string = component.latest_version;
@@ -1065,6 +1083,8 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                     directDependenciesWithTransitveDetailsObj[key] = depDict[key];
                 }
             }
+            console.log("directDependenciesWithTransitveDetailsObj==>>", directDependenciesWithTransitveDetailsObj);
+
 
             return directDependenciesWithTransitveDetailsObj;
 
