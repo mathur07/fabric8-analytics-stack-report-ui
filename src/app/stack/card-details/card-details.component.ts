@@ -118,7 +118,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
         if (component) {
             switch (cardType) {
                 case 'security':
-                    processFlag = component.securityDetails && component.securityDetails.totalIssues > 0;
+                    processFlag = (component.securityDetails && component.securityDetails.totalIssues > 0) || (component.allTransitiveDependencies);
                     break;
                 case 'insights':
                     processFlag = component.isUsageOutlier;
@@ -256,11 +256,35 @@ export class CardDetailsComponent implements OnInit, OnChanges {
             && this.report.user_stack_info.analyzed_dependencies.length > 0) {
             components = this.report.user_stack_info.analyzed_dependencies;
         }
-        console.log("components", components);
+
+        // if (components) {
+        //     components.forEach((component: ComponentInformationModel) => {
+        //         componentInformation = this.getComponentInformation(component);
+        //         if (this.canInclude(cardType, componentInformation)) {
+        //             componentInformation.action = this.decideAction(componentInformation);
+        //             componentDetails.push(new MComponentDetails(
+        //                 componentInformation,
+        //                 recommendationInformation
+        //             ));
+        //         }
+        //     });
+        // }
 
         if (components) {
+            const dependenciesWithTransitve = this.dictionary
+
             components.forEach((component: ComponentInformationModel) => {
-                componentInformation = this.getComponentInformation(component);
+
+                let allTransitiveDependencies: MComponentDetails = null;
+
+                if (cardType == 'security' && dependenciesWithTransitve.hasOwnProperty(component.name + "-" + component.version) && dependenciesWithTransitve.hasOwnProperty(component.name + "-" + component.version) !== null) {
+                    allTransitiveDependencies = dependenciesWithTransitve[component.name + "-" + component.version];
+                    componentInformation = this.getComponentInformation(component, allTransitiveDependencies);
+                } else {
+
+                    componentInformation = this.getComponentInformation(component);
+                }
+
                 if (this.canInclude(cardType, componentInformation)) {
                     componentInformation.action = this.decideAction(componentInformation);
                     componentDetails.push(new MComponentDetails(
@@ -287,6 +311,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                 // reportInformations.push(genericReport);
 
                 const effectedDirects: Array<MComponentDetails> = this.getDirectDependencySecurityDetails(genericReport.componentDetails);
+                console.log("effectedDirects=======>>>>>>",effectedDirects);
                 reportInformations.push(new MReportInformation(
                     'comp-direct-security',
                     'Direct Dependencies with Security Issues',
@@ -561,7 +586,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
         return null;
     }
 
-    private getComponentInformation(component: ComponentInformationModel): MComponentInformation {
+    private getComponentInformation(component: ComponentInformationModel, allTransitiveDependencies?: MComponentDetails): MComponentInformation {
         if (component) {
             let currentVersion: string = component.version;
             let latestVersion: string = component.latest_version;
@@ -661,7 +686,8 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                 component.ecosystem,
                 this.report.manifest_file_path,
                 null,
-                transitive
+                transitive,
+                allTransitiveDependencies
             );
         }
         return null;

@@ -158,30 +158,30 @@ export class ReportSummaryUtils {
                 vulnerableDependencies
             );
 
-            // if (maxIssue) {
-            //     let securityColor: string = Number(maxIssue.CVSS) >= 7 ? this.colors.security.warning : this.colors.security.moderate;
+            if (maxIssue) {
+                let securityColor: string = Number(maxIssue.CVSS) >= 7 ? this.colors.security.warning : this.colors.security.moderate;
 
-            //     let maxIssueEntry: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
-            //     maxIssueEntry.infoText = 'Highest CVSS Score';
-            //     maxIssueEntry.infoValue = maxIssue.CVSS;
-            //     maxIssueEntry.infoType = 'progress';
-            //     maxIssueEntry.config = {
-            //         headerText: maxIssue.CVSS + ' / ' + 10,
-            //         value: Number(maxIssue.CVSS),
-            //         bgColor: securityColor,
-            //         footerText: 'No. of dependencies with this CVSS Score: ' + totalComponentsWithMaxScore,
-            //         width: Number(maxIssue.CVSS) * 10
-            //     };
-            //     securityCard.reportSummaryContent.infoEntries.push(maxIssueEntry);
-            //     securityCard.reportSummaryTitle.notificationIcon = this.notification.warning.icon;
-            //     securityCard.reportSummaryTitle.notificationIconBgColor = securityColor;
-            //     securityCard.hasWarning = true;
-            //     securityCard.severity = Number(maxIssue.CVSS) >= 7 ? 1 : 2;
-            // } else {
-            //     // securityCard.reportSummaryTitle.notificationIcon = this.notification.good.icon;
-            //     // securityCard.reportSummaryTitle.notificationIconBgColor = this.notification.good.bg;
-            //     securityCard.hasWarning = false;
-            // }
+                let maxIssueEntry: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
+                maxIssueEntry.infoText = 'Highest CVSS Score';
+                maxIssueEntry.infoValue = maxIssue.CVSS;
+                maxIssueEntry.infoType = 'progress';
+                maxIssueEntry.config = {
+                    headerText: maxIssue.CVSS + ' / ' + 10,
+                    value: Number(maxIssue.CVSS),
+                    bgColor: securityColor,
+                    footerText: 'No. of dependencies with this CVSS Score: ' + totalComponentsWithMaxScore,
+                    width: Number(maxIssue.CVSS) * 10
+                };
+                // securityCard.reportSummaryContent.infoEntries.push(maxIssueEntry);
+                securityCard.reportSummaryTitle.notificationIcon = this.notification.warning.icon;
+                securityCard.reportSummaryTitle.notificationIconBgColor = securityColor;
+                securityCard.hasWarning = true;
+                securityCard.severity = Number(maxIssue.CVSS) >= 7 ? 1 : 2;
+            } else {
+                // securityCard.reportSummaryTitle.notificationIcon = this.notification.good.icon;
+                // securityCard.reportSummaryTitle.notificationIconBgColor = this.notification.good.bg;
+                securityCard.hasWarning = false;
+            }
 
         } else {
             // Handle for no analyzed_dependencies
