@@ -24,12 +24,12 @@
                         </div>
                         <div *ngSwitchCase="'highestCVSS'">
                             <!-- highestCVSS -->
-                            <span *ngIf="!comp?.hasSecurityIssue" [innerText]="NA"></span>
+                            <span *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
                             <ana-progress-meter *ngIf="comp?.hasSecurityIssue" [config]="comp?.securityDetails?.progressReport"></ana-progress-meter>
                         </div>
                         <div *ngSwitchCase="'cveIdOfH'">
                             <!-- cveIdOfHeighest CVSS -->
-                            <span *ngIf="!comp?.hasSecurityIssue" [innerText]="NA"></span>
+                            <span *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
                             <span *ngIf="comp?.hasSecurityIssue" [innerText]="comp?.securityDetails && comp?.securityDetails?.highestIssue?.cve"></span>
                         </div>
                         <!-- Action -->

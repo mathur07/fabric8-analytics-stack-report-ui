@@ -1055,6 +1055,9 @@ export class CardDetailsComponent implements OnInit, OnChanges {
 
             transitiveDeps.forEach(dep => {
 
+                let tempDep = { ...dep };
+                tempDep.transitive = null;
+
                 if (dep.transitive && dep.transitive.isTransitive) {
                     let affectedDirectDeps = dep.transitive.affected_direct_deps;
 
@@ -1063,11 +1066,11 @@ export class CardDetailsComponent implements OnInit, OnChanges {
 
                         if (depDict[uidDirDep] == null) {
                             depDict[uidDirDep] = [new MComponentDetails(
-                                this.getComponentInformation(dep),
+                                this.getComponentInformation(tempDep),
                                 null)]
                         } else {
                             depDict[uidDirDep].push(new MComponentDetails(
-                                this.getComponentInformation(dep),
+                                this.getComponentInformation(tempDep),
                                 null));
                         }
 
