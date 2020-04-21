@@ -35,7 +35,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
         let summary: any = changes['report'];
         if (summary) {
             this.report = <MReportInformation>summary.currentValue;
-            // this.paint();
+            this.paint();
         }
     }
 
@@ -43,6 +43,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
 
         console.log("event   =======>>>>", event);
         console.log("componentDetail =======>>>", componentDetail);
+        event.stopPropagation()
 
         let element = componentDetail.componentInformation;
 
@@ -71,6 +72,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
                 }
 
             } else if (element.allTransitiveDependencies === undefined) {
+
                 console.log("trans vala");
                 this.closeAllButThis(componentDetail);
 
@@ -89,6 +91,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
                         componentDetail.recommendationInformation.componentInformation.isOpen = !componentDetail.recommendationInformation.componentInformation.isOpen;
                     }
                 }
+
             }
 
         }
@@ -111,11 +114,13 @@ export class ReportInformationComponent implements OnInit, OnChanges {
     }
 
     private closeAllButThis(componentDetail: MComponentDetails): void {
+        event.preventDefault();
         if (this.componentDetails) {
             this.componentDetails.forEach((cdetail: MComponentDetails) => {
                 if (cdetail !== componentDetail) {
                     if (cdetail.componentInformation) {
                         cdetail.componentInformation.isOpen = false;  // changed
+                        event.preventDefault();
                     }
                     if (cdetail.recommendationInformation) {
                         if (cdetail.recommendationInformation.componentInformation) {
