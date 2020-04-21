@@ -114,14 +114,16 @@
             </span>
         </div>
     </div>
-
-
+    <br>
     <div class="common-table component-tags"
         *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0">
         <div class="common-wrapper">
             <span class="info-head">Transitives with Vulnerabilities</span>
             <span [innerHtml]="component?.allTransitiveDependencies.length" class="badge"></span>
-
+            <!-- <span class="toggler">
+                <i [ngClass]="{'fa': true, 'fa-angle-up': component?.isOpen, 'fa-angle-down': !component?.isOpen}"
+                    aria-hidden="true"></i>
+            </span> -->
             <report-information [report]="component.transitiveInfo"></report-information>
             <!-- <span *ngIf="component?.crowdSourcing?.tags && component?.crowdSourcing?.tags?.length > 0"
             class="common-container tags-container">

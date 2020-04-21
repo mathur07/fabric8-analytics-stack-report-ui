@@ -30,35 +30,67 @@ export class ReportInformationComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log("this.report============>>>>>>>",this.report);
-        
+        // console.log("this.report============>>>>>>>", this.report);
+
         let summary: any = changes['report'];
         if (summary) {
-            this.report = <MReportInformation> summary.currentValue;
-            this.paint();
+            this.report = <MReportInformation>summary.currentValue;
+            // this.paint();
         }
     }
 
     public handleAccordion(event: MouseEvent, componentDetail: MComponentDetails): void {
+
+        console.log("event   =======>>>>", event);
+        console.log("componentDetail =======>>>", componentDetail);
+
+        let element = componentDetail.componentInformation;
+
+
         let elem: HTMLElement = (<HTMLElement>event.target);
         if (this.checkIfClickable(elem)) {
-            this.closeAllButThis(componentDetail);
-            if (
-                (componentDetail.componentInformation && !componentDetail.componentInformation.needsExpansion) ||
-                (componentDetail.recommendationInformation && componentDetail.recommendationInformation.componentInformation &&
-                !componentDetail.recommendationInformation.componentInformation.needsExpansion)
-            ) {
-                return;
-            }
 
-            if (componentDetail.componentInformation) {
-                componentDetail.componentInformation.isOpen = !componentDetail.componentInformation.isOpen;
-            }
-            if (componentDetail.recommendationInformation) {
-                if (componentDetail.recommendationInformation.componentInformation) {
-                    componentDetail.recommendationInformation.componentInformation.isOpen = !componentDetail.recommendationInformation.componentInformation.isOpen;
+            if (componentDetail.componentInformation.allTransitiveDependencies && componentDetail.componentInformation.allTransitiveDependencies.length > 0) {
+                console.log("direct vala");
+                this.closeAllButThis(componentDetail);
+
+                if (
+                    (componentDetail.componentInformation && !componentDetail.componentInformation.needsExpansion) ||
+                    (componentDetail.recommendationInformation && componentDetail.recommendationInformation.componentInformation &&
+                        !componentDetail.recommendationInformation.componentInformation.needsExpansion)
+                ) {
+                    return;
+                }
+                if (componentDetail.componentInformation) {
+                    componentDetail.componentInformation.isOpen = !componentDetail.componentInformation.isOpen;
+                }
+                if (componentDetail.recommendationInformation) {
+                    if (componentDetail.recommendationInformation.componentInformation) {
+                        componentDetail.recommendationInformation.componentInformation.isOpen = !componentDetail.recommendationInformation.componentInformation.isOpen;
+                    }
+                }
+
+            } else if (element.allTransitiveDependencies === undefined) {
+                console.log("trans vala");
+                this.closeAllButThis(componentDetail);
+
+                if (
+                    (componentDetail.componentInformation && !componentDetail.componentInformation.needsExpansion) ||
+                    (componentDetail.recommendationInformation && componentDetail.recommendationInformation.componentInformation &&
+                        !componentDetail.recommendationInformation.componentInformation.needsExpansion)
+                ) {
+                    return;
+                }
+                if (componentDetail.componentInformation) {
+                    componentDetail.componentInformation.isOpen = !componentDetail.componentInformation.isOpen;
+                }
+                if (componentDetail.recommendationInformation) {
+                    if (componentDetail.recommendationInformation.componentInformation) {
+                        componentDetail.recommendationInformation.componentInformation.isOpen = !componentDetail.recommendationInformation.componentInformation.isOpen;
+                    }
                 }
             }
+
         }
     }
 
@@ -83,7 +115,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
             this.componentDetails.forEach((cdetail: MComponentDetails) => {
                 if (cdetail !== componentDetail) {
                     if (cdetail.componentInformation) {
-                        cdetail.componentInformation.isOpen = false;
+                        cdetail.componentInformation.isOpen = false;  // changed
                     }
                     if (cdetail.recommendationInformation) {
                         if (cdetail.recommendationInformation.componentInformation) {

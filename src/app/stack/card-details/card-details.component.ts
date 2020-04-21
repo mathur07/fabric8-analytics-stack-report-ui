@@ -44,7 +44,8 @@ import {
     MStackLicenseConflictDetails,
     MLicenseInformation,
     MComponentFeedback,
-    MFeedbackTemplate
+    MFeedbackTemplate,
+    // MToggler
 } from '../models/ui.model';
 import { element } from 'protractor';
 
@@ -281,7 +282,6 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                 if (cardType == 'security' && dependenciesWithTransitve.hasOwnProperty(component.name + "-" + component.version) && dependenciesWithTransitve.hasOwnProperty(component.name + "-" + component.version) !== null) {
                     allTransitiveDependencies = dependenciesWithTransitve[component.name + "-" + component.version];
                     componentInformation = this.getComponentInformation(component, allTransitiveDependencies);
-                    console.log("componentInformation===>>>", componentInformation);
                 } else {
 
                     componentInformation = this.getComponentInformation(component);
@@ -326,9 +326,6 @@ export class CardDetailsComponent implements OnInit, OnChanges {
 
                     }
                 });
-
-                console.log("effectedDirects=======>>>>>>", effectedDirects);
-
 
                 reportInformations.push(new MReportInformation(
                     'comp-direct-security',
@@ -693,7 +690,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                 null,
                 true,
                 recommendationInformation,
-                false,
+               false,
                 new MLicenseInformation(
                     component.licenses,
                     this.getUnknownLicenses(component),
@@ -1086,8 +1083,6 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                     directDependenciesWithTransitveDetailsObj[key] = depDict[key];
                 }
             }
-            console.log("directDependenciesWithTransitveDetailsObj==>>", directDependenciesWithTransitveDetailsObj);
-
 
             return directDependenciesWithTransitveDetailsObj;
 
