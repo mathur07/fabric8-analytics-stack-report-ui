@@ -62,9 +62,9 @@ export class AppComponent implements OnInit {
                 }
 
                 if (this.gateway['user_key']) {
-                    this.stackUrl = apiHost + 'api/v1/stack-analyses/' + this.label + '?user_key=' + this.gateway['user_key'];
+                    this.stackUrl = apiHost + 'api/v2/stack-analyses/' + this.label + '?user_key=' + this.gateway['user_key'];
                 } else {
-                    this.stackUrl = apiHost + 'api/v1/stack-analyses/' + this.label;
+                    this.stackUrl = apiHost + 'api/v2/stack-analyses/' + this.label;
                 }
 
                 console.log('=========================');
