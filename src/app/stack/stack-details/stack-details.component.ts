@@ -152,7 +152,7 @@ export class StackDetailsComponent implements OnChanges {
                 this.companionLevelRecommendation = {
                     dependencies: recommendations.companion,
                     manifestinfo: tab.content.manifest_name,
-                    licenseAnalysis: tab.content.user_stack_info.license_analysis
+                    // licenseAnalysis: tab.content.user_stack_info.license_analysis
                 };
                 alternate = recommendations.alternate ? recommendations.alternate.length : 0;
                 companion = recommendations.companion ? recommendations.companion.length : 0;
@@ -187,7 +187,8 @@ export class StackDetailsComponent implements OnChanges {
                 dependencies: tab.content.user_stack_info.analyzed_dependencies,
                 manifestinfo: tab.content.manifest_name,
                 licenseAnalysis: tab.content.user_stack_info.license_analysis
-            };
+            }
+            
             // Select the first card by default
             if (SaveState && SaveState.ELEMENTS && SaveState.ELEMENTS.length > 0) {
                 if (SaveState.ELEMENTS[currentIndex * 4]) {
@@ -282,6 +283,8 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     private handleResponse(data: any): void {
+        console.log("data===>>",data);
+        
         this.errorMessage = null;
         this.tabs = [];
         SaveState.ELEMENTS = [];
@@ -311,6 +314,7 @@ export class StackDetailsComponent implements OnChanges {
                         this.tabs.push(tab);
                         this.recommendationsArray.push(r.recommendation);
                     });
+
                     this.modalHeader = 'Updated just now';
                     this.dataLoaded = true;
                     this.tabSelection(this.tabs[0]);
