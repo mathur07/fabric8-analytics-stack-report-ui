@@ -129,7 +129,7 @@ export class ReportSummaryUtils {
             let totalVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             totalVulnerabilities.infoText = "Total Vulnerabilities";
             // totalIssuesEntry.infoValue = totalVulnerabilitiesCount;
-            totalVulnerabilities.infoValue = 28;
+            totalVulnerabilities.infoValue = 38;
             securityCard.reportSummaryContent.infoEntries.push(
                 totalVulnerabilities
             );
@@ -137,7 +137,7 @@ export class ReportSummaryUtils {
             let publicVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             publicVulnerabilities.infoText = "Public Vulnerabilities";
             // totaldependenciesEffectedEntry.infoValue = dependenciesEffected;
-            publicVulnerabilities.infoValue = 27;
+            publicVulnerabilities.infoValue = 37;
             securityCard.reportSummaryContent.infoEntries.push(
                 publicVulnerabilities
             );
@@ -145,7 +145,7 @@ export class ReportSummaryUtils {
             let privateVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             privateVulnerabilities.infoText = "Private Vulnerabilities";
             // totaldependenciesEffectedEntry.infoValue = dependenciesEffected;
-            privateVulnerabilities.infoValue = 1;
+            privateVulnerabilities.infoValue = 9;
             securityCard.reportSummaryContent.infoEntries.push(
                 privateVulnerabilities
             );
@@ -153,7 +153,7 @@ export class ReportSummaryUtils {
             let vulnerableDependencies: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             vulnerableDependencies.infoText = "Vulnerable Dependencies";
             // totaldependenciesEffectedEntry.infoValue = dependenciesEffected;
-            vulnerableDependencies.infoValue = 15;
+            vulnerableDependencies.infoValue = 24;
             securityCard.reportSummaryContent.infoEntries.push(
                 vulnerableDependencies
             );

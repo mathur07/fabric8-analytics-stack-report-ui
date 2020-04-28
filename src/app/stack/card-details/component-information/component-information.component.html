@@ -102,17 +102,21 @@
                             <span
                                 [ngClass]="{'indicator license': true, 'pficon-warning-triangle-o license-issue': component?.hasLicenseIssue, 'pficon-ok': !component?.hasLicenseIssue}"></span>
                         </div>
-                         <!-- Component Details Card -->
+                        <!-- Component Details Card -->
                         <div *ngSwitchCase="'helpUsKnownMore'">
                             <!-- Help us know more about dependencies - get tags -->
                         </div>
                         <div *ngSwitchCase="'collapse'">
                             <!-- Toggle -->
+
                             <div class="toggler">
+                                <i *ngIf="comp?.transitive && comp?.transitive?.isTransitive === true"
+                                    class="fa fa-lock" title="Sign up with Snyk"> </i>
+
                                 <i [ngClass]="{'fa': true, 'fa-angle-up': comp?.isOpen, 'fa-angle-down': !comp?.isOpen}"
                                     aria-hidden="true"></i>
                             </div>
-                        </div>                      
+                        </div>
                     </div>
                 </div>
             </div>

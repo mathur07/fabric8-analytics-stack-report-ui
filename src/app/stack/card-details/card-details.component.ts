@@ -318,7 +318,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                     if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
                         element.componentInformation.transitiveInfo = new MReportInformation(
                             'comp-direct-security',
-                            'Direct Dependencies with Security Issues',
+                            'Dependencies with Public Vulnerabilities',
                             'component',
                             this.fillColumnHeaders(cardType, 2),
                             element.componentInformation.allTransitiveDependencies
@@ -329,7 +329,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
 
                 reportInformations.push(new MReportInformation(
                     'comp-direct-security',
-                    'Direct Dependencies with Security Issues',
+                    'Dependencies with Public Vulnerabilities',
                     'component',
                     this.fillColumnHeaders(cardType, 2),
                     effectedDirects
@@ -341,7 +341,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                     if (effectedPureTransitives.length > 0) {
                         reportInformations.push(new MReportInformation(
                             'comp-trans-security',
-                            'Transitive Dependencies with Security Issues',
+                            'Dependencies with Private Vulnerabilities',
                             'component',
                             this.fillColumnHeaders(cardType, 3),
                             effectedPureTransitives
