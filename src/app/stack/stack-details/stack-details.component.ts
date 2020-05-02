@@ -75,10 +75,10 @@ export class StackDetailsComponent implements OnChanges {
     public modalHeader: string = null;
     public userStackInformation: UserStackInfoModel;
     public componentLevelInformation: any = {};
-    public userComponentInformation: Array < ComponentInformationModel > = [];
+    public userComponentInformation: Array<ComponentInformationModel> = [];
     public companionLevelRecommendation: any = {};
     public dataLoaded: boolean = false;
-    public recommendationsArray: Array < RecommendationsModel > = [];
+    public recommendationsArray: Array<RecommendationsModel> = [];
     public stackLevelOutliers: any = {};
 
     public companionLevel: any = {};
@@ -91,9 +91,9 @@ export class StackDetailsComponent implements OnChanges {
 
     public feedbackConfig: any = {};
 
-    public tabs: Array < any > = [];
+    public tabs: Array<any> = [];
 
-    private userStackInformationArray: Array < UserStackInfoModel > = [];
+    private userStackInformationArray: Array<UserStackInfoModel> = [];
     private totalManifests: number;
 
     private stackId: string;
@@ -102,6 +102,8 @@ export class StackDetailsComponent implements OnChanges {
     private alive = true;
 
     private reportSummaryUtils = new ReportSummaryUtils();
+
+    private responseData: any = null;
 
     /**
      * New Stack Report Revamp - Begin
@@ -152,7 +154,7 @@ export class StackDetailsComponent implements OnChanges {
                 this.companionLevelRecommendation = {
                     dependencies: recommendations.companion,
                     manifestinfo: tab.content.manifest_name,
-                    // licenseAnalysis: tab.content.user_stack_info.license_analysis
+                    licenseAnalysis: tab.content.user_stack_info.license_analysis
                 };
                 alternate = recommendations.alternate ? recommendations.alternate.length : 0;
                 companion = recommendations.companion ? recommendations.companion.length : 0;
@@ -163,15 +165,14 @@ export class StackDetailsComponent implements OnChanges {
 
             if (tab.content && tab.content.user_stack_info) {
                 let userStackInfo: UserStackInfoModel = tab.content.user_stack_info;
-                if (userStackInfo.dependencies) {
-                    analyzed = userStackInfo.analyzed_dependencies.length;
-                }
                 if (userStackInfo.analyzed_dependencies) {
-                    total = userStackInfo.dependencies.length;
+                    analyzed = userStackInfo.analyzed_dependencies.length;
                 }
                 if (userStackInfo.unknown_dependencies) {
                     unknown = userStackInfo.unknown_dependencies.length;
                 }
+
+                total = analyzed + unknown;
             }
 
             this.analysis = {
@@ -187,8 +188,7 @@ export class StackDetailsComponent implements OnChanges {
                 dependencies: tab.content.user_stack_info.analyzed_dependencies,
                 manifestinfo: tab.content.manifest_name,
                 licenseAnalysis: tab.content.user_stack_info.license_analysis
-            }
-            
+            };
             // Select the first card by default
             if (SaveState && SaveState.ELEMENTS && SaveState.ELEMENTS.length > 0) {
                 if (SaveState.ELEMENTS[currentIndex * 4]) {
@@ -205,12 +205,14 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     ngOnChanges(): void {
+
         if (this.stack && this.stack !== this.cache) {
             this.cache = this.stack;
             this.resetFields();
             this.stackId = this.stack && this.stack.split('?')[0].split('/')[this.stack.split('/').length - 1];
             // this.init(this.stack);
             this.initFeedback();
+
             this.componentLevel = {
                 header: 'Analysis of your application stack',
                 subHeader: 'Recommended alternative dependencies'
@@ -228,7 +230,7 @@ export class StackDetailsComponent implements OnChanges {
         this.componentFilterBy = filterBy.filterBy;
     }
 
-    constructor(private stackAnalysisService: StackAnalysesService) {}
+    constructor(private stackAnalysisService: StackAnalysesService) { }
 
     /**
      * New Revamp - Begin
@@ -283,8 +285,24 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     private handleResponse(data: any): void {
-        console.log("data===>>",data);
-        
+
+        console.log("data ==== >>1", data);
+
+        data.result = data.result.map(element => {
+            return ({
+                manifest_file_path: element.manifest_file_path,
+                manifest_name: element.manifest_name,
+                recommendation: element.recommendation,
+                user_stack_info: {
+                    analyzed_dependencies: element.analyzed_dependencies,
+                    ecosystem: element.ecosystem,
+                    license_analysis: element.license_analysis,
+                    registration_status: element.registration_status,
+                    unknown_dependencies: element.unknown_dependencies
+                }
+            })
+        });
+
         this.errorMessage = null;
         this.tabs = [];
         SaveState.ELEMENTS = [];
@@ -293,12 +311,12 @@ export class StackDetailsComponent implements OnChanges {
                 data.result.length > 0 &&
                 data.result[0].hasOwnProperty('recommendation') && data.result[0].recommendation &&
                 data.result[0].recommendation.hasOwnProperty('alternate')) {
-                    this.alive = false;
-                    this.subPolling.unsubscribe();
+                this.alive = false;
+                this.subPolling.unsubscribe();
             }
-            let resultInformation: Observable < StackReportModel > = getStackReportModel(data);
+            let resultInformation: Observable<StackReportModel> = getStackReportModel(data);
             resultInformation.subscribe((response) => {
-                let result: Array < ResultInformationModel > = response.result;
+                let result: Array<ResultInformationModel> = response.result;
                 this.totalManifests = result.length;
                 if (this.totalManifests > 0) {
                     this.userStackInformationArray = result.map((r) => r.user_stack_info);
@@ -314,7 +332,6 @@ export class StackDetailsComponent implements OnChanges {
                         this.tabs.push(tab);
                         this.recommendationsArray.push(r.recommendation);
                     });
-
                     this.modalHeader = 'Updated just now';
                     this.dataLoaded = true;
                     this.tabSelection(this.tabs[0]);
@@ -347,6 +364,7 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     private init(): void {
+
         let counter = 2;
         if (this.gatewayConfig["modal"]) {
             this.showCrowdModal();
@@ -359,22 +377,21 @@ export class StackDetailsComponent implements OnChanges {
             }, 1000);
         } else {
             if (this.stack && this.stack !== '') {
-                let analysis: Observable < any > = this.stackAnalysisService
-                    .getStackAnalyses(this.stack, this.gatewayConfig);
-
+                let analysis: Observable<any> = this.stackAnalysisService.getStackAnalyses(this.stack, this.gatewayConfig);
                 if (analysis) {
-                    TimerObservable .create(0, 10000)
-                                    .takeWhile(() => this.alive)
-                                    .subscribe(() => {
-                                        
-                                        if (counter -- === 0) {
-                                            this.alive = false;
-                                            this.subPolling.unsubscribe();
-                                        }
-                                
-                                this.subPolling = analysis.subscribe((data) => {
-                                    this.handleResponse(data);
-                                },
+                    TimerObservable.create(0, 1000)
+                        .takeWhile(() => this.alive)
+                        .subscribe(() => {
+
+                            if (counter-- === 0) {
+                                this.alive = false;
+                                this.subPolling.unsubscribe();
+                                this.handleResponse(this.responseData);
+                            }
+
+                            this.subPolling = analysis.subscribe((data) => {
+                                this.responseData = data;
+                            },
                                 error => {
                                     let title: string = '';
                                     if (error.status >= 500) {
@@ -392,7 +409,7 @@ export class StackDetailsComponent implements OnChanges {
                                         title: title
                                     });
                                 });
-                            });
+                        });
                 }
             }
         }

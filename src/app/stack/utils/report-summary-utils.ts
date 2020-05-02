@@ -83,12 +83,17 @@ export class ReportSummaryUtils {
 
             let securityIssues: number = 0;
             let dependenciesEffected: number = 0;
-            let maxIssue: SecurityInformationModel = null,
-                temp: SecurityInformationModel = null;
+            // let maxIssue: SecurityInformationModel = null,
+            //     temp: SecurityInformationModel = null;
 
             let analyzedDependencies: Array<ComponentInformationModel>;
+            let publicVulnerabilitiesCount: number = 0;
+            let privateVulnerabilitiesCount: number = 0;
+            let highCvss: boolean = false;
+            let hasVulnerabilities: boolean = false;
 
-            // filter-out transitives which is also listed as direct
+
+            // filter-out transitives which is also listed as direct commented
             const uniqueDependencies: Set<string> = new Set<string>();
             analyzedDependencies = userStackInfo.analyzed_dependencies.filter(info => {
                 const key: string = `${info.name}+${info.version}`;
@@ -98,46 +103,70 @@ export class ReportSummaryUtils {
                 uniqueDependencies.add(key);
                 return true;
             });
-            analyzedDependencies.forEach((analyzed) => {
-                if (analyzed.security && analyzed.security.length > 0) {
-                    let currSecurity: Array<SecurityInformationModel> = analyzed.security;
-                    temp = currSecurity.reduce((a, b) => {
-                        return parseFloat(a.CVSS) < parseFloat(b.CVSS) ? b : a;
-                    });
-                    if (temp) {
-                        if (maxIssue === null || maxIssue.CVSS < temp.CVSS) {
-                            maxIssue = temp;
+
+
+            analyzedDependencies.forEach(element => {
+                publicVulnerabilitiesCount += element.public_vulnerabilities.length;
+                privateVulnerabilitiesCount += element.private_vulnerabilities.length;
+            });
+
+            for (const dep of analyzedDependencies) {
+                let allVulnerabilities = dep.public_vulnerabilities.concat(dep.private_vulnerabilities);
+                if (allVulnerabilities.length > 0) {
+                    hasVulnerabilities = true;
+                    for (const element of allVulnerabilities) {
+                        if (element.cvss >= 7) {
+                            highCvss = true;
+                            break;
                         }
                     }
-                    securityIssues += currSecurity.length;
-                    dependenciesEffected++;
                 }
-            });
-            let totalComponentsWithMaxScore: number = 0;
-            analyzedDependencies.forEach((analyzed) => {
-                if (analyzed.security && analyzed.security.length > 0) {
-                    let currSecurity: Array<SecurityInformationModel> = analyzed.security;
-                    let filters: Array<SecurityInformationModel>;
-                    filters = currSecurity.filter((security) => {
-                        return security.CVSS === maxIssue.CVSS;
-                    });
-                    totalComponentsWithMaxScore += filters ? filters.length : 0;
+                if (highCvss) {
+                    break;
                 }
-            });
+            }
+
+
+            // analyzedDependencies.forEach((analyzed) => {
+            //     if (analyzed.security && analyzed.security.length > 0) {
+            //         let currSecurity: Array<SecurityInformationModel> = analyzed.security;
+            //         temp = currSecurity.reduce((a, b) => {
+            //             return parseFloat(a.CVSS) < parseFloat(b.CVSS) ? b : a;
+            //         });
+            //         if (temp) {
+            //             if (maxIssue === null || maxIssue.CVSS < temp.CVSS) {
+            //                 maxIssue = temp;
+            //             }
+            //         }
+            //         securityIssues += currSecurity.length;
+            //         dependenciesEffected++;
+            //     }
+            // });
+
+            // let totalComponentsWithMaxScore: number = 0;
+            // analyzedDependencies.forEach((analyzed) => {
+            //     if (analyzed.security && analyzed.security.length > 0) {
+            //         let currSecurity: Array<SecurityInformationModel> = analyzed.security;
+            //         let filters: Array<SecurityInformationModel>;
+            //         filters = currSecurity.filter((security) => {
+            //             return security.CVSS === maxIssue.CVSS;
+            //         });
+            //         totalComponentsWithMaxScore += filters ? filters.length : 0;
+            //     }
+            // });
+
 
             // hardcoded
             let totalVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             totalVulnerabilities.infoText = "Total Vulnerabilities";
-            // totalIssuesEntry.infoValue = totalVulnerabilitiesCount;
-            totalVulnerabilities.infoValue = 38;
+            totalVulnerabilities.infoValue = privateVulnerabilitiesCount + privateVulnerabilitiesCount;
             securityCard.reportSummaryContent.infoEntries.push(
                 totalVulnerabilities
             );
 
             let publicVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             publicVulnerabilities.infoText = "Public Vulnerabilities";
-            // totaldependenciesEffectedEntry.infoValue = dependenciesEffected;
-            publicVulnerabilities.infoValue = 37;
+            publicVulnerabilities.infoValue = publicVulnerabilitiesCount;
             securityCard.reportSummaryContent.infoEntries.push(
                 publicVulnerabilities
             );
@@ -145,7 +174,7 @@ export class ReportSummaryUtils {
             let privateVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             privateVulnerabilities.infoText = "Private Vulnerabilities";
             // totaldependenciesEffectedEntry.infoValue = dependenciesEffected;
-            privateVulnerabilities.infoValue = 9;
+            privateVulnerabilities.infoValue = privateVulnerabilitiesCount;
             securityCard.reportSummaryContent.infoEntries.push(
                 privateVulnerabilities
             );
@@ -158,28 +187,44 @@ export class ReportSummaryUtils {
                 vulnerableDependencies
             );
 
-            if (maxIssue) {
-                let securityColor: string = Number(maxIssue.CVSS) >= 7 ? this.colors.security.warning : this.colors.security.moderate;
+            //commented
 
-                let maxIssueEntry: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
-                maxIssueEntry.infoText = 'Highest CVSS Score';
-                maxIssueEntry.infoValue = maxIssue.CVSS;
-                maxIssueEntry.infoType = 'progress';
-                maxIssueEntry.config = {
-                    headerText: maxIssue.CVSS + ' / ' + 10,
-                    value: Number(maxIssue.CVSS),
-                    bgColor: securityColor,
-                    footerText: 'No. of dependencies with this CVSS Score: ' + totalComponentsWithMaxScore,
-                    width: Number(maxIssue.CVSS) * 10
-                };
-                // securityCard.reportSummaryContent.infoEntries.push(maxIssueEntry);
+            // if (maxIssue) {
+            //     let securityColor: string = Number(maxIssue.CVSS) >= 7 ? this.colors.security.warning : this.colors.security.moderate;
+
+            //     let maxIssueEntry: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
+            //     maxIssueEntry.infoText = 'Highest CVSS Score';
+            //     maxIssueEntry.infoValue = maxIssue.CVSS;
+            //     maxIssueEntry.infoType = 'progress';
+            //     maxIssueEntry.config = {
+            //         headerText: maxIssue.CVSS + ' / ' + 10,
+            //         value: Number(maxIssue.CVSS),
+            //         bgColor: securityColor,
+            //         footerText: 'No. of dependencies with this CVSS Score: ' + totalComponentsWithMaxScore,
+            //         width: Number(maxIssue.CVSS) * 10
+            //     };
+            //     // securityCard.reportSummaryContent.infoEntries.push(maxIssueEntry);
+            //     securityCard.reportSummaryTitle.notificationIcon = this.notification.warning.icon;
+            //     securityCard.reportSummaryTitle.notificationIconBgColor = securityColor;
+            //     securityCard.hasWarning = true;
+            //     securityCard.severity = Number(maxIssue.CVSS) >= 7 ? 1 : 2;
+            // } else {
+            //     // securityCard.reportSummaryTitle.notificationIcon = this.notification.good.icon;
+            //     // securityCard.reportSummaryTitle.notificationIconBgColor = this.notification.good.bg;
+            //     securityCard.hasWarning = false;
+            // }
+
+
+
+            if (hasVulnerabilities) {
+                let securityColor: string = highCvss ? this.colors.security.warning : this.colors.security.moderate;
                 securityCard.reportSummaryTitle.notificationIcon = this.notification.warning.icon;
                 securityCard.reportSummaryTitle.notificationIconBgColor = securityColor;
                 securityCard.hasWarning = true;
-                securityCard.severity = Number(maxIssue.CVSS) >= 7 ? 1 : 2;
+                securityCard.severity = highCvss ? 1 : 2;
+
+
             } else {
-                // securityCard.reportSummaryTitle.notificationIcon = this.notification.good.icon;
-                // securityCard.reportSummaryTitle.notificationIconBgColor = this.notification.good.bg;
                 securityCard.hasWarning = false;
             }
 
@@ -264,7 +309,7 @@ export class ReportSummaryUtils {
 
             let stackLicense: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             stackLicense.infoText = 'Suggested License';
-            let stackLicenses = licenseAnalysis.f8a_stack_licenses;
+            let stackLicenses = licenseAnalysis.current_stack_license;
             if (stackLicenses) {
                 if (stackLicenses.length > 0) {
                     stackLicense.infoValue = stackLicenses[0];

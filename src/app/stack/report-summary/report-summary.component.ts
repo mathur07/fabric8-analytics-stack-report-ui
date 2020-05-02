@@ -34,7 +34,7 @@ import { ReportSummaryUtils } from '../utils/report-summary-utils';
     styleUrls: ['./report-summary.component.less'],
     templateUrl: './report-summary.component.html'
 })
-export class ReportSummaryComponent implements OnInit, OnChanges {
+export class ReportSummaryComponent implements OnChanges {
     @Input() report: ResultInformationModel;
     @Output('onCardClick') onCardClick = new EventEmitter<any>();
 
@@ -78,14 +78,14 @@ export class ReportSummaryComponent implements OnInit, OnChanges {
         }
     };
 
-    ngOnInit() {
-        this.paintView();
-    }
+    // ngOnInit() {
+    //     this.paintView();
+    // }
 
     ngOnChanges(changes: SimpleChanges) {
         let summary: any = changes['report'];
         if (summary) {
-            this.report = <ResultInformationModel> summary.currentValue;
+            this.report = <ResultInformationModel>summary.currentValue;
             this.repaintView();
         }
     }
@@ -124,10 +124,16 @@ export class ReportSummaryComponent implements OnInit, OnChanges {
         if (this.report.user_stack_info) {
             let userStackInfo: UserStackInfoModel = this.report.user_stack_info;
 
-            const unknownCount: number = userStackInfo.unknown_dependencies_count;
-            const totalCount: number = unknownCount + userStackInfo.analyzed_dependencies_count;
-            const analyzedDirectCount: number = userStackInfo.analyzed_dependencies.filter(d => !d.hasOwnProperty('transitive')).length;
-            const analyzedTransCount: number = userStackInfo.hasOwnProperty('transitive_count') ? userStackInfo.transitive_count : -1;
+
+            const unknownCount: number = userStackInfo.unknown_dependencies.length;
+            const analyzedDirectCount: number = userStackInfo.analyzed_dependencies.length;
+            const totalCount: number = unknownCount + analyzedDirectCount;
+
+            let analyzedTransCount: number = 0;
+            userStackInfo.analyzed_dependencies.forEach(dep => {
+                analyzedTransCount += dep.dependencies.length;
+            });
+
             const isTransitiveSupported: boolean = analyzedTransCount >= 0;
 
             const analyzedEntry: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
@@ -163,7 +169,7 @@ export class ReportSummaryComponent implements OnInit, OnChanges {
 
     private updateCards(): void {
         let cards: Array<MReportSummaryCard> = [];
-        if (this.report) {
+        if (this.report) {            
             cards[0] = this.getSecurityReportCard();
             cards[1] = this.getLicensesReportCard();
             cards[2] = this.getInsightsReportCard();

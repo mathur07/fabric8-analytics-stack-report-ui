@@ -1,16 +1,18 @@
 <div class="stack-report">
     <div *ngIf="!error">
         <tabset *ngIf="dataLoaded">
-            <tab *ngFor="let tabz of tabs" (select)="tabSelection(tabz)" (deselect)="tabDeSelection(tabz)" (removed)="removeTabHandler(tabz)"
+            <tab *ngFor="let tabz of tabs" (select)="tabSelection(tabz)" (deselect)="tabDeSelection(tabz)"
                 [customClass]="tabz.active ? 'active-menu-item' : 'inactive-menu'">
                 <ng-template tabHeading>
-                    <i *ngIf="tabz.hasWarning" [ngClass]="{'pficon-warning-triangle-o': true, 'icon-severe': tabz.severity === 1, 'icon-moderate': tabz.severity === 2}"></i>
+                    <i *ngIf="tabz.hasWarning"
+                        [ngClass]="{'pficon-warning-triangle-o': true, 'icon-severe': tabz.severity === 1, 'icon-moderate': tabz.severity === 2}"></i>
                     <span [innerHtml]="tabz.title" style="margin-left: 5px"></span>
                 </ng-template>
                 <!-- Stack Report Design Revamp - BEGIN -->
-                <analytics-report-summary (onCardClick)="handleCardClick($event)" [report]="tabz.content"></analytics-report-summary>
-                <card-details [genericInformation]="genericInformation && genericInformation" *ngIf="cardDetails" [cardDetails]="cardDetails"
-                    [repoInfo]="repoInfo"></card-details>
+                <analytics-report-summary (onCardClick)="handleCardClick($event)" [report]="tabz.content">
+                </analytics-report-summary>
+                <card-details [genericInformation]="genericInformation && genericInformation" *ngIf="cardDetails"
+                    [cardDetails]="cardDetails" [repoInfo]="repoInfo"></card-details>
                 <!-- Stack Report Design Revamp - END -->
             </tab>
         </tabset>
