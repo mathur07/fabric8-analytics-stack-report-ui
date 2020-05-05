@@ -21,7 +21,8 @@ import {
     LicenseAnalysisModel,
     ComponentConflictUnknownModel,
     ConflictPackageModel,
-    ReallyUnknownLicenseModel
+    ReallyUnknownLicenseModel,
+    VulnerabilitiesModel
 } from '../models/stack-report.model';
 
 import {
@@ -55,7 +56,7 @@ import { element } from 'protractor';
     encapsulation: ViewEncapsulation.None,
     templateUrl: './card-details.component.html'
 })
-export class CardDetailsComponent implements OnInit, OnChanges {
+export class CardDetailsComponent implements OnChanges {
     @Input() cardDetails: any;
     @Input() genericInformation: MGenericStackInformation;
     @Input() repoInfo: any;
@@ -97,9 +98,9 @@ export class CardDetailsComponent implements OnInit, OnChanges {
         }
     };
 
-    ngOnInit() {
-        this.paint();
-    }
+    // ngOnInit() {
+    //     this.paint();
+    // }
 
     ngOnChanges(changes: SimpleChanges) {
         let summary: any = changes['cardDetails'];
@@ -259,33 +260,31 @@ export class CardDetailsComponent implements OnInit, OnChanges {
             components = this.report.user_stack_info.analyzed_dependencies;
         }
 
-        // if (components) {
-        //     components.forEach((component: ComponentInformationModel) => {
-        //         componentInformation = this.getComponentInformation(component);
-        //         if (this.canInclude(cardType, componentInformation)) {
-        //             componentInformation.action = this.decideAction(componentInformation);
-        //             componentDetails.push(new MComponentDetails(
-        //                 componentInformation,
-        //                 recommendationInformation
-        //             ));
-        //         }
-        //     });
-        // }
+        if (components) {
+            components.forEach(component => {
+                if (component.vulnerable_dependencies && component.vulnerable_dependencies.length > 0) {
+                    let vulnerable_dependencies_array = [...component.vulnerable_dependencies]
+                    let updated_vulnerable_dependencies_array = [];
+                    vulnerable_dependencies_array.forEach(element => {
+                        updated_vulnerable_dependencies_array.push(new MComponentDetails(
+                            this.getComponentInformation(element),
+                            recommendationInformation
+                        ));
+                    });
+                    component.allTransitiveDependencies = updated_vulnerable_dependencies_array;
+                }
+            });
+        }
+
+        console.log("components ====>>", components);
 
         if (components) {
-            const dependenciesWithTransitve = this.dictionary
 
             components.forEach((component: ComponentInformationModel) => {
 
-                let allTransitiveDependencies: Array<MComponentDetails> = null;
+                componentInformation = this.getComponentInformation(component);
 
-                if (cardType == 'security' && dependenciesWithTransitve.hasOwnProperty(component.name + "-" + component.version) && dependenciesWithTransitve.hasOwnProperty(component.name + "-" + component.version) !== null) {
-                    allTransitiveDependencies = dependenciesWithTransitve[component.name + "-" + component.version];
-                    componentInformation = this.getComponentInformation(component, allTransitiveDependencies);
-                } else {
-
-                    componentInformation = this.getComponentInformation(component);
-                }
+                console.log("componentInformation======>>>", componentInformation);
 
                 if (this.canInclude(cardType, componentInformation)) {
                     componentInformation.action = this.decideAction(componentInformation);
@@ -296,6 +295,33 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                 }
             });
         }
+
+        // console.log("componentDetails====>>", componentDetails);
+
+        // if (components) {
+        //     // const dependenciesWithTransitve = this.dictionary
+
+        //     components.forEach((component: ComponentInformationModel) => {
+
+        //         let allTransitiveDependencies: Array<MComponentDetails> = null;
+
+        //         if (cardType == 'security' && component.vulnerable_dependencies.length) {
+        //             // allTransitiveDependencies = dependenciesWithTransitve[component.name + "-" + component.version];
+        //             componentInformation = this.getComponentInformation(component, allTransitiveDependencies);
+        //         } else {
+
+        //             componentInformation = this.getComponentInformation(component);
+        //         }
+
+        //         if (this.canInclude(cardType, componentInformation)) {
+        //             componentInformation.action = this.decideAction(componentInformation);
+        //             componentDetails.push(new MComponentDetails(
+        //                 componentInformation,
+        //                 recommendationInformation
+        //             ));
+        //         }
+        //     });
+        // }
 
         let genericReport: MReportInformation = new MReportInformation(
             null,
@@ -601,7 +627,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
         return null;
     }
 
-    private getComponentInformation(component: ComponentInformationModel, allTransitiveDependencies?: Array<MComponentDetails>): MComponentInformation {
+    private getComponentInformation(component: ComponentInformationModel): MComponentInformation {
         if (component) {
             let currentVersion: string = component.version;
             let latestVersion: string = component.latest_version;
@@ -609,7 +635,12 @@ export class CardDetailsComponent implements OnInit, OnChanges {
             let github: GithubModel = component.github;
             let hasLicenseIssue: boolean = this.hasLicenseIssue(component);
             let isUsageOutlier: boolean = false;
-            let securityDetails: MSecurityDetails = this.getComponentSecurity(component);
+            // let securityDetails: MSecurityDetails = this.getComponentSecurity(component);
+            let publicSecurityDetails: MSecurityDetails = this.getComponenVulnerabilityInformation(component.public_vulnerabilities);
+            let privateSecurityDetails: MSecurityDetails = this.getComponenVulnerabilityInformation(component.private_vulnerabilities);
+            console.log("publicSecurityDetails", publicSecurityDetails);
+
+            let securityDetails: MSecurityDetails = publicSecurityDetails;
             let recommendation: RecommendationsModel = this.report.recommendation;
             let recommendationInformation: MRecommendationInformation = null;
             let usageOutliers: Array<OutlierInformationModel> = null;
@@ -690,7 +721,7 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                 null,
                 true,
                 recommendationInformation,
-               false,
+                false,
                 new MLicenseInformation(
                     component.licenses,
                     this.getUnknownLicenses(component),
@@ -702,7 +733,16 @@ export class CardDetailsComponent implements OnInit, OnChanges {
                 this.report.manifest_file_path,
                 null,
                 transitive,
-                allTransitiveDependencies
+                component.allTransitiveDependencies,
+                null,
+                component.dependencies,
+                component.url,
+                component.public_vulnerabilities,
+                component.private_vulnerabilities,
+                component.recommended_version,
+                component.vulnerable_dependencies && component.vulnerable_dependencies.length > 0 ? component.vulnerable_dependencies : null,
+                publicSecurityDetails,
+                privateSecurityDetails
             );
         }
         return null;
@@ -846,6 +886,56 @@ export class CardDetailsComponent implements OnInit, OnChanges {
             return securityDetails;
         }
         return null;
+    }
+
+    private getComponenVulnerabilityInformation(vulnerabilities: Array<VulnerabilitiesModel>) {
+        let cveList: Array<string> = [];
+        let securityDetails = new MSecurityDetails();
+
+        let maxSecurityIssues: number = 0;
+        let maxSecurityIssuesID: string = null;
+
+        if (vulnerabilities.length > 0) {
+
+            vulnerabilities.forEach(vulnerability => {
+                if (vulnerability.cvss > maxSecurityIssues) {
+                    maxSecurityIssues = vulnerability.cvss;
+                    maxSecurityIssuesID = vulnerability.id;
+                }
+
+                console.log(vulnerability.cve_ids);
+                vulnerability.cve_ids.forEach(cve => {
+                    cveList.push(cve);
+                });
+                
+            });
+
+            if (cveList && cveList.length > 0) {
+                securityDetails.cveList = cveList;
+                securityDetails.totalIssues = cveList.length;
+            }
+
+            if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
+                securityDetails.highestIssue = new MSecurityIssue(
+                    maxSecurityIssues + '',
+                    maxSecurityIssuesID
+                );
+            }
+
+            if (maxSecurityIssues) {
+                securityDetails.progressReport = new MProgressMeter(
+                    Number(maxSecurityIssues) + '/10',
+                    Number(maxSecurityIssues),
+                    Number(maxSecurityIssues) >= 7 ? '#d1011c' : 'ORANGE',
+                    '',
+                    Number(maxSecurityIssues) * 10
+                );
+            }
+
+            return securityDetails;
+        }
+        return null;
+
     }
 
     private getComponentSecurity(component: ComponentInformationModel): MSecurityDetails {
@@ -1025,77 +1115,77 @@ export class CardDetailsComponent implements OnInit, OnChanges {
         return headers;
     }
 
-    // mComponentDetails->McomponentInformation
-    private createDictionary(report: ResultInformationModel, whatCard: string): Object {
-        if (whatCard === 'security') {
-            let components: Array<ComponentInformationModel> = null;
-            if (report.user_stack_info
-                && report.user_stack_info.analyzed_dependencies
-                && report.user_stack_info.analyzed_dependencies.length > 0) {
-                components = report.user_stack_info.analyzed_dependencies;
-            }
+    // mComponentDetails->McomponentInformation commented
+    // private createDictionary(report: ResultInformationModel, whatCard: string): Object {
+    //     if (whatCard === 'security') {
+    //         let components: Array<ComponentInformationModel> = null;
+    //         if (report.user_stack_info
+    //             && report.user_stack_info.analyzed_dependencies
+    //             && report.user_stack_info.analyzed_dependencies.length > 0) {
+    //             components = report.user_stack_info.analyzed_dependencies;
+    //         }
 
-            const depDict = new Object();
-            const transitiveDeps = new Array();
-            components.forEach(dep => {
-                if (!dep.hasOwnProperty('transitive')) {
-                    let uidofDep = dep.name + "-" + dep.version;
-                    depDict[uidofDep] = null;
-                }
-            });
+    //         const depDict = new Object();
+    //         const transitiveDeps = new Array();
+    //         components.forEach(dep => {
+    //             if (!dep.hasOwnProperty('transitive')) {
+    //                 let uidofDep = dep.name + "-" + dep.version;
+    //                 depDict[uidofDep] = null;
+    //             }
+    //         });
 
-            components.forEach(dep => {
-                if (dep.hasOwnProperty('transitive')) {
-                    transitiveDeps.push(dep);
-                }
-            });
+    //         components.forEach(dep => {
+    //             if (dep.hasOwnProperty('transitive')) {
+    //                 transitiveDeps.push(dep);
+    //             }
+    //         });
 
-            transitiveDeps.forEach(dep => {
+    //         transitiveDeps.forEach(dep => {
 
-                let tempDep = { ...dep };
-                tempDep.transitive = null;
+    //             let tempDep = { ...dep };
+    //             tempDep.transitive = null;
 
-                if (dep.transitive && dep.transitive.isTransitive) {
-                    let affectedDirectDeps = dep.transitive.affected_direct_deps;
+    //             if (dep.transitive && dep.transitive.isTransitive) {
+    //                 let affectedDirectDeps = dep.transitive.affected_direct_deps;
 
-                    affectedDirectDeps.forEach(dirDep => {
-                        let uidDirDep = dirDep.package + "-" + dirDep.version;
+    //                 affectedDirectDeps.forEach(dirDep => {
+    //                     let uidDirDep = dirDep.package + "-" + dirDep.version;
 
-                        if (depDict[uidDirDep] == null) {
-                            depDict[uidDirDep] = [new MComponentDetails(
-                                this.getComponentInformation(tempDep),
-                                null)]
-                        } else {
-                            depDict[uidDirDep].push(new MComponentDetails(
-                                this.getComponentInformation(tempDep),
-                                null));
-                        }
+    //                     if (depDict[uidDirDep] == null) {
+    //                         depDict[uidDirDep] = [new MComponentDetails(
+    //                             this.getComponentInformation(tempDep),
+    //                             null)]
+    //                     } else {
+    //                         depDict[uidDirDep].push(new MComponentDetails(
+    //                             this.getComponentInformation(tempDep),
+    //                             null));
+    //                     }
 
-                    });
-                }
-            });
+    //                 });
+    //             }
+    //         });
 
 
-            const directDependenciesWithTransitveDetailsObj = new Object();
+    //         const directDependenciesWithTransitveDetailsObj = new Object();
 
-            for (var key of Object.keys(depDict)) {
-                if (depDict[key] != null) {
-                    directDependenciesWithTransitveDetailsObj[key] = depDict[key];
-                }
-            }
+    //         for (var key of Object.keys(depDict)) {
+    //             if (depDict[key] != null) {
+    //                 directDependenciesWithTransitveDetailsObj[key] = depDict[key];
+    //             }
+    //         }
 
-            return directDependenciesWithTransitveDetailsObj;
+    //         return directDependenciesWithTransitveDetailsObj;
 
-        } else {
-            return null;
-        }
-    }
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     private paint(): void {
         this.tabs = [];
         if (this.report && this.whatCard) {
             console.log(this.report, this.whatCard);
-            this.dictionary = this.createDictionary(this.report, this.whatCard);
+            // this.dictionary = this.createDictionary(this.report, this.whatCard); commented
             let reports: Array<MReportInformation> = this.getUIReportInformations(this.whatCard);
             this.details = new MCardDetails();
             let { title, description } = this.getTitleAndDescription(this.whatCard);

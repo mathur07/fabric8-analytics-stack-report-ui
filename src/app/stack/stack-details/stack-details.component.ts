@@ -238,7 +238,7 @@ export class StackDetailsComponent implements OnChanges {
      */
     private getBaseUrl(url: string): string {
         if (url && url !== '') {
-            let splitter: string = 'api/v1';
+            let splitter: string = 'api/v2';
             return url.indexOf(splitter) !== -1 ? url.split(splitter)[0] : '';
         }
         return '';
@@ -390,6 +390,9 @@ export class StackDetailsComponent implements OnChanges {
                             }
 
                             this.subPolling = analysis.subscribe((data) => {
+
+                                console.log("data",data );
+                                
                                 this.responseData = data;
                             },
                                 error => {

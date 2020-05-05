@@ -30,7 +30,7 @@ export class RecommendationsModel {
 
 export class ComponentInformationModel {
     code_metrics: any; // Ignored from strict typing as this is of least importance commented
-    dependencies: Array<any>; 
+    dependencies: Array<any>;
     ecosystem: string;
     github: GithubModel;
     latest_version: string;
@@ -50,21 +50,22 @@ export class ComponentInformationModel {
     public_vulnerabilities: Array<VulnerabilitiesModel>;
     public_vulnerabilities_count: number;
     recommended_version: string;
-    url: Array<String>;
-    vulnerable_dependencies: any; // commented
+    url: Array<string>;
+    vulnerable_dependencies: Array<any>; // commented
+    allTransitiveDependencies?: Array<any>;
 
 }
 
 
 export class VulnerabilitiesModel {
-    cve_ids: Array<String>;
+    cve_ids: Array<string>;
     cvss: number;
     cvss_v3: string;
-    cwes: Array<String>;
-    description: String;
+    cwes: Array<string>;
+    description: string;
     exploit: string;
     fixable: boolean;
-    fixed_in: Array<String>;
+    fixed_in: Array<string>;
     id: string;
     malicious: boolean;
     patch_exists: boolean;

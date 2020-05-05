@@ -150,7 +150,15 @@ export class MComponentInformation {
         public workItem = new MWorkItem(),
         public transitive?: any,
         public allTransitiveDependencies?: Array<MComponentDetails>,
-        public transitiveInfo?: MReportInformation
+        public transitiveInfo?: MReportInformation,
+        public dependencies?: Array<any>,
+        public url?: Array<string>,
+        public public_vulnerabilities?: any,
+        public private_vulnerabilities?: any,
+        public recommended_version?: string,
+        public vulnerable_dependencies?: Array<MComponentDetails>,
+        public publicSecurityDetails:MSecurityDetails = null,
+        public privateSecurityDetails:MSecurityDetails = null
     ) { }
 }
 
