@@ -121,7 +121,10 @@ export class CardDetailsComponent implements OnChanges {
         if (component) {
             switch (cardType) {
                 case 'security':
-                    processFlag = (component.securityDetails && component.securityDetails.totalIssues > 0) || (component.allTransitiveDependencies && component.allTransitiveDependencies.length > 0);
+                    processFlag = (component.securityDetails && component.securityDetails.totalIssues > 0) ||
+                        (component.allTransitiveDependencies && component.allTransitiveDependencies.length > 0) ||
+                        (component.publicSecurityDetails && component.publicSecurityDetails.totalIssues > 0) ||
+                        (component.privateSecurityDetails && component.privateSecurityDetails.totalIssues > 0)
                     break;
                 case 'insights':
                     processFlag = component.isUsageOutlier;
@@ -242,6 +245,30 @@ export class CardDetailsComponent implements OnChanges {
         return action;
     }
 
+    private filterDependenciesWithKnownVulnerabilities(componentDetails: Array<MComponentDetails>): Array<MComponentDetails> {
+        let dependenciesWithKnownVulnerabilities: Array<MComponentDetails> = [];
+        if (componentDetails && componentDetails.length > 0) {
+            componentDetails.forEach(component => {
+                if (component.componentInformation.public_vulnerabilities && component.componentInformation.public_vulnerabilities.length > 0) {
+                    dependenciesWithKnownVulnerabilities.push(component);
+                }
+            });
+        }
+        return dependenciesWithKnownVulnerabilities;
+    }
+
+    private filterDependencieswithSecurityAdvisories(componentDetails: Array<MComponentDetails>): Array<MComponentDetails> {
+        let dependencieswithSecurityAdvisories: Array<MComponentDetails> = [];
+        if (componentDetails && componentDetails.length > 0) {
+            componentDetails.forEach(component => {
+                if (component.componentInformation.private_vulnerabilities && component.componentInformation.private_vulnerabilities.length > 0) {
+                    dependencieswithSecurityAdvisories.push(component);
+                }
+            });
+        }
+        return dependencieswithSecurityAdvisories;
+    }
+
     private getUIReportInformations(cardType: string): Array<MReportInformation> {
         let reportInformations: Array<MReportInformation> = [];
         let componentDetails: Array<MComponentDetails> = [];
@@ -276,16 +303,9 @@ export class CardDetailsComponent implements OnChanges {
             });
         }
 
-        console.log("components ====>>", components);
-
         if (components) {
-
             components.forEach((component: ComponentInformationModel) => {
-
                 componentInformation = this.getComponentInformation(component);
-
-                console.log("componentInformation======>>>", componentInformation);
-
                 if (this.canInclude(cardType, componentInformation)) {
                     componentInformation.action = this.decideAction(componentInformation);
                     componentDetails.push(new MComponentDetails(
@@ -338,9 +358,8 @@ export class CardDetailsComponent implements OnChanges {
                 genericReport.name = 'Security Issues';
                 // reportInformations.push(genericReport);
 
-                const effectedDirects: Array<MComponentDetails> = this.getDirectDependencySecurityDetails(genericReport.componentDetails);
-
-                effectedDirects.forEach(element => {
+                const dependenciesWithKnownVulnerabilities: Array<MComponentDetails> = this.filterDependenciesWithKnownVulnerabilities(genericReport.componentDetails);
+                dependenciesWithKnownVulnerabilities.forEach(element => {
                     if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
                         element.componentInformation.transitiveInfo = new MReportInformation(
                             'comp-direct-security',
@@ -352,28 +371,51 @@ export class CardDetailsComponent implements OnChanges {
 
                     }
                 });
-
                 reportInformations.push(new MReportInformation(
                     'comp-direct-security',
-                    'Dependencies with Public Vulnerabilities',
+                    'Dependencies with Known Vulnerabilities',
                     'component',
                     this.fillColumnHeaders(cardType, 2),
-                    effectedDirects
+                    dependenciesWithKnownVulnerabilities
                 ));
-                const effectedTransitives: Array<MComponentDetails> = this.getTransitiveDependencySecurityDetails(genericReport.componentDetails);
-                if (effectedTransitives && effectedTransitives.length > 0) {
-                    // filter-out transitives which is also listed as direct
-                    const effectedPureTransitives = effectedTransitives.filter(t => !effectedDirects.find(d => (d.componentInformation.name === t.componentInformation.name && d.componentInformation.currentVersion === t.componentInformation.currentVersion)));
-                    if (effectedPureTransitives.length > 0) {
-                        reportInformations.push(new MReportInformation(
-                            'comp-trans-security',
-                            'Dependencies with Private Vulnerabilities',
+
+                const dependencieswithSecurityAdvisories: Array<MComponentDetails> = this.filterDependencieswithSecurityAdvisories(genericReport.componentDetails);
+                dependencieswithSecurityAdvisories.forEach(element => {
+                    if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
+                        element.componentInformation.transitiveInfo = new MReportInformation(
+                            'comp-direct-security',
+                            'Dependencies with Security Advisories ',
                             'component',
-                            this.fillColumnHeaders(cardType, 3),
-                            effectedPureTransitives
-                        ));
+                            this.fillColumnHeaders(cardType, 2),
+                            element.componentInformation.allTransitiveDependencies
+                        )
+
                     }
-                }
+                });
+                reportInformations.push(new MReportInformation(
+                    'comp-direct-security',
+                    'Dependencies with Security Advisories',
+                    'component',
+                    this.fillColumnHeaders(cardType, 3),
+                    dependencieswithSecurityAdvisories
+                ));
+
+
+
+                // const effectedTransitives: Array<MComponentDetails> = this.getTransitiveDependencySecurityDetails(genericReport.componentDetails);
+                // if (effectedTransitives && effectedTransitives.length > 0) {
+                //     // filter-out transitives which is also listed as direct
+                //     const effectedPureTransitives = effectedTransitives.filter(t => !effectedDirects.find(d => (d.componentInformation.name === t.componentInformation.name && d.componentInformation.currentVersion === t.componentInformation.currentVersion)));
+                //     if (effectedPureTransitives.length > 0) {
+                //         reportInformations.push(new MReportInformation(
+                //             'comp-trans-security',
+                //             'Dependencies with Private Vulnerabilities',
+                //             'component',
+                //             this.fillColumnHeaders(cardType, 3),
+                //             effectedPureTransitives
+                //         ));
+                //     }
+                // }
                 break;
             case 'insights':
                 compDetails = this.getCompanionComponentDetails();
@@ -638,8 +680,6 @@ export class CardDetailsComponent implements OnChanges {
             // let securityDetails: MSecurityDetails = this.getComponentSecurity(component);
             let publicSecurityDetails: MSecurityDetails = this.getComponenVulnerabilityInformation(component.public_vulnerabilities);
             let privateSecurityDetails: MSecurityDetails = this.getComponenVulnerabilityInformation(component.private_vulnerabilities);
-            console.log("publicSecurityDetails", publicSecurityDetails);
-
             let securityDetails: MSecurityDetails = publicSecurityDetails;
             let recommendation: RecommendationsModel = this.report.recommendation;
             let recommendationInformation: MRecommendationInformation = null;
@@ -896,6 +936,7 @@ export class CardDetailsComponent implements OnChanges {
         let maxSecurityIssuesID: string = null;
 
         if (vulnerabilities.length > 0) {
+            securityDetails.totalIssues = vulnerabilities.length;
 
             vulnerabilities.forEach(vulnerability => {
                 if (vulnerability.cvss > maxSecurityIssues) {
@@ -903,16 +944,14 @@ export class CardDetailsComponent implements OnChanges {
                     maxSecurityIssuesID = vulnerability.id;
                 }
 
-                console.log(vulnerability.cve_ids);
                 vulnerability.cve_ids.forEach(cve => {
                     cveList.push(cve);
                 });
-                
+
             });
 
             if (cveList && cveList.length > 0) {
                 securityDetails.cveList = cveList;
-                securityDetails.totalIssues = cveList.length;
             }
 
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
@@ -967,7 +1006,7 @@ export class CardDetailsComponent implements OnChanges {
                 ));
                 headers.push(new MComponentHeaderColumn(
                     'cveCount',
-                    'No. of CVE(s)',
+                    'No. of Vulnerabilities',
                     'float-left small'
                 ));
                 headers.push(new MComponentHeaderColumn(
@@ -977,7 +1016,7 @@ export class CardDetailsComponent implements OnChanges {
                 ));
                 headers.push(new MComponentHeaderColumn(
                     'cveIdOfH',
-                    'CVE ID of highest CVSS score',
+                    'Highest Vulnerability Severity',
                     'float-left medium'
                 ));
                 // headers.push(new MComponentHeaderColumn(

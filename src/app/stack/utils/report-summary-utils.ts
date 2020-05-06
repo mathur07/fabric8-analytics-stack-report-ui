@@ -159,7 +159,7 @@ export class ReportSummaryUtils {
             // hardcoded
             let totalVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             totalVulnerabilities.infoText = "Total Vulnerabilities";
-            totalVulnerabilities.infoValue = privateVulnerabilitiesCount + privateVulnerabilitiesCount;
+            totalVulnerabilities.infoValue = publicVulnerabilitiesCount + privateVulnerabilitiesCount;
             securityCard.reportSummaryContent.infoEntries.push(
                 totalVulnerabilities
             );
@@ -182,7 +182,7 @@ export class ReportSummaryUtils {
             let vulnerableDependencies: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             vulnerableDependencies.infoText = "Vulnerable Dependencies";
             // totaldependenciesEffectedEntry.infoValue = dependenciesEffected;
-            vulnerableDependencies.infoValue = 24;
+            vulnerableDependencies.infoValue = analyzedDependencies.length;
             securityCard.reportSummaryContent.infoEntries.push(
                 vulnerableDependencies
             );
