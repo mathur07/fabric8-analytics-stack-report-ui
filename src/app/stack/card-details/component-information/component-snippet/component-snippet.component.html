@@ -22,12 +22,12 @@
             <div
                 [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
                 <div class="col-xs-6">
-                    <p class="info-head">Current Version</p>
-                    <p [innerText]="component?.currentVersion"></p>
+                    <p>Current Version</p>
+                    <p class="info-head" [innerText]="component?.currentVersion"></p>
                 </div>
                 <div class="col-xs-6">
-                    <p class="info-head">Latest Version</p>
-                    <p [innerText]="component?.latestVersion"></p>
+                    <p>Latest Version</p>
+                    <p class="info-head" [innerText]="component?.latestVersion"></p>
                 </div>
             </div>
         </div>
@@ -36,12 +36,12 @@
                 [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
                 <div [ngClass]="{'col-xs-6': component?.currentVersion !== '-----'}"
                     *ngIf="component?.currentVersion !== '-----'">
-                    <p class="info-head">Current Version</p>
-                    <p [innerText]="component?.currentVersion"></p>
+                    <p>Current Version</p>
+                    <p class="info-head" [innerText]="component?.currentVersion"></p>
                 </div>
                 <div [ngClass]="{'col-xs-12': component?.currentVersion === '-----'}">
-                    <p class="info-head">Recommended Version</p>
-                    <p [innerText]="component?.latestVersion"></p>
+                    <p>Recommended Version</p>
+                    <p class="info-head" [innerText]="component?.latestVersion"></p>
                 </div>
             </div>
         </ng-template>
@@ -54,8 +54,8 @@
             </div>
             <div class="info-container left">
                 <div *ngFor="let github of githubEntries" class="side">
-                    <p class="info-head" [innerText]="github.key"></p>
-                    <p [innerText]="github.value || '-----'"></p>
+                    <p [innerText]="github.key"></p>
+                    <p class="info-head" [innerText]="github.value || '-----'"></p>
                 </div>
             </div>
         </div>
@@ -81,12 +81,22 @@
             </div>
         </div>
     </div>
+
     <div class="common-table component-tags">
         <div class="common-wrapper"
             *ngIf="component?.securityDetails?.cveList && component?.securityDetails?.cveList?.length > 0">
-            <span class="info-head">CVE ID(s):</span>
-            <span class="common-container tags-container">
-                <span [innerText]="cve" *ngFor="let cve of component?.securityDetails?.cveList"></span>
+            <span class="info-head">Vulnerabilities:</span>
+            <span class="common-container">
+                <span *ngFor="let cve of component?.public_vulnerabilities">
+                    <span class="severity"
+                        [ngClass]="{'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
+                        <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
+                        <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
+                        <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
+                        <span [innerText]="cve.severity"></span>
+                    </span>
+                    <span class="name" [innerText]="cve.title"></span>
+                </span>
             </span>
         </div>
     </div>

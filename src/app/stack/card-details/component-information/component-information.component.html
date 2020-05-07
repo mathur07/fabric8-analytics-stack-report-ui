@@ -12,7 +12,7 @@
                         </div>
                         <div *ngSwitchCase="'component'">
                             <!-- Component Names -->
-                            <span [innerText]="comp?.name"></span>
+                            <span class="name" [innerText]="comp?.name"></span>
                             <span class="recommendation-reason" [tooltip]="component?.reason"
                                 *ngIf="component?.reason && type === 'recommendation' && comp?.name">Why this
                                 dependency?</span>
@@ -32,8 +32,8 @@
                         </div>
                         <div *ngSwitchCase="'cveIdOfH'">
                             <!-- cveIdOfHeighest CVSS -->
-                            <span *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
-                            <span *ngIf="comp?.hasSecurityIssue"
+                            <span class="name" *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
+                            <span class="name" *ngIf="comp?.hasSecurityIssue"
                                 [innerText]="comp?.securityDetails && comp?.securityDetails?.highestIssue?.cve"></span>
                         </div>
                         <!-- Action -->

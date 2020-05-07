@@ -16,7 +16,6 @@
             <tab *ngFor="let tabz of tabs" (select)="tabz.active = true"
                 [customClass]="tabz.active ? 'active-menu-item' : 'inactive-menu'">
                 <ng-template tabHeading>
-                    <span *ngIf="tabz?.title === 'Dependencies with Private Vulnerabilities'" class="fa fa-lock"></span>
                     <span [innerHtml]="tabz.title"></span>
                     <span [innerHtml]="tabz?.content?.componentDetails?.length || '0'" class="badge"></span>
                 </ng-template>

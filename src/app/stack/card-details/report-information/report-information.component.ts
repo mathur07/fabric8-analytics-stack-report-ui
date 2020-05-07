@@ -30,7 +30,6 @@ export class ReportInformationComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        // console.log("this.report============>>>>>>>", this.report);
 
         let summary: any = changes['report'];
         if (summary) {
@@ -41,8 +40,6 @@ export class ReportInformationComponent implements OnInit, OnChanges {
 
     public handleAccordion(event: MouseEvent, componentDetail: MComponentDetails): void {
 
-        console.log("event   =======>>>>", event);
-        console.log("componentDetail =======>>>", componentDetail);
         event.stopPropagation()
 
         let element = componentDetail.componentInformation;
