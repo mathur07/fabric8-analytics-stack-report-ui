@@ -157,8 +157,9 @@ export class MComponentInformation {
         public private_vulnerabilities?: any,
         public recommended_version?: string,
         public vulnerable_dependencies?: Array<MComponentDetails>,
-        public publicSecurityDetails:MSecurityDetails = null,
-        public privateSecurityDetails:MSecurityDetails = null
+        public publicSecurityDetails: MSecurityDetails = null,
+        public privateSecurityDetails: MSecurityDetails = null,
+        public registrationStatus: string = 'freetier'
     ) { }
 }
 
@@ -220,7 +221,8 @@ export class MReportInformation {
         public name: string,
         public type: string,
         public headers: Array<MComponentHeaderColumn>,
-        public componentDetails: Array<any>
+        public componentDetails: Array<any>,
+        public tabType?: string
     ) { }
 }
 

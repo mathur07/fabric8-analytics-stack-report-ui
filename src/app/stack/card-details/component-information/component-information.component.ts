@@ -28,6 +28,7 @@ export class ComponentInformationComponent implements OnInit, OnChanges {
     @Input() serial: number;
     @Input() type: string;
     @Input() repoInfo: any;
+    @Input() tabType: string;
     public comp: MComponentInformation;
 
     constructor(

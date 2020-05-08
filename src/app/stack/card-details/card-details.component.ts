@@ -64,6 +64,7 @@ export class CardDetailsComponent implements OnChanges {
     public whatCard: string;
     public details: MCardDetails = null;
     public dictionary: Object = null;
+    public registrationStatus: string;
 
     public tabs: Array<MTab> = [];
 
@@ -363,10 +364,11 @@ export class CardDetailsComponent implements OnChanges {
                     if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
                         element.componentInformation.transitiveInfo = new MReportInformation(
                             'comp-direct-security',
-                            'Dependencies with Public Vulnerabilities',
+                            'Dependencies with Known Vulnerabilities',
                             'component',
                             this.fillColumnHeaders(cardType, 2),
-                            element.componentInformation.allTransitiveDependencies
+                            element.componentInformation.allTransitiveDependencies,
+                            'public'
                         )
 
                     }
@@ -376,7 +378,8 @@ export class CardDetailsComponent implements OnChanges {
                     'Dependencies with Known Vulnerabilities',
                     'component',
                     this.fillColumnHeaders(cardType, 2),
-                    dependenciesWithKnownVulnerabilities
+                    dependenciesWithKnownVulnerabilities,
+                    'public'
                 ));
 
                 const dependencieswithSecurityAdvisories: Array<MComponentDetails> = this.filterDependencieswithSecurityAdvisories(genericReport.componentDetails);
@@ -387,7 +390,8 @@ export class CardDetailsComponent implements OnChanges {
                             'Dependencies with Security Advisories ',
                             'component',
                             this.fillColumnHeaders(cardType, 2),
-                            element.componentInformation.allTransitiveDependencies
+                            element.componentInformation.allTransitiveDependencies,
+                            'private'
                         )
 
                     }
@@ -397,7 +401,8 @@ export class CardDetailsComponent implements OnChanges {
                     'Dependencies with Security Advisories',
                     'component',
                     this.fillColumnHeaders(cardType, 3),
-                    dependencieswithSecurityAdvisories
+                    dependencieswithSecurityAdvisories,
+                    'private'
                 ));
 
 
@@ -678,8 +683,8 @@ export class CardDetailsComponent implements OnChanges {
             let hasLicenseIssue: boolean = this.hasLicenseIssue(component);
             let isUsageOutlier: boolean = false;
             // let securityDetails: MSecurityDetails = this.getComponentSecurity(component);
-            let publicSecurityDetails: MSecurityDetails = this.getComponenVulnerabilityInformation(component.public_vulnerabilities);
-            let privateSecurityDetails: MSecurityDetails = this.getComponenVulnerabilityInformation(component.private_vulnerabilities);
+            let publicSecurityDetails: MSecurityDetails = this.getPublicVulnerabilityInformation(component.public_vulnerabilities, this.registrationStatus);
+            let privateSecurityDetails: MSecurityDetails = this.getPrivateVulnerabilityInformation(component.private_vulnerabilities, this.registrationStatus);
             let securityDetails: MSecurityDetails = publicSecurityDetails;
             let recommendation: RecommendationsModel = this.report.recommendation;
             let recommendationInformation: MRecommendationInformation = null;
@@ -749,7 +754,7 @@ export class CardDetailsComponent implements OnChanges {
                 currentVersion,
                 latestVersion,
                 securityDetails,
-                securityDetails !== null,
+                publicSecurityDetails !== null || privateSecurityDetails !== null,
                 isUsageOutlier,
                 hasLicenseIssue,
                 component.licenses,
@@ -782,7 +787,8 @@ export class CardDetailsComponent implements OnChanges {
                 component.recommended_version,
                 component.vulnerable_dependencies && component.vulnerable_dependencies.length > 0 ? component.vulnerable_dependencies : null,
                 publicSecurityDetails,
-                privateSecurityDetails
+                privateSecurityDetails,
+                this.registrationStatus
             );
         }
         return null;
@@ -928,7 +934,7 @@ export class CardDetailsComponent implements OnChanges {
         return null;
     }
 
-    private getComponenVulnerabilityInformation(vulnerabilities: Array<VulnerabilitiesModel>) {
+    private getPublicVulnerabilityInformation(vulnerabilities: Array<VulnerabilitiesModel>, registrationStatus: string) {
         let cveList: Array<string> = [];
         let securityDetails = new MSecurityDetails();
 
@@ -952,6 +958,60 @@ export class CardDetailsComponent implements OnChanges {
 
             if (cveList && cveList.length > 0) {
                 securityDetails.cveList = cveList;
+            }
+
+            if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
+                securityDetails.highestIssue = new MSecurityIssue(
+                    maxSecurityIssues + '',
+                    maxSecurityIssuesID
+                );
+            }
+
+            if (maxSecurityIssues) {
+                securityDetails.progressReport = new MProgressMeter(
+                    Number(maxSecurityIssues) + '/10',
+                    Number(maxSecurityIssues),
+                    Number(maxSecurityIssues) >= 7 ? '#d1011c' : 'ORANGE',
+                    '',
+                    Number(maxSecurityIssues) * 10
+                );
+            }
+
+            return securityDetails;
+        }
+        return null;
+
+    }
+
+    private getPrivateVulnerabilityInformation(vulnerabilities: Array<VulnerabilitiesModel>, registrationStatus: string) {
+        let cveList: Array<string> = [];
+        let securityDetails = new MSecurityDetails();
+
+        let maxSecurityIssues: number = 0;
+        let maxSecurityIssuesID: string = null;
+
+        if (vulnerabilities.length > 0) {
+            securityDetails.totalIssues = vulnerabilities.length;
+
+            vulnerabilities.forEach(vulnerability => {
+                if (vulnerability.cvss > maxSecurityIssues) {
+                    maxSecurityIssues = vulnerability.cvss;
+                    maxSecurityIssuesID = vulnerability.id;
+                }
+
+                vulnerability.cve_ids.forEach(cve => {
+                    cveList.push(cve);
+                });
+
+            });
+
+            if (cveList && cveList.length > 0) {
+                securityDetails.cveList = cveList;
+            }
+
+
+            if (registrationStatus == 'freetier') {
+                maxSecurityIssuesID = 'Sign in to snyk to view'
             }
 
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
@@ -1225,6 +1285,7 @@ export class CardDetailsComponent implements OnChanges {
         if (this.report && this.whatCard) {
             console.log(this.report, this.whatCard);
             // this.dictionary = this.createDictionary(this.report, this.whatCard); commented
+            this.registrationStatus = this.report.user_stack_info.registration_status
             let reports: Array<MReportInformation> = this.getUIReportInformations(this.whatCard);
             this.details = new MCardDetails();
             let { title, description } = this.getTitleAndDescription(this.whatCard);

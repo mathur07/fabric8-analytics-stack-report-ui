@@ -20,22 +20,33 @@
                                 <reco-name [name]="comp?.name" [reason]="comp?.recommendation?.reason" *ngIf="comp?.recommendation && (comp?.recommendation?.type === 'companion')"></reco-name>
                             -->
                         </div>
+
                         <div *ngSwitchCase="'cveCount'">
                             <!-- cveCount -->
-                            <span [innerText]="comp?.securityDetails && comp?.securityDetails.totalIssues || 0"></span>
+                            <span *ngIf="tabType == 'private'"
+                                [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails.totalIssues || 0"></span>
+                            <span *ngIf="tabType == 'public'"
+                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails.totalIssues || 0"></span>
                         </div>
                         <div *ngSwitchCase="'highestCVSS'">
                             <!-- highestCVSS -->
                             <span *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
-                            <ana-progress-meter *ngIf="comp?.hasSecurityIssue"
-                                [config]="comp?.securityDetails?.progressReport"></ana-progress-meter>
+                            <ana-progress-meter *ngIf="comp?.hasSecurityIssue && tabType == 'private'"
+                                [config]="comp?.privateSecurityDetails?.progressReport"></ana-progress-meter>
+                            <ana-progress-meter *ngIf="comp?.hasSecurityIssue && tabType == 'public'"
+                                [config]="comp?.publicSecurityDetails?.progressReport"></ana-progress-meter>
                         </div>
+
                         <div *ngSwitchCase="'cveIdOfH'">
                             <!-- cveIdOfHeighest CVSS -->
-                            <span class="name" *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
-                            <span class="name" *ngIf="comp?.hasSecurityIssue"
-                                [innerText]="comp?.securityDetails && comp?.securityDetails?.highestIssue?.cve"></span>
+                            <span #public class="name" *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
+
+                            <span *ngIf="comp?.hasSecurityIssue && tabType == 'private';else public" class="name"
+                                [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails?.highestIssue?.cve"></span>
+                            <span #public *ngIf="comp?.hasSecurityIssue && tabType == 'public'" class="name"
+                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails?.highestIssue?.cve"></span>
                         </div>
+
                         <!-- Action -->
                         <!-- <div *ngSwitchCase="'action'" class="action">
                             <span *ngIf="!comp?.workItem?.isWorkItemCreated" (click)="handleAction($event, comp)" [innerText]="comp?.action || '-----'" class="not-created"></span>

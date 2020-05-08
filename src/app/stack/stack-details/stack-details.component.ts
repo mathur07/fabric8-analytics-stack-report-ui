@@ -286,7 +286,17 @@ export class StackDetailsComponent implements OnChanges {
 
     private handleResponse(data: any): void {
 
-        console.log("data ==== >>1", data);
+        if (!data.hasOwnProperty('result')) {
+            let result = [];
+            result.push(data)
+            let tmpData = {
+                result: [data],
+                statusCode: data.statusCode,
+                statusText: data.statusText
+            }
+            console.log("newData===>>>", tmpData);
+            data = {...tmpData}
+        }
 
         data.result = data.result.map(element => {
             return ({
@@ -391,8 +401,8 @@ export class StackDetailsComponent implements OnChanges {
 
                             this.subPolling = analysis.subscribe((data) => {
 
-                                console.log("data",data );
-                                
+                                console.log("data", data);
+
                                 this.responseData = data;
                             },
                                 error => {
