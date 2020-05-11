@@ -2,8 +2,13 @@
     <div class="card-pf-title">
         <span [class]="title?.titleIcon" aria-hidden="true"></span>
         {{title?.titleText}}
+        <span *ngIf="title?.titleText === 'Security Issues' || title?.titleText ===  'Dependency Details'">
+            <span class="branding">Powered By</span>
+            <img src="../../../../../assets/icon/snyk-logo-monochrome.png" alt="snyk-mono" class="monologo" />
+        </span>
     </div>
-    <span [ngStyle]="{'background-color': title?.notificationIconBgColor}" class="ana-notification-icon pull-right" *ngIf="title?.notificationIcon">
+    <span [ngStyle]="{'background-color': title?.notificationIconBgColor}" class="ana-notification-icon pull-right"
+        *ngIf="title?.notificationIcon">
         <i [class]="title?.notificationIcon" aria-hidden="true"></i>
     </span>
 </div>

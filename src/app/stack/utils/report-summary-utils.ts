@@ -104,11 +104,43 @@ export class ReportSummaryUtils {
                 return true;
             });
 
+            let publicVulnerabilitiesSet = new Set();
+            let privateVulnerabilitiesSet = new Set();
 
             analyzedDependencies.forEach(element => {
-                publicVulnerabilitiesCount += element.public_vulnerabilities.length;
-                privateVulnerabilitiesCount += element.private_vulnerabilities.length;
+
+                if (element.public_vulnerabilities && element.public_vulnerabilities.length > 0) {
+                    element.public_vulnerabilities.forEach(pubDep => {
+                        publicVulnerabilitiesSet.add(pubDep)
+                    });
+                }
+                if (element.private_vulnerabilities && element.private_vulnerabilities.length > 0) {
+                    element.private_vulnerabilities.forEach(priDep => {
+                        privateVulnerabilitiesSet.add(priDep)
+                    });
+                }
+
+                if (element.vulnerable_dependencies && element.vulnerable_dependencies.length > 0) {
+
+                    element.vulnerable_dependencies.forEach(tdep => {
+                        if (tdep.public_vulnerabilities && tdep.public_vulnerabilities.length > 0) {
+                            tdep.public_vulnerabilities.forEach(transPubDep => {
+                                publicVulnerabilitiesSet.add(transPubDep)
+                            });
+                        }
+                        if (tdep.private_vulnerabilities && tdep.private_vulnerabilities.length > 0) {
+                            tdep.private_vulnerabilities.forEach(transPriDep => {
+                                privateVulnerabilitiesSet.add(transPriDep)
+                            });
+                        }
+                    });
+
+                }
+
             });
+
+            publicVulnerabilitiesCount = publicVulnerabilitiesSet.size;
+            privateVulnerabilitiesCount = privateVulnerabilitiesSet.size;
 
             for (const dep of analyzedDependencies) {
                 let allVulnerabilities = dep.public_vulnerabilities.concat(dep.private_vulnerabilities);
@@ -165,14 +197,14 @@ export class ReportSummaryUtils {
             );
 
             let publicVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
-            publicVulnerabilities.infoText = "Public Vulnerabilities";
+            publicVulnerabilities.infoText = "Known Vulnerabilities";
             publicVulnerabilities.infoValue = publicVulnerabilitiesCount;
             securityCard.reportSummaryContent.infoEntries.push(
                 publicVulnerabilities
             );
 
             let privateVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
-            privateVulnerabilities.infoText = "Private Vulnerabilities";
+            privateVulnerabilities.infoText = "Security Advisories";
             // totaldependenciesEffectedEntry.infoValue = dependenciesEffected;
             privateVulnerabilities.infoValue = privateVulnerabilitiesCount;
             securityCard.reportSummaryContent.infoEntries.push(

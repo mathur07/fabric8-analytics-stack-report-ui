@@ -1079,6 +1079,11 @@ export class CardDetailsComponent implements OnChanges {
                     'Highest Vulnerability Severity',
                     'float-left medium'
                 ));
+                headers.push(new MComponentHeaderColumn(
+                    'transCount',
+                    'Transitive Count',
+                    'float-left small'
+                ));
                 // headers.push(new MComponentHeaderColumn(
                 //     'action',
                 //     'Action',

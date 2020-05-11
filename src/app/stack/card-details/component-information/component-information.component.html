@@ -47,6 +47,14 @@
                                 [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails?.highestIssue?.cve"></span>
                         </div>
 
+                        <div *ngSwitchCase="'transCount'">
+                            <span class="transCount"
+                                *ngIf="comp?.vulnerable_dependencies && comp?.vulnerable_dependencies.length>0"
+                                [innerText]=comp?.vulnerable_dependencies.length></span>
+                            <span class="name"
+                                *ngIf="comp?.vulnerable_dependencies && comp?.vulnerable_dependencies.length==0"
+                                [innerText]=''></span>
+                        </div>
                         <!-- Action -->
                         <!-- <div *ngSwitchCase="'action'" class="action">
                             <span *ngIf="!comp?.workItem?.isWorkItemCreated" (click)="handleAction($event, comp)" [innerText]="comp?.action || '-----'" class="not-created"></span>
