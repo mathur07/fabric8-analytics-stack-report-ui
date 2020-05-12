@@ -8,7 +8,7 @@
                         <!-- Security Card -->
                         <div *ngSwitchCase="'serial'">
                             <!-- Serial Numbers -->
-                            <span [innerText]="serial + 1"></span>
+                            <span [innerText]="serial+1<10? '#0'+(serial+1):'#'+(serial+1)"></span>
                         </div>
                         <div *ngSwitchCase="'component'">
                             <!-- Component Names -->
@@ -129,9 +129,6 @@
                             <!-- Toggle -->
 
                             <div class="toggler">
-                                <i *ngIf="comp?.transitive && comp?.transitive?.isTransitive === true"
-                                    class="fa fa-lock" title="Sign up with Snyk"> </i>
-
                                 <i [ngClass]="{'fa': true, 'fa-angle-up': comp?.isOpen, 'fa-angle-down': !comp?.isOpen}"
                                     aria-hidden="true"></i>
                             </div>

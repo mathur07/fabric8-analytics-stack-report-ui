@@ -38,6 +38,8 @@ export class ReportInformationComponent implements OnInit, OnChanges {
         }
     }
 
+
+
     public handleAccordion(event: MouseEvent, componentDetail: MComponentDetails): void {
 
         event.stopPropagation()
@@ -94,6 +96,23 @@ export class ReportInformationComponent implements OnInit, OnChanges {
         }
     }
 
+
+    public handleTransitive(event: MouseEvent, componentDetail: MComponentDetails): void {
+
+        event.stopPropagation()
+        
+        let elem: HTMLElement = (<HTMLElement>event.target);
+        if (this.checkIfTransitiveToggler(elem)) {
+            
+            if (componentDetail.componentInformation) {
+                console.log("hiiiii");
+                componentDetail.componentInformation.showTransitive = !componentDetail.componentInformation.showTransitive;
+            }
+
+        }
+    }
+
+
     private checkIfClickable(elem: HTMLElement): boolean {
         if (elem && elem.classList && elem.classList.contains('toggler')) {
             return true;
@@ -101,6 +120,14 @@ export class ReportInformationComponent implements OnInit, OnChanges {
         elem = <HTMLElement>elem.parentNode;
         return (elem && elem.classList && elem.classList.contains('toggler'));
     }
+    private checkIfTransitiveToggler(elem: HTMLElement): boolean {
+        if (elem && elem.classList && elem.classList.contains('trans-dropdown')) {
+            return true;
+        }
+        elem = <HTMLElement>elem.parentNode;
+        return (elem && elem.classList && elem.classList.contains('trans-dropdown'));
+    }
+
 
     private paint(): void {
         if (this.report) {

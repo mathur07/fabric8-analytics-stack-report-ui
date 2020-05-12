@@ -56,6 +56,24 @@
         font-weight: bold;
         margin-bottom: 10px;
     }
+    .transitive-head {
+        font-weight: bold;
+        margin-bottom: 10px;
+        overflow: hidden;
+        position: relative;
+        &:after {
+            content:'';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: inline-block;
+            width: 100%;
+            margin-left: 280px;
+            margin-bottom: .8em;
+            border-top: 1px solid #9c9c9c;
+        }
+    }
     .license-container {
         span {
             margin-right: 3px;
@@ -122,6 +140,13 @@
         margin-left: .2em;
         margin-right: .6em;
         font-size: 13px;
+    }
+    .trans-dropdown {
+        cursor: pointer;
+        font-size: 18px;
+        text-align: center;
+        padding-right: 10px;
+        padding-top: 4px;
     }
     .github-osio-box {
         background: @greyBg;

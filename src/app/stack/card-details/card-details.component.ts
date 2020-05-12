@@ -366,7 +366,7 @@ export class CardDetailsComponent implements OnChanges {
                             'comp-direct-security',
                             'Dependencies with Known Vulnerabilities',
                             'component',
-                            this.fillColumnHeaders(cardType, 2),
+                            this.fillColumnHeaders(cardType, 2, true),
                             element.componentInformation.allTransitiveDependencies,
                             'public'
                         )
@@ -389,7 +389,7 @@ export class CardDetailsComponent implements OnChanges {
                             'comp-direct-security',
                             'Dependencies with Security Advisories ',
                             'component',
-                            this.fillColumnHeaders(cardType, 2),
+                            this.fillColumnHeaders(cardType, 2, true),
                             element.componentInformation.allTransitiveDependencies,
                             'private'
                         )
@@ -1049,7 +1049,7 @@ export class CardDetailsComponent implements OnChanges {
         };
     }
 
-    private fillColumnHeaders(cardType: string, tabNo: number = null): Array<MComponentHeaderColumn> {
+    private fillColumnHeaders(cardType: string, tabNo: number = null, transitive?: boolean): Array<MComponentHeaderColumn> {
         let headers: Array<MComponentHeaderColumn> = [];
 
         headers.push(new MComponentHeaderColumn(
@@ -1079,11 +1079,14 @@ export class CardDetailsComponent implements OnChanges {
                     'Highest Vulnerability Severity',
                     'float-left medium'
                 ));
-                headers.push(new MComponentHeaderColumn(
-                    'transCount',
-                    'Transitive Count',
-                    'float-left small'
-                ));
+
+                if (!transitive) {
+                    headers.push(new MComponentHeaderColumn(
+                        'transCount',
+                        'Transitive Count',
+                        'float-left small'
+                    ));
+                }
                 // headers.push(new MComponentHeaderColumn(
                 //     'action',
                 //     'Action',

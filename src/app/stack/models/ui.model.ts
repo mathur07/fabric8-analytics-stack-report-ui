@@ -159,7 +159,8 @@ export class MComponentInformation {
         public vulnerable_dependencies?: Array<MComponentDetails>,
         public publicSecurityDetails: MSecurityDetails = null,
         public privateSecurityDetails: MSecurityDetails = null,
-        public registrationStatus: string = 'freetier'
+        public registrationStatus: string = 'freetier',
+        public showTransitive : boolean = false
     ) { }
 }
 
