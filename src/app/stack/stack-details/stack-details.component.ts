@@ -286,17 +286,15 @@ export class StackDetailsComponent implements OnChanges {
 
     private handleResponse(data: any): void {
 
-        if (!data.hasOwnProperty('result')) {
-            let result = [];
-            result.push(data)
-            let tmpData = {
-                result: [data],
-                statusCode: data.statusCode,
-                statusText: data.statusText
-            }
-            console.log("newData===>>>", tmpData);
-            data = {...tmpData}
+        let result = [];
+        result.push(data)
+        let tmpData = {
+            result: [data],
+            statusCode: data.statusCode,
+            statusText: data.statusText
         }
+        console.log("newData===>>>", tmpData);
+        data = { ...tmpData }
 
         data.result = data.result.map(element => {
             return ({
