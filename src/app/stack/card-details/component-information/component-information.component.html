@@ -1,6 +1,7 @@
 <fab-toast-notification [notifications]="workItemResponse"></fab-toast-notification>
 <div class="analytics-component-information">
-    <div [ngClass]="{'card-pf card-pf-view card-pf-view-xs': true, 'active-card': comp?.isOpen}">
+    <div
+        [ngClass]="{'card-pf card-pf-view card-pf-view-xs': true, 'active-card': comp?.isOpen,'transitive-card': comp?.isOpen && comp?.allTransitiveDependencies==null}">
         <div class="card-pf-body clear-float header-group">
             <div class="main-content">
                 <div [class]="position?.className" *ngFor="let position of positions;">

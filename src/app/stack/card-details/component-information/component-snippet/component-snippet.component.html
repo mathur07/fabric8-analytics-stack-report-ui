@@ -47,7 +47,7 @@
         </ng-template>
     </ng-template>
 
-    <div *ngIf="view === 'normal'" class="github-osio-box">
+    <div *ngIf="view === 'normal' && component.allTransitiveDependencies" class="github-osio-box">
         <div class="github left">
             <div class="box-header">
                 GitHub Statistics:
@@ -81,47 +81,48 @@
             </div>
         </div>
     </div>
-
-    <div class="common-table component-tags">
-        <div class="common-wrapper"
-            *ngIf="component?.securityDetails?.cveList && component?.securityDetails?.cveList?.length > 0">
-            <span class="info-head">Vulnerabilities:</span>
-            <span class="common-container">
-                <span *ngFor="let cve of component?.public_vulnerabilities">
-                    <span class="severity"
-                        [ngClass]="{'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
-                        <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
-                        <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
-                        <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
-                        <span [innerText]="cve.severity"></span>
+    <div [ngClass]="!component.allTransitiveDependencies?'tsansitive-details':null">
+        <div class="common-table component-tags">
+            <div class="common-wrapper"
+                *ngIf="component?.securityDetails?.cveList && component?.securityDetails?.cveList?.length > 0">
+                <span class="info-head">Vulnerabilities:</span>
+                <span class="common-container">
+                    <span *ngFor="let cve of component?.public_vulnerabilities">
+                        <span class="severity"
+                            [ngClass]="{'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
+                            <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
+                            <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
+                            <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
+                            <span [innerText]="cve.severity"></span>
+                        </span>
+                        <span class="name" [innerText]="cve.title"></span>
                     </span>
-                    <span class="name" [innerText]="cve.title"></span>
                 </span>
-            </span>
+            </div>
         </div>
-    </div>
-    <div class="common-table component-licenses">
-        <div class="common-wrapper">
-            <span class="info-head">License(s) used: </span>
-            <span *ngIf="component?.licenses?.length > 0" class="common-container license-container">
-                <span [innerText]="license" *ngFor="let license of component?.licenses"></span>
-            </span>
-            <span *ngIf="component?.licenses?.length === 0" class="common-container license-container">
-                -----
-            </span>
+        <div class="common-table component-licenses">
+            <div class="common-wrapper">
+                <span class="info-head">License(s) used: </span>
+                <span *ngIf="component?.licenses?.length > 0" class="common-container license-container">
+                    <span [innerText]="license" *ngFor="let license of component?.licenses"></span>
+                </span>
+                <span *ngIf="component?.licenses?.length === 0" class="common-container license-container">
+                    -----
+                </span>
+            </div>
         </div>
-    </div>
-    <div class="common-table component-tags">
-        <div class="common-wrapper">
-            <span class="info-head">Tags:</span>
-            <span *ngIf="component?.crowdSourcing?.tags && component?.crowdSourcing?.tags?.length > 0"
-                class="common-container tags-container">
-                <span [innerText]="tag" *ngFor="let tag of component?.crowdSourcing?.tags"></span>
-            </span>
-            <span *ngIf="!component?.crowdSourcing?.tags || component?.crowdSourcing?.tags?.length === 0"
-                class="common-container tags-container">
-                -----
-            </span>
+        <div class="common-table component-tags">
+            <div class="common-wrapper">
+                <span class="info-head">Tags:</span>
+                <span *ngIf="component?.crowdSourcing?.tags && component?.crowdSourcing?.tags?.length > 0"
+                    class="common-container tags-container">
+                    <span [innerText]="tag" *ngFor="let tag of component?.crowdSourcing?.tags"></span>
+                </span>
+                <span *ngIf="!component?.crowdSourcing?.tags || component?.crowdSourcing?.tags?.length === 0"
+                    class="common-container tags-container">
+                    -----
+                </span>
+            </div>
         </div>
     </div>
     <div class="common-table component-tags"
