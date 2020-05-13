@@ -286,6 +286,8 @@ export class StackDetailsComponent implements OnChanges {
 
     private handleResponse(data: any): void {
 
+        console.log("data before filter", data);
+
         let result = [];
         result.push(data)
         let tmpData = {
@@ -394,13 +396,16 @@ export class StackDetailsComponent implements OnChanges {
                             if (counter-- === 0) {
                                 this.alive = false;
                                 this.subPolling.unsubscribe();
-                                this.handleResponse(this.responseData);
+
                             }
 
                             this.subPolling = analysis.subscribe((data) => {
 
                                 console.log("data", data);
-
+                                if (data != null) {
+                                    this.subPolling.unsubscribe();
+                                    this.handleResponse(data);
+                                }
                                 this.responseData = data;
                             },
                                 error => {
