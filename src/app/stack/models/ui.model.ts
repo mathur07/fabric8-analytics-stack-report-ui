@@ -160,7 +160,8 @@ export class MComponentInformation {
         public publicSecurityDetails: MSecurityDetails = null,
         public privateSecurityDetails: MSecurityDetails = null,
         public registrationStatus: string = 'freetier',
-        public showTransitive : boolean = false
+        public showTransitive: boolean = false,
+        public isTransitive: boolean = false,
     ) { }
 }
 

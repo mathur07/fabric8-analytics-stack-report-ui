@@ -20,8 +20,11 @@ import {
 export class ComponentSnippetComponent implements OnInit, OnChanges {
     @Input() component: MComponentInformation;
     @Input() view: string;
+    @Input() tabType: string; 
 
     public githubEntries: Array<any> = [];
+
+
 
     public githubKeys: any = {
         contributors: 'Contributors',
@@ -32,7 +35,7 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
     };
 
     public lastUpdatedGH: any = {
-        lastUpdated : 'N/A'
+        lastUpdated: 'N/A'
     };
 
     public osioKeys: any = {
@@ -48,7 +51,9 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         let summary: any = changes['component'];
         if (summary) {
-            this.component = <MComponentInformation> summary.currentValue;
+            this.component = <MComponentInformation>summary.currentValue;
+            console.log("component==>", this.component);
+
         }
         this.paint();
     }

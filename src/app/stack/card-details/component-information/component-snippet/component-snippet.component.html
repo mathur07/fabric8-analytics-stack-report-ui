@@ -18,7 +18,7 @@
         </div>
     </div>
     <ng-template #component_version>
-        <div *ngIf="!component.action || !component.allTransitiveDependencies ;else companion_component">
+        <div *ngIf="!component.action || component.isTransitive ;else companion_component">
             <div
                 [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
                 <div class="col-xs-6">
@@ -47,7 +47,7 @@
         </ng-template>
     </ng-template>
 
-    <div *ngIf="view === 'normal' && component.allTransitiveDependencies" class="github-osio-box">
+    <div *ngIf="view === 'normal' && !component.isTransitive" class="github-osio-box">
         <div class="github left">
             <div class="box-header">
                 GitHub Statistics:
@@ -81,10 +81,10 @@
             </div>
         </div>
     </div>
-    <div [ngClass]="!component.allTransitiveDependencies?'tsansitive-details':null">
+    <div [ngClass]="component.isTransitive?'tsansitive-details':null">
         <div class="common-table component-tags">
             <div class="common-wrapper"
-                *ngIf="component?.securityDetails?.cveList && component?.securityDetails?.cveList?.length > 0">
+                *ngIf="component?.registrationStatus == 'freetier' && component?.publicSecurityDetails?.cveList.length > 0 && tabType=='public'">
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
                     <span *ngFor="let cve of component?.public_vulnerabilities">
@@ -97,6 +97,48 @@
                         </span>
                         <span class="name" [innerText]="cve.title"></span>
                     </span>
+                </span>
+            </div>
+            <div class="common-wrapper"
+                *ngIf="component?.registrationStatus == 'registered' && component?.privateSecurityDetails?.cveList.length > 0 && tabType=='private'">
+                <span class="info-head">Vulnerabilities:</span>
+                <span class="common-container">
+                    <span *ngFor="let cve of component?.private_vulnerabilities">
+                        <span class="severity"
+                            [ngClass]="{'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
+                            <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
+                            <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
+                            <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
+                            <span [innerText]="cve.severity"></span>
+                        </span>
+                        <span class="name" [innerText]="cve.title"></span>
+                    </span>
+                </span>
+            </div>
+            <div class="common-wrapper"
+                *ngIf="component?.registrationStatus == 'freetier' && (component?.publicSecurityDetails?.cveList.length > 0 ||component?.privateSecurityDetails?.cveList.length > 0) && tabType=='compDetails'">
+                <span class="info-head">Vulnerabilities:</span>
+                <span class="common-container">
+                    <span *ngFor="let cve of component?.public_vulnerabilities">
+                        <span class="severity"
+                            [ngClass]="{'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
+                            <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
+                            <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
+                            <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
+                            <span [innerText]="cve.severity"></span>
+                        </span>
+                        <span class="name" [innerText]="cve.title"></span>
+                    </span>
+                    <span class="name" *ngIf="component?.privateSecurityDetails?.cveList.length>0">Sign in to snyk to view
+                        more..</span>
+                </span>
+            </div>
+            <div class="common-wrapper"
+                *ngIf="component?.registrationStatus == 'freetier' && component?.privateSecurityDetails?.cveList.length > 0 && tabType=='private'">
+                <span class="info-head">Vulnerabilities:</span>
+                <span class="common-container">
+                    <span class="name">
+                        Sign in to snyk to view</span>
                 </span>
             </div>
         </div>

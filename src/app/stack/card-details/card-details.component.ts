@@ -295,7 +295,7 @@ export class CardDetailsComponent implements OnChanges {
                     let updated_vulnerable_dependencies_array = [];
                     vulnerable_dependencies_array.forEach(element => {
                         updated_vulnerable_dependencies_array.push(new MComponentDetails(
-                            this.getComponentInformation(element),
+                            this.getComponentInformation(element,true),
                             recommendationInformation
                         ));
                     });
@@ -460,7 +460,8 @@ export class CardDetailsComponent implements OnChanges {
                     'Analyzed Direct Dependency Details',
                     'component',
                     this.fillColumnHeaders(cardType, 3),
-                    compDetails
+                    compDetails,
+                    'compDetails'
                 ));
                 /*
                 compDetails = this.getTransitiveDependencyDetails(cardType);
@@ -674,7 +675,7 @@ export class CardDetailsComponent implements OnChanges {
         return null;
     }
 
-    private getComponentInformation(component: ComponentInformationModel): MComponentInformation {
+    private getComponentInformation(component: ComponentInformationModel,isTransitive?: boolean): MComponentInformation {
         if (component) {
             let currentVersion: string = component.version;
             let latestVersion: string = component.latest_version;
@@ -788,7 +789,9 @@ export class CardDetailsComponent implements OnChanges {
                 component.vulnerable_dependencies && component.vulnerable_dependencies.length > 0 ? component.vulnerable_dependencies : null,
                 publicSecurityDetails,
                 privateSecurityDetails,
-                this.registrationStatus
+                this.registrationStatus,
+                false,
+                isTransitive
             );
         }
         return null;

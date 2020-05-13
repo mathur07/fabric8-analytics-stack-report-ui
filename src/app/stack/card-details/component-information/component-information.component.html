@@ -1,7 +1,7 @@
 <fab-toast-notification [notifications]="workItemResponse"></fab-toast-notification>
 <div class="analytics-component-information">
     <div
-        [ngClass]="{'card-pf card-pf-view card-pf-view-xs': true, 'active-card': comp?.isOpen,'transitive-card': comp?.isOpen && comp?.allTransitiveDependencies==null}">
+        [ngClass]="{'card-pf card-pf-view card-pf-view-xs': true, 'active-card': comp?.isOpen,'transitive-card': comp?.isOpen && comp?.isTransitive}">
         <div class="card-pf-body clear-float header-group">
             <div class="main-content">
                 <div [class]="position?.className" *ngFor="let position of positions;">
@@ -141,7 +141,8 @@
             <div *ngIf="comp?.isOpen" class="accordion-body">
                 <div [ngClass]="{'col-xs-12': true, 'col-md-6 common-section': comp?.recommendation, 'col-md-12': !comp?.recommendation}"
                     *ngIf="comp">
-                    <component-snippet [view]="!comp?.recommendation ? 'normal' : 'split'" [component]="comp">
+                    <component-snippet [view]="!comp?.recommendation ? 'normal' : 'split'" [component]="comp"
+                        [tabType]="tabType">
                     </component-snippet>
                 </div>
                 <div class="col-xs-12 col-md-6 recommendation-section common-section"
