@@ -253,6 +253,15 @@ export class CardDetailsComponent implements OnChanges {
                 if (component.componentInformation.public_vulnerabilities && component.componentInformation.public_vulnerabilities.length > 0) {
                     dependenciesWithKnownVulnerabilities.push(component);
                 }
+                if (component.componentInformation.allTransitiveDependencies && component.componentInformation.allTransitiveDependencies.length > 0) {
+                    component.componentInformation.allTransitiveDependencies.forEach(element => {
+                        if (element.componentInformation.public_vulnerabilities && element.componentInformation.public_vulnerabilities.length > 0) {
+                            if (dependenciesWithKnownVulnerabilities.indexOf(component) === -1)
+                                dependenciesWithKnownVulnerabilities.push(component)
+                        }
+                    });
+
+                }
             });
         }
         return dependenciesWithKnownVulnerabilities;
@@ -264,6 +273,14 @@ export class CardDetailsComponent implements OnChanges {
             componentDetails.forEach(component => {
                 if (component.componentInformation.private_vulnerabilities && component.componentInformation.private_vulnerabilities.length > 0) {
                     dependencieswithSecurityAdvisories.push(component);
+                }
+                if (component.componentInformation.allTransitiveDependencies && component.componentInformation.allTransitiveDependencies.length > 0) {
+                    component.componentInformation.allTransitiveDependencies.forEach(element => {
+                        if (element.componentInformation.private_vulnerabilities && element.componentInformation.private_vulnerabilities.length > 0) {
+                            if (dependencieswithSecurityAdvisories.indexOf(component) === -1)
+                                dependencieswithSecurityAdvisories.push(component)
+                        }
+                    });
                 }
             });
         }
@@ -295,7 +312,7 @@ export class CardDetailsComponent implements OnChanges {
                     let updated_vulnerable_dependencies_array = [];
                     vulnerable_dependencies_array.forEach(element => {
                         updated_vulnerable_dependencies_array.push(new MComponentDetails(
-                            this.getComponentInformation(element,true),
+                            this.getComponentInformation(element, true),
                             recommendationInformation
                         ));
                     });
@@ -316,33 +333,6 @@ export class CardDetailsComponent implements OnChanges {
                 }
             });
         }
-
-        // console.log("componentDetails====>>", componentDetails);
-
-        // if (components) {
-        //     // const dependenciesWithTransitve = this.dictionary
-
-        //     components.forEach((component: ComponentInformationModel) => {
-
-        //         let allTransitiveDependencies: Array<MComponentDetails> = null;
-
-        //         if (cardType == 'security' && component.vulnerable_dependencies.length) {
-        //             // allTransitiveDependencies = dependenciesWithTransitve[component.name + "-" + component.version];
-        //             componentInformation = this.getComponentInformation(component, allTransitiveDependencies);
-        //         } else {
-
-        //             componentInformation = this.getComponentInformation(component);
-        //         }
-
-        //         if (this.canInclude(cardType, componentInformation)) {
-        //             componentInformation.action = this.decideAction(componentInformation);
-        //             componentDetails.push(new MComponentDetails(
-        //                 componentInformation,
-        //                 recommendationInformation
-        //             ));
-        //         }
-        //     });
-        // }
 
         let genericReport: MReportInformation = new MReportInformation(
             null,
@@ -404,23 +394,6 @@ export class CardDetailsComponent implements OnChanges {
                     dependencieswithSecurityAdvisories,
                     'private'
                 ));
-
-
-
-                // const effectedTransitives: Array<MComponentDetails> = this.getTransitiveDependencySecurityDetails(genericReport.componentDetails);
-                // if (effectedTransitives && effectedTransitives.length > 0) {
-                //     // filter-out transitives which is also listed as direct
-                //     const effectedPureTransitives = effectedTransitives.filter(t => !effectedDirects.find(d => (d.componentInformation.name === t.componentInformation.name && d.componentInformation.currentVersion === t.componentInformation.currentVersion)));
-                //     if (effectedPureTransitives.length > 0) {
-                //         reportInformations.push(new MReportInformation(
-                //             'comp-trans-security',
-                //             'Dependencies with Private Vulnerabilities',
-                //             'component',
-                //             this.fillColumnHeaders(cardType, 3),
-                //             effectedPureTransitives
-                //         ));
-                //     }
-                // }
                 break;
             case 'insights':
                 compDetails = this.getCompanionComponentDetails();
@@ -495,10 +468,10 @@ export class CardDetailsComponent implements OnChanges {
             let licenseAnalysis: StackLicenseAnalysisModel = this.getLicensesAnalysis();
             if (licenseAnalysis &&
                 licenseAnalysis.unknown_licenses &&
-                licenseAnalysis.unknown_licenses.really_unknown &&
-                licenseAnalysis.unknown_licenses.really_unknown.length > 0
+                licenseAnalysis.unknown_licenses.unknowns &&
+                licenseAnalysis.unknown_licenses.unknowns.length > 0
             ) {
-                let reallyUnknown = licenseAnalysis.unknown_licenses.really_unknown;
+                let reallyUnknown = licenseAnalysis.unknown_licenses.unknowns;
                 let len: number = reallyUnknown.length;
                 for (let i = 0; i < len; ++i) {
                     if (reallyUnknown[i].package === component.name) {
@@ -675,7 +648,7 @@ export class CardDetailsComponent implements OnChanges {
         return null;
     }
 
-    private getComponentInformation(component: ComponentInformationModel,isTransitive?: boolean): MComponentInformation {
+    private getComponentInformation(component: ComponentInformationModel, isTransitive?: boolean): MComponentInformation {
         if (component) {
             let currentVersion: string = component.version;
             let latestVersion: string = component.latest_version;
@@ -803,10 +776,10 @@ export class CardDetailsComponent implements OnChanges {
             if (this.report) {
                 let analysis: StackLicenseAnalysisModel = this.getLicensesAnalysis();
                 if (analysis && analysis.unknown_licenses
-                    && analysis.unknown_licenses.really_unknown
-                    && analysis.unknown_licenses.really_unknown.length > 0
+                    && analysis.unknown_licenses.unknowns
+                    && analysis.unknown_licenses.unknowns.length > 0
                 ) {
-                    let reallyUnknown: Array<ReallyUnknownLicenseModel> = analysis.unknown_licenses.really_unknown;
+                    let reallyUnknown: Array<ReallyUnknownLicenseModel> = analysis.unknown_licenses.unknowns;
                     reallyUnknown.forEach((unknown) => {
                         if (unknown.package === component.name) {
                             unknownLicenses.push(unknown.license);
@@ -1225,77 +1198,10 @@ export class CardDetailsComponent implements OnChanges {
         return headers;
     }
 
-    // mComponentDetails->McomponentInformation commented
-    // private createDictionary(report: ResultInformationModel, whatCard: string): Object {
-    //     if (whatCard === 'security') {
-    //         let components: Array<ComponentInformationModel> = null;
-    //         if (report.user_stack_info
-    //             && report.user_stack_info.analyzed_dependencies
-    //             && report.user_stack_info.analyzed_dependencies.length > 0) {
-    //             components = report.user_stack_info.analyzed_dependencies;
-    //         }
-
-    //         const depDict = new Object();
-    //         const transitiveDeps = new Array();
-    //         components.forEach(dep => {
-    //             if (!dep.hasOwnProperty('transitive')) {
-    //                 let uidofDep = dep.name + "-" + dep.version;
-    //                 depDict[uidofDep] = null;
-    //             }
-    //         });
-
-    //         components.forEach(dep => {
-    //             if (dep.hasOwnProperty('transitive')) {
-    //                 transitiveDeps.push(dep);
-    //             }
-    //         });
-
-    //         transitiveDeps.forEach(dep => {
-
-    //             let tempDep = { ...dep };
-    //             tempDep.transitive = null;
-
-    //             if (dep.transitive && dep.transitive.isTransitive) {
-    //                 let affectedDirectDeps = dep.transitive.affected_direct_deps;
-
-    //                 affectedDirectDeps.forEach(dirDep => {
-    //                     let uidDirDep = dirDep.package + "-" + dirDep.version;
-
-    //                     if (depDict[uidDirDep] == null) {
-    //                         depDict[uidDirDep] = [new MComponentDetails(
-    //                             this.getComponentInformation(tempDep),
-    //                             null)]
-    //                     } else {
-    //                         depDict[uidDirDep].push(new MComponentDetails(
-    //                             this.getComponentInformation(tempDep),
-    //                             null));
-    //                     }
-
-    //                 });
-    //             }
-    //         });
-
-
-    //         const directDependenciesWithTransitveDetailsObj = new Object();
-
-    //         for (var key of Object.keys(depDict)) {
-    //             if (depDict[key] != null) {
-    //                 directDependenciesWithTransitveDetailsObj[key] = depDict[key];
-    //             }
-    //         }
-
-    //         return directDependenciesWithTransitveDetailsObj;
-
-    //     } else {
-    //         return null;
-    //     }
-    // }
-
     private paint(): void {
         this.tabs = [];
         if (this.report && this.whatCard) {
             console.log(this.report, this.whatCard);
-            // this.dictionary = this.createDictionary(this.report, this.whatCard); commented
             this.registrationStatus = this.report.user_stack_info.registration_status
             let reports: Array<MReportInformation> = this.getUIReportInformations(this.whatCard);
             this.details = new MCardDetails();

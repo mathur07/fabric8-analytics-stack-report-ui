@@ -161,7 +161,7 @@ export class ComponentConflictUnknownModel {
 }
 
 export class UnknownLicensesModel {
-    really_unknown: Array<ReallyUnknownLicenseModel> = [];
+    unknowns: Array<ReallyUnknownLicenseModel> = [];
     component_conflict: Array<ComponentConflictUnknownModel> = [];
 }
 

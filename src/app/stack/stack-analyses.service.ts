@@ -45,13 +45,14 @@ export class StackAnalysesService {
       if (params['access_token']) {
         let headers: Headers = new Headers();
         headers.append('Authorization', 'Bearer ' + params['access_token']);
+        // headers.append('x-3scale-account-secret','not-set');
         return this.http.get(url, {
           headers: headers
         })
         .map(this.extractData)
         .map((data) => {
           stackReport = data;
-          console.log("response data===>>",data);
+          console.log("response data >>",data);
           
           return stackReport;
         })

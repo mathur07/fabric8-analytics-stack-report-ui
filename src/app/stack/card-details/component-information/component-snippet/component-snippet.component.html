@@ -129,7 +129,8 @@
                         </span>
                         <span class="name" [innerText]="cve.title"></span>
                     </span>
-                    <span class="name" *ngIf="component?.privateSecurityDetails?.cveList.length>0">Sign in to snyk to view
+                    <span class="name" *ngIf="component?.privateSecurityDetails?.cveList.length>0">Sign in to snyk to
+                        view
                         more..</span>
                 </span>
             </div>
@@ -168,7 +169,7 @@
         </div>
     </div>
     <div class="common-table component-tags"
-        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0">
+        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0 && tabType!='compDetails'">
         <div class="common-wrapper">
             <div class="transitive-head">
                 <span class="trans-dropdown">

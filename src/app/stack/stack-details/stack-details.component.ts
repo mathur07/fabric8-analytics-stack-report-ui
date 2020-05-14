@@ -286,8 +286,6 @@ export class StackDetailsComponent implements OnChanges {
 
     private handleResponse(data: any): void {
 
-        console.log("data before filter", data);
-
         let result = [];
         result.push(data)
         let tmpData = {
@@ -295,14 +293,17 @@ export class StackDetailsComponent implements OnChanges {
             statusCode: data.statusCode,
             statusText: data.statusText
         }
-        console.log("newData===>>>", tmpData);
         data = { ...tmpData }
 
         data.result = data.result.map(element => {
             return ({
+                ended_at: element.ended_at,
+                external_request_id:element.external_request_id,
                 manifest_file_path: element.manifest_file_path,
                 manifest_name: element.manifest_name,
                 recommendation: element.recommendation,
+                started_at:element.started_at,
+                version: element.version,
                 user_stack_info: {
                     analyzed_dependencies: element.analyzed_dependencies,
                     ecosystem: element.ecosystem,
@@ -401,7 +402,6 @@ export class StackDetailsComponent implements OnChanges {
 
                             this.subPolling = analysis.subscribe((data) => {
 
-                                console.log("data", data);
                                 if (data != null) {
                                     this.subPolling.unsubscribe();
                                     this.handleResponse(data);

@@ -187,8 +187,6 @@ export class ReportSummaryUtils {
             //     }
             // });
 
-
-            // hardcoded
             let totalVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             totalVulnerabilities.infoText = "Total Vulnerabilities";
             totalVulnerabilities.infoValue = publicVulnerabilitiesCount + privateVulnerabilitiesCount;
@@ -211,10 +209,16 @@ export class ReportSummaryUtils {
                 privateVulnerabilities
             );
 
+            let vulnerableDependenciesCount = 0;
             let vulnerableDependencies: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             vulnerableDependencies.infoText = "Vulnerable Dependencies";
             // totaldependenciesEffectedEntry.infoValue = dependenciesEffected;
-            vulnerableDependencies.infoValue = analyzedDependencies.length;
+            analyzedDependencies.forEach(element => {
+                if (element.public_vulnerabilities.length > 0 || element.private_vulnerabilities.length > 0 || element.vulnerable_dependencies.length > 0) {
+                    vulnerableDependenciesCount++;
+                }
+            });
+            vulnerableDependencies.infoValue = vulnerableDependenciesCount;
             securityCard.reportSummaryContent.infoEntries.push(
                 vulnerableDependencies
             );
@@ -353,6 +357,7 @@ export class ReportSummaryUtils {
                 }
             } else {
                 // Null
+                stackLicense.infoValue = '-';
             }
             licensesCard.reportSummaryContent.infoEntries.push(stackLicense);
 
@@ -367,7 +372,7 @@ export class ReportSummaryUtils {
 
             let unknownLicense: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             unknownLicense.infoText = 'Unknown Licenses';
-            let unknownLicenses = licenseAnalysis.unknown_licenses.really_unknown;
+            let unknownLicenses = licenseAnalysis.unknown_licenses.unknowns;
             unknownLicense.infoValue = unknownLicenses ? unknownLicenses.length : 0;
             if (stackLicense.infoValue === 'Unknown') {
                 unknownLicense.infoValue = 'NA';
