@@ -469,10 +469,10 @@ export class CardDetailsComponent implements OnChanges {
             let licenseAnalysis: StackLicenseAnalysisModel = this.getLicensesAnalysis();
             if (licenseAnalysis &&
                 licenseAnalysis.unknown_licenses &&
-                licenseAnalysis.unknown_licenses.unknowns &&
-                licenseAnalysis.unknown_licenses.unknowns.length > 0
+                licenseAnalysis.unknown_licenses.unknown &&
+                licenseAnalysis.unknown_licenses.unknown.length > 0
             ) {
-                let reallyUnknown = licenseAnalysis.unknown_licenses.unknowns;
+                let reallyUnknown = licenseAnalysis.unknown_licenses.unknown;
                 let len: number = reallyUnknown.length;
                 for (let i = 0; i < len; ++i) {
                     if (reallyUnknown[i].package === component.name) {
@@ -555,10 +555,10 @@ export class CardDetailsComponent implements OnChanges {
     }
 
     private getUnknownComponentDetails(cardType: string): Array<MComponentDetails> {
-        let unknowns: Array<MComponentDetails> = [];
+        let unknown: Array<MComponentDetails> = [];
         let unknownComponents = (this.report && this.report.user_stack_info && this.report.user_stack_info.unknown_dependencies) || [];
         unknownComponents.forEach((unknown) => {
-            unknowns.push(new MComponentDetails(
+            unknown.push(new MComponentDetails(
                 new MComponentInformation(
                     unknown.name,
                     unknown.version,
@@ -583,7 +583,7 @@ export class CardDetailsComponent implements OnChanges {
                 null
             ));
         });
-        return unknowns;
+        return unknown;
     }
 
     private getMGithub(component: ComponentInformationModel): MGithub {
@@ -777,10 +777,10 @@ export class CardDetailsComponent implements OnChanges {
             if (this.report) {
                 let analysis: StackLicenseAnalysisModel = this.getLicensesAnalysis();
                 if (analysis && analysis.unknown_licenses
-                    && analysis.unknown_licenses.unknowns
-                    && analysis.unknown_licenses.unknowns.length > 0
+                    && analysis.unknown_licenses.unknown
+                    && analysis.unknown_licenses.unknown.length > 0
                 ) {
-                    let reallyUnknown: Array<ReallyUnknownLicenseModel> = analysis.unknown_licenses.unknowns;
+                    let reallyUnknown: Array<ReallyUnknownLicenseModel> = analysis.unknown_licenses.unknown;
                     reallyUnknown.forEach((unknown) => {
                         if (unknown.package === component.name) {
                             unknownLicenses.push(unknown.license);

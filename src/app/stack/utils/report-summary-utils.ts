@@ -314,7 +314,7 @@ export class ReportSummaryUtils {
 
             let unknownLicense: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             unknownLicense.infoText = 'Unknown Licenses';
-            let unknownLicenses = licenseAnalysis.unknown_licenses.unknowns;
+            let unknownLicenses = licenseAnalysis.unknown_licenses.unknown;
             unknownLicense.infoValue = unknownLicenses ? unknownLicenses.length : 0;
             if (stackLicense.infoValue === 'Unknown') {
                 unknownLicense.infoValue = 'NA';
