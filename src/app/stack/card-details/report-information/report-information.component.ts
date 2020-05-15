@@ -23,6 +23,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
     @Input() report: MReportInformation;
     @Input() genericInformation: MGenericStackInformation;
     @Input() repoInfo: any;
+    @Input() tabType: string;
 
     public componentDetails: Array<MComponentDetails> = null;
 
@@ -51,7 +52,6 @@ export class ReportInformationComponent implements OnInit, OnChanges {
         if (this.checkIfClickable(elem)) {
 
             if (componentDetail.componentInformation.allTransitiveDependencies && componentDetail.componentInformation.allTransitiveDependencies.length > 0) {
-                console.log("direct vala");
                 this.closeAllButThis(componentDetail);
 
                 if (
@@ -71,8 +71,6 @@ export class ReportInformationComponent implements OnInit, OnChanges {
                 }
 
             } else if (element.allTransitiveDependencies === undefined) {
-
-                console.log("trans vala");
                 this.closeAllButThis(componentDetail);
 
                 if (
@@ -105,7 +103,6 @@ export class ReportInformationComponent implements OnInit, OnChanges {
         if (this.checkIfTransitiveToggler(elem)) {
             
             if (componentDetail.componentInformation) {
-                console.log("hiiiii");
                 componentDetail.componentInformation.showTransitive = !componentDetail.componentInformation.showTransitive;
             }
 

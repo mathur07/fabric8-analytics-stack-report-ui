@@ -298,12 +298,13 @@ export class StackDetailsComponent implements OnChanges {
         data.result = data.result.map(element => {
             return ({
                 ended_at: element.ended_at,
-                external_request_id:element.external_request_id,
+                external_request_id: element.external_request_id,
                 manifest_file_path: element.manifest_file_path,
                 manifest_name: element.manifest_name,
                 recommendation: element.recommendation,
-                started_at:element.started_at,
+                started_at: element.started_at,
                 version: element.version,
+                registration_link: element.registration_link,
                 user_stack_info: {
                     analyzed_dependencies: element.analyzed_dependencies,
                     ecosystem: element.ecosystem,

@@ -65,6 +65,7 @@ export class CardDetailsComponent implements OnChanges {
     public details: MCardDetails = null;
     public dictionary: Object = null;
     public registrationStatus: string;
+    public registrationLink: string;
 
     public tabs: Array<MTab> = [];
 
@@ -1201,8 +1202,8 @@ export class CardDetailsComponent implements OnChanges {
     private paint(): void {
         this.tabs = [];
         if (this.report && this.whatCard) {
-            console.log(this.report, this.whatCard);
-            this.registrationStatus = this.report.user_stack_info.registration_status
+            this.registrationStatus = this.report.user_stack_info.registration_status;
+            this.registrationLink = this.report.registration_link;
             let reports: Array<MReportInformation> = this.getUIReportInformations(this.whatCard);
             this.details = new MCardDetails();
             let { title, description } = this.getTitleAndDescription(this.whatCard);

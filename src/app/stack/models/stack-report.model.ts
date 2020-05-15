@@ -10,6 +10,11 @@ export class StackReportModel {
 export class ResultInformationModel {
     manifest_name: string;
     manifest_file_path: string;
+    version: string;
+    started_at: string;
+    ended_at: string;
+    external_request_id: string;
+    registration_link: string;
     recommendation: RecommendationsModel;
     user_stack_info: UserStackInfoModel;
 }
@@ -50,7 +55,7 @@ export class ComponentInformationModel {
     public_vulnerabilities: Array<VulnerabilitiesModel>;
     public_vulnerabilities_count: number;
     recommended_version: string;
-    url: Array<string>;
+    url: string;
     vulnerable_dependencies: Array<any>; // commented
     allTransitiveDependencies?: Array<any>;
 

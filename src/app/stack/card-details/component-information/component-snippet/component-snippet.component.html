@@ -129,17 +129,17 @@
                         </span>
                         <span class="name" [innerText]="cve.title"></span>
                     </span>
-                    <span class="name" *ngIf="component?.privateSecurityDetails?.cveList.length>0">Sign in to snyk to
+                    <a class="name" *ngIf="component?.privateSecurityDetails?.cveList.length>0" [href]="component.url" target="_blank">Sign in to snyk to
                         view
-                        more..</span>
+                        more..</a>
                 </span>
             </div>
             <div class="common-wrapper"
                 *ngIf="component?.registrationStatus == 'freetier' && component?.privateSecurityDetails?.cveList.length > 0 && tabType=='private'">
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
-                    <span class="name">
-                        Sign in to snyk to view</span>
+                    <a class="name" [href]="component.url" target="_blank">
+                        Sign in to snyk to view</a>
                 </span>
             </div>
         </div>
@@ -169,7 +169,34 @@
         </div>
     </div>
     <div class="common-table component-tags"
-        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0 && tabType!='compDetails'">
+        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0 && tabType=='public'">
+        <div class="common-wrapper">
+            <div class="transitive-head">
+                <span class="trans-dropdown">
+                    <i [ngClass]="{'fa': true, 'fa-angle-right': !component?.showTransitive, 'fa-angle-down': component?.showTransitive}"
+                        aria-hidden="true"></i>
+                </span>
+                <span
+                    [innerText]='component?.showTransitive ? "Hide Transitives with Vulnerabilities":"Show Transitives with Vulnerabilities"'>
+                </span>
+                <span [innerHtml]="component?.allTransitiveDependencies.length" class="badge"></span>
+            </div>
+
+            <report-information *ngIf="component.showTransitive" [report]="component.transitiveInfo"
+                [tabType]="tabType">
+            </report-information>
+            <!-- <span *ngIf=" component?.crowdSourcing?.tags && component?.crowdSourcing?.tags?.length> 0"
+                class="common-container tags-container">
+                <span [innerText]="tag" *ngFor="let tag of component?.crowdSourcing?.tags"></span>
+                </span>
+                <span *ngIf="!component?.crowdSourcing?.tags || component?.crowdSourcing?.tags?.length === 0"
+                    class="common-container tags-container">
+                    -----
+                </span> -->
+        </div>
+    </div>
+    <div class="common-table component-tags"
+        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0 && tabType=='private'">
         <div class="common-wrapper">
             <div class="transitive-head">
                 <span class="trans-dropdown">

@@ -158,35 +158,6 @@ export class ReportSummaryUtils {
                 }
             }
 
-
-            // analyzedDependencies.forEach((analyzed) => {
-            //     if (analyzed.security && analyzed.security.length > 0) {
-            //         let currSecurity: Array<SecurityInformationModel> = analyzed.security;
-            //         temp = currSecurity.reduce((a, b) => {
-            //             return parseFloat(a.CVSS) < parseFloat(b.CVSS) ? b : a;
-            //         });
-            //         if (temp) {
-            //             if (maxIssue === null || maxIssue.CVSS < temp.CVSS) {
-            //                 maxIssue = temp;
-            //             }
-            //         }
-            //         securityIssues += currSecurity.length;
-            //         dependenciesEffected++;
-            //     }
-            // });
-
-            // let totalComponentsWithMaxScore: number = 0;
-            // analyzedDependencies.forEach((analyzed) => {
-            //     if (analyzed.security && analyzed.security.length > 0) {
-            //         let currSecurity: Array<SecurityInformationModel> = analyzed.security;
-            //         let filters: Array<SecurityInformationModel>;
-            //         filters = currSecurity.filter((security) => {
-            //             return security.CVSS === maxIssue.CVSS;
-            //         });
-            //         totalComponentsWithMaxScore += filters ? filters.length : 0;
-            //     }
-            // });
-
             let totalVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             totalVulnerabilities.infoText = "Total Vulnerabilities";
             totalVulnerabilities.infoValue = publicVulnerabilitiesCount + privateVulnerabilitiesCount;
@@ -222,35 +193,6 @@ export class ReportSummaryUtils {
             securityCard.reportSummaryContent.infoEntries.push(
                 vulnerableDependencies
             );
-
-            //commented
-
-            // if (maxIssue) {
-            //     let securityColor: string = Number(maxIssue.CVSS) >= 7 ? this.colors.security.warning : this.colors.security.moderate;
-
-            //     let maxIssueEntry: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
-            //     maxIssueEntry.infoText = 'Highest CVSS Score';
-            //     maxIssueEntry.infoValue = maxIssue.CVSS;
-            //     maxIssueEntry.infoType = 'progress';
-            //     maxIssueEntry.config = {
-            //         headerText: maxIssue.CVSS + ' / ' + 10,
-            //         value: Number(maxIssue.CVSS),
-            //         bgColor: securityColor,
-            //         footerText: 'No. of dependencies with this CVSS Score: ' + totalComponentsWithMaxScore,
-            //         width: Number(maxIssue.CVSS) * 10
-            //     };
-            //     // securityCard.reportSummaryContent.infoEntries.push(maxIssueEntry);
-            //     securityCard.reportSummaryTitle.notificationIcon = this.notification.warning.icon;
-            //     securityCard.reportSummaryTitle.notificationIconBgColor = securityColor;
-            //     securityCard.hasWarning = true;
-            //     securityCard.severity = Number(maxIssue.CVSS) >= 7 ? 1 : 2;
-            // } else {
-            //     // securityCard.reportSummaryTitle.notificationIcon = this.notification.good.icon;
-            //     // securityCard.reportSummaryTitle.notificationIconBgColor = this.notification.good.bg;
-            //     securityCard.hasWarning = false;
-            // }
-
-
 
             if (hasVulnerabilities) {
                 let securityColor: string = highCvss ? this.colors.security.warning : this.colors.security.moderate;

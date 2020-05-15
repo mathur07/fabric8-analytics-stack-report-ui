@@ -152,7 +152,7 @@ export class MComponentInformation {
         public allTransitiveDependencies?: Array<MComponentDetails>,
         public transitiveInfo?: MReportInformation,
         public dependencies?: Array<any>,
-        public url?: Array<string>,
+        public url?: string,
         public public_vulnerabilities?: any,
         public private_vulnerabilities?: any,
         public recommended_version?: string,
