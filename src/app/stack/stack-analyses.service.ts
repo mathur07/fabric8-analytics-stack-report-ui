@@ -45,7 +45,7 @@ export class StackAnalysesService {
       if (params['access_token']) {
         let headers: Headers = new Headers();
         headers.append('Authorization', 'Bearer ' + params['access_token']);
-        // headers.append('x-3scale-account-secret','not-set');
+        headers.append('x-3scale-account-secret','not-set');
         return this.http.get(url, {
           headers: headers
         })
