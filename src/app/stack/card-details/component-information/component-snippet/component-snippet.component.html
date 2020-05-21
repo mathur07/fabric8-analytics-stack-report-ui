@@ -1,6 +1,6 @@
 <div class="analytics-snippet-information">
     <h4>Details of the dependency: <span class="component-name" [innerText]="component?.name"></span></h4>
-    <div *ngIf="component?.transitive !== null;else component_version">
+    <div *ngIf="component?.transitive !== null && (tabType == 'private' || tabType =='public' || tabType =='compDetails');else component_version">
         <div
             [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
             <div class="col-xs-6">
@@ -17,8 +17,9 @@
             </div>
         </div>
     </div>
+    
     <ng-template #component_version>
-        <div *ngIf="!component.action || component.isTransitive ;else companion_component">
+        <div *ngIf="!component.action || component.isTransitive && (tabType == 'private' || tabType =='public' || tabType =='compDetails') ;else companion_component">
             <div
                 [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
                 <div class="col-xs-6">
@@ -46,8 +47,33 @@
             </div>
         </ng-template>
     </ng-template>
+    
+    <div *ngIf="view === 'normal'  && !(tabType == 'private' || tabType =='public' || tabType =='compDetails') " class="github-osio-box">
+        <div class="github left">
+            <div class="box-header">
+                GitHub Statistics:
+            </div>
+            <div class="info-container left">
+                <div *ngFor="let github of githubEntries" class="side">
+                    <p class="info-head" [innerText]="github.key"></p>
+                    <p [innerText]="github.value || '-----'"></p>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="showOSIOUsage" class="osio left">
+            <div class="box-header">
+                OSIO Statistics:
+            </div>
+            <div class="info-container left">
+                <div class="side">
+                    <p class="info-head" [innerText]="'OSIO Usage'"></p>
+                    <p [innerText]="component?.osio?.usage || '-----'"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div *ngIf="view === 'normal' && !component.isTransitive" class="github-osio-box">
+    <div *ngIf="view === 'normal' && !component.isTransitive && (tabType == 'private' || tabType =='public' || tabType =='compDetails')" class="github-osio-box">
         <div class="github left">
             <div class="box-header">
                 GitHub Statistics:
@@ -84,10 +110,10 @@
     <div [ngClass]="component.isTransitive?'tsansitive-details':null">
         <div class="common-table component-tags">
             <div class="common-wrapper"
-                *ngIf="component?.registrationStatus == 'freetier' && component?.publicSecurityDetails?.cveList.length > 0 && tabType=='public'">
+                *ngIf="component?.registrationStatus == 'freetier' && (component?.public_vulnerabilities && component?.public_vulnerabilities?.length > 0) && tabType=='public'">
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
-                    <span *ngFor="let cve of component?.public_vulnerabilities">
+                    <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
                         <span class="severity"
                             [ngClass]="{'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
                             <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
@@ -100,10 +126,10 @@
                 </span>
             </div>
             <div class="common-wrapper"
-                *ngIf="component?.registrationStatus == 'registered' && component?.privateSecurityDetails?.cveList.length > 0 && tabType=='private'">
+                *ngIf="component?.registrationStatus == 'registered' && (component?.private_vulnerabilities && component?.private_vulnerabilities?.length > 0) && tabType=='private'">
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
-                    <span *ngFor="let cve of component?.private_vulnerabilities">
+                    <span *ngFor="let cve of component?.private_vulnerabilities" class="wrapper">
                         <span class="severity"
                             [ngClass]="{'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
                             <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
@@ -116,10 +142,10 @@
                 </span>
             </div>
             <div class="common-wrapper"
-                *ngIf="component?.registrationStatus == 'freetier' && (component?.publicSecurityDetails?.cveList.length > 0 ||component?.privateSecurityDetails?.cveList.length > 0) && tabType=='compDetails'">
+                *ngIf="component?.registrationStatus == 'freetier' && ((component?.public_vulnerabilities && component?.public_vulnerabilities?.length > 0) ||(component?.private_vulnerabilities && component?.private_vulnerabilities?.length > 0)) && tabType=='compDetails'">
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
-                    <span *ngFor="let cve of component?.public_vulnerabilities">
+                    <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
                         <span class="severity"
                             [ngClass]="{'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
                             <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
@@ -129,13 +155,14 @@
                         </span>
                         <span class="name" [innerText]="cve.title"></span>
                     </span>
-                    <a class="name" *ngIf="component?.privateSecurityDetails?.cveList.length>0" [href]="component.url" target="_blank">Sign in to snyk to
-                        view
-                        more..</a>
+                    <a class="name" *ngIf="component?.private_vulnerabilities?.length>0" [href]="component.url"
+                        target="_blank">
+                        Sign in to snyk to view more..
+                    </a>
                 </span>
             </div>
             <div class="common-wrapper"
-                *ngIf="component?.registrationStatus == 'freetier' && component?.privateSecurityDetails?.cveList.length > 0 && tabType=='private'">
+                *ngIf="component?.registrationStatus == 'freetier' && (component?.private_vulnerabilities && component?.private_vulnerabilities.length > 0) && tabType=='private'">
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
                     <a class="name" [href]="component.url" target="_blank">
@@ -224,30 +251,4 @@
 
     <!-- <report-information [genericInformation]="genericInformation" [report]="tabz.content" [repoInfo]="repoInfo"></report-information> -->
 
-
-
-    <div *ngIf="view === 'split'" class="github-osio-box">
-        <div class="github left">
-            <div class="box-header">
-                GitHub Statistics:
-            </div>
-            <div class="info-container left">
-                <div *ngFor="let github of githubEntries" class="side">
-                    <p class="info-head" [innerText]="github.key"></p>
-                    <p [innerText]="github.value || '-----'"></p>
-                </div>
-            </div>
-        </div>
-        <div *ngIf="showOSIOUsage" class="osio left">
-            <div class="box-header">
-                OSIO Statistics:
-            </div>
-            <div class="info-container left">
-                <div class="side">
-                    <p class="info-head" [innerText]="'OSIO Usage'"></p>
-                    <p [innerText]="component?.osio?.usage || '-----'"></p>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

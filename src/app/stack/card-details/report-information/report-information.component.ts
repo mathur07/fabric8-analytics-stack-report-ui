@@ -51,7 +51,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
         let elem: HTMLElement = (<HTMLElement>event.target);
         if (this.checkIfClickable(elem)) {
 
-            if (componentDetail.componentInformation.allTransitiveDependencies && componentDetail.componentInformation.allTransitiveDependencies.length > 0) {
+            if (componentDetail.componentInformation && componentDetail.componentInformation.allTransitiveDependencies && componentDetail.componentInformation.allTransitiveDependencies.length > 0) {
                 this.closeAllButThis(componentDetail);
 
                 if (
@@ -70,7 +70,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
                     }
                 }
 
-            } else if (element.allTransitiveDependencies === undefined) {
+            } else if (componentDetail.componentInformation && componentDetail.componentInformation.allTransitiveDependencies === undefined || null) {
                 this.closeAllButThis(componentDetail);
 
                 if (
@@ -89,8 +89,25 @@ export class ReportInformationComponent implements OnInit, OnChanges {
                     }
                 }
 
+            } else {
+                this.closeAllButThis(componentDetail);
+
+                if (
+                    (componentDetail.componentInformation && !componentDetail.componentInformation.needsExpansion) ||
+                    (componentDetail.recommendationInformation && componentDetail.recommendationInformation.componentInformation &&
+                        !componentDetail.recommendationInformation.componentInformation.needsExpansion)
+                ) {
+                    return;
+                }
+                if (componentDetail.componentInformation) {
+                    componentDetail.componentInformation.isOpen = !componentDetail.componentInformation.isOpen;
+                }
+                if (componentDetail.recommendationInformation) {
+                    if (componentDetail.recommendationInformation.componentInformation) {
+                        componentDetail.recommendationInformation.componentInformation.isOpen = !componentDetail.recommendationInformation.componentInformation.isOpen;
+                    }
+                }
             }
-
         }
     }
 
@@ -98,10 +115,10 @@ export class ReportInformationComponent implements OnInit, OnChanges {
     public handleTransitive(event: MouseEvent, componentDetail: MComponentDetails): void {
 
         event.stopPropagation()
-        
+
         let elem: HTMLElement = (<HTMLElement>event.target);
         if (this.checkIfTransitiveToggler(elem)) {
-            
+
             if (componentDetail.componentInformation) {
                 componentDetail.componentInformation.showTransitive = !componentDetail.componentInformation.showTransitive;
             }

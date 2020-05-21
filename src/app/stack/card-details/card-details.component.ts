@@ -403,7 +403,8 @@ export class CardDetailsComponent implements OnChanges {
                     'Companion Dependency Details',
                     'recommendation',
                     this.fillColumnHeaders(cardType, 2),
-                    compDetails
+                    compDetails,
+                    'insights'
                 ));
                 genericReport.identifier = 'ins-usage';
                 genericReport.name = 'Usage Outlier Details';
@@ -530,15 +531,29 @@ export class CardDetailsComponent implements OnChanges {
     }
 
     private getDirectDependencyDetails(cardType: string): Array<MComponentDetails> {
-        let directDependencies: Array<MComponentDetails> = [];
-        let transitiveDependenciesComponents = (this.report && this.report.user_stack_info && this.report.user_stack_info.analyzed_dependencies) || [];
-        transitiveDependenciesComponents.forEach((transDep) => {
-            if (!transDep.hasOwnProperty('transitive') || !transDep['transitive']) {
-                directDependencies.push(new MComponentDetails(
-                    this.getComponentInformation(transDep)));
+        let securitySortedDirectDependencies: Array<MComponentDetails> = [];
+        let nonSecuritySortedDirectDependencies: Array<MComponentDetails> = [];
+        let unsortedDirectDependencies = (this.report && this.report.user_stack_info && this.report.user_stack_info.analyzed_dependencies) || [];
+        // transitiveDependenciesComponents.forEach((transDep) => {                    //commented
+        //     if (!transDep.hasOwnProperty('transitive') || !transDep['transitive']) {
+        //         directDependencies.push(new MComponentDetails(
+        //             this.getComponentInformation(transDep)));
+        //     }
+        // });
+
+        unsortedDirectDependencies.forEach(element => {
+            if ((element.public_vulnerabilities && element.public_vulnerabilities.length > 0) || (element.private_vulnerabilities && element.private_vulnerabilities.length > 0)) {
+                securitySortedDirectDependencies.push(new MComponentDetails(
+                    this.getComponentInformation(element)
+                ));
+            } else {
+                nonSecuritySortedDirectDependencies.push(new MComponentDetails(
+                    this.getComponentInformation(element)
+                ));
             }
         });
-        return directDependencies;
+
+        return securitySortedDirectDependencies.concat(nonSecuritySortedDirectDependencies);
     }
 
     private getTransitiveDependencyDetails(cardType: string): Array<MComponentDetails> {
@@ -555,10 +570,10 @@ export class CardDetailsComponent implements OnChanges {
     }
 
     private getUnknownComponentDetails(cardType: string): Array<MComponentDetails> {
-        let unknown: Array<MComponentDetails> = [];
+        let unknowns: Array<MComponentDetails> = [];
         let unknownComponents = (this.report && this.report.user_stack_info && this.report.user_stack_info.unknown_dependencies) || [];
         unknownComponents.forEach((unknown) => {
-            unknown.push(new MComponentDetails(
+            unknowns.push(new MComponentDetails(
                 new MComponentInformation(
                     unknown.name,
                     unknown.version,
@@ -583,7 +598,7 @@ export class CardDetailsComponent implements OnChanges {
                 null
             ));
         });
-        return unknown;
+        return unknowns;
     }
 
     private getMGithub(component: ComponentInformationModel): MGithub {

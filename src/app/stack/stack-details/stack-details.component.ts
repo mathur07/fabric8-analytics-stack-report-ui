@@ -103,8 +103,6 @@ export class StackDetailsComponent implements OnChanges {
 
     private reportSummaryUtils = new ReportSummaryUtils();
 
-    private responseData: any = null;
-
     /**
      * New Stack Report Revamp - Begin
      */
@@ -205,7 +203,6 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     ngOnChanges(): void {
-
         if (this.stack && this.stack !== this.cache) {
             this.cache = this.stack;
             this.resetFields();
@@ -376,7 +373,6 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     private init(): void {
-
         let counter = 2;
         if (this.gatewayConfig["modal"]) {
             this.showCrowdModal();
@@ -389,7 +385,9 @@ export class StackDetailsComponent implements OnChanges {
             }, 1000);
         } else {
             if (this.stack && this.stack !== '') {
-                let analysis: Observable<any> = this.stackAnalysisService.getStackAnalyses(this.stack, this.gatewayConfig);
+                let analysis: Observable<any> = this.stackAnalysisService
+                    .getStackAnalyses(this.stack, this.gatewayConfig);
+
                 if (analysis) {
                     TimerObservable.create(0, 1000)
                         .takeWhile(() => this.alive)
@@ -398,16 +396,13 @@ export class StackDetailsComponent implements OnChanges {
                             if (counter-- === 0) {
                                 this.alive = false;
                                 this.subPolling.unsubscribe();
-
                             }
 
                             this.subPolling = analysis.subscribe((data) => {
-
                                 if (data != null) {
                                     this.subPolling.unsubscribe();
                                     this.handleResponse(data);
                                 }
-                                this.responseData = data;
                             },
                                 error => {
                                     let title: string = '';

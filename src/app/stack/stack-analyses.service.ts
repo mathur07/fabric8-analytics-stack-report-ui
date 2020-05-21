@@ -51,9 +51,8 @@ export class StackAnalysesService {
         })
         .map(this.extractData)
         .map((data) => {
+          console.log("response data >>", data);
           stackReport = data;
-          console.log("response data >>",data);
-          
           return stackReport;
         })
         .catch(this.handleError);

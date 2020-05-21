@@ -1,4 +1,4 @@
 <router-outlet>
-    <stack-details *ngIf="label" [stack]="stackUrl && stackUrl !== '' && label && stackUrl"
+    <stack-details *ngIf="label && version=='v2'" [stack]="stackUrl && stackUrl !== '' && label && stackUrl"
         [gatewayConfig]="gateway && gateway" style="text-align: left;"></stack-details>
 </router-outlet>
