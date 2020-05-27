@@ -399,10 +399,8 @@ export class StackDetailsComponent implements OnChanges {
                             }
 
                             this.subPolling = analysis.subscribe((data) => {
-                                if (data != null) {
-                                    this.subPolling.unsubscribe();
-                                    this.handleResponse(data);
-                                }
+                                this.subPolling.unsubscribe();
+                                this.handleResponse(data);
                             },
                                 error => {
                                     let title: string = '';

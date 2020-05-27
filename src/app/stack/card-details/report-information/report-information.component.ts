@@ -39,8 +39,6 @@ export class ReportInformationComponent implements OnInit, OnChanges {
         }
     }
 
-
-
     public handleAccordion(event: MouseEvent, componentDetail: MComponentDetails): void {
 
         event.stopPropagation()

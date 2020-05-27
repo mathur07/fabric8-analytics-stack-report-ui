@@ -9,7 +9,7 @@
                         <!-- Security Card -->
                         <div *ngSwitchCase="'serial'">
                             <!-- Serial Numbers -->
-                            <span [innerText]="serial+1<10? '#0'+(serial+1):'#'+(serial+1)"></span>
+                            <span [innerText]="serial + 1 < 10 ? '#0' + (serial + 1) : '#' + (serial + 1)"></span>
                         </div>
                         <div *ngSwitchCase="'component'">
                             <!-- Component Names -->
@@ -43,8 +43,8 @@
                             <span #public class="name" *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
                             <a *ngIf="comp?.hasSecurityIssue && tabType == 'private';else public" [href]="comp?.url" target="_blank" class="name"
                                 [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails?.highestIssue?.cve"></a>
-                            <span #public *ngIf="comp?.hasSecurityIssue && tabType == 'public'" class="name"
-                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails?.highestIssue?.cve"></span>
+                            <a #public *ngIf="comp?.hasSecurityIssue && tabType == 'public'" class="name" [href]="comp?.url" target="_blank"
+                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails?.highestIssue?.cve"></a>
                         </div>
 
                         <div *ngSwitchCase="'transCount'">

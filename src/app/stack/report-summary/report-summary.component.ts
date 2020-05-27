@@ -78,10 +78,6 @@ export class ReportSummaryComponent implements OnChanges {
         }
     };
 
-    // ngOnInit() {
-    //     this.paintView();
-    // }
-
     ngOnChanges(changes: SimpleChanges) {
         let summary: any = changes['report'];
         if (summary) {

@@ -99,11 +99,7 @@ export class CardDetailsComponent implements OnChanges {
             description: 'A list of all the analyzed dependencies that flags security, usage, and license issues in your stack and suggests alternate dependencies to replace dependencies with these issues. It also lists dependencies unknown to Dependency Analytics.'
         }
     };
-
-    // ngOnInit() {
-    //     this.paint();
-    // }
-
+    
     ngOnChanges(changes: SimpleChanges) {
         let summary: any = changes['cardDetails'];
         if (summary) {
@@ -534,12 +530,6 @@ export class CardDetailsComponent implements OnChanges {
         let securitySortedDirectDependencies: Array<MComponentDetails> = [];
         let nonSecuritySortedDirectDependencies: Array<MComponentDetails> = [];
         let unsortedDirectDependencies = (this.report && this.report.user_stack_info && this.report.user_stack_info.analyzed_dependencies) || [];
-        // transitiveDependenciesComponents.forEach((transDep) => {                    //commented
-        //     if (!transDep.hasOwnProperty('transitive') || !transDep['transitive']) {
-        //         directDependencies.push(new MComponentDetails(
-        //             this.getComponentInformation(transDep)));
-        //     }
-        // });
 
         unsortedDirectDependencies.forEach(element => {
             if ((element.public_vulnerabilities && element.public_vulnerabilities.length > 0) || (element.private_vulnerabilities && element.private_vulnerabilities.length > 0)) {
@@ -1075,7 +1065,7 @@ export class CardDetailsComponent implements OnChanges {
                 if (!transitive) {
                     headers.push(new MComponentHeaderColumn(
                         'transCount',
-                        'Transitive Count',
+                        'Transitive Dependencies Count',
                         'float-left small'
                     ));
                 }
