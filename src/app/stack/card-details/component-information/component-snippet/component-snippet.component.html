@@ -1,6 +1,7 @@
 <div class="analytics-snippet-information">
     <h4>Details of the dependency: <span class="component-name" [innerText]="component?.name"></span></h4>
-    <div *ngIf="component?.transitive !== null && (tabType == 'private' || tabType =='public' || tabType =='compDetails');else component_version">
+    <div
+        *ngIf="component?.transitive !== null && (tabType == 'private' || tabType =='public' || tabType =='compDetails');else component_version">
         <div
             [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
             <div class="col-xs-6">
@@ -17,9 +18,10 @@
             </div>
         </div>
     </div>
-    
+
     <ng-template #component_version>
-        <div *ngIf="!component.action || component.isTransitive && (tabType == 'private' || tabType =='public' || tabType =='compDetails') ;else companion_component">
+        <div
+            *ngIf="!component.action || component.isTransitive && (tabType == 'private' || tabType =='public' || tabType =='compDetails') ;else companion_component">
             <div
                 [ngClass]="{'component-version left': true, 'normal-version-box': view === 'split', 'small-version-box': view === 'normal'}">
                 <div class="col-xs-6">
@@ -47,8 +49,9 @@
             </div>
         </ng-template>
     </ng-template>
-    
-    <div *ngIf="view === 'normal'  && !(tabType == 'private' || tabType =='public' || tabType =='compDetails') " class="github-osio-box">
+
+    <div *ngIf="view === 'normal'  && !(tabType == 'private' || tabType =='public' || tabType =='compDetails') "
+        class="github-osio-box">
         <div class="github left">
             <div class="box-header">
                 GitHub Statistics:
@@ -73,7 +76,8 @@
         </div>
     </div>
 
-    <div *ngIf="view === 'normal' && !component.isTransitive && (tabType == 'private' || tabType =='public' || tabType =='compDetails')" class="github-osio-box">
+    <div *ngIf="view === 'normal' && !component.isTransitive && (tabType == 'private' || tabType =='public' || tabType =='compDetails')"
+        class="github-osio-box">
         <div class="github left">
             <div class="box-header">
                 GitHub Statistics:
@@ -107,7 +111,7 @@
             </div>
         </div>
     </div>
-    <div [ngClass]="component.isTransitive?'tsansitive-details':null">
+    <div [ngClass]="component.isTransitive?'transitive-details' : null">
         <div class="common-table component-tags">
             <div class="common-wrapper"
                 *ngIf="component?.registrationStatus == 'freetier' && (component?.public_vulnerabilities && component?.public_vulnerabilities?.length > 0) && tabType=='public'">
@@ -196,7 +200,7 @@
         </div>
     </div>
     <div class="common-table component-tags"
-        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0 && tabType=='public'">
+        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0 && tabType==='public'">
         <div class="common-wrapper">
             <div class="transitive-head">
                 <span class="trans-dropdown">
@@ -210,12 +214,12 @@
             </div>
 
             <report-information *ngIf="component.showTransitive" [report]="component.transitiveInfo"
-                [tabType]="tabType">
+                [tabType]="'public'">
             </report-information>
         </div>
     </div>
     <div class="common-table component-tags"
-        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0 && tabType=='private'">
+        *ngIf="component?.allTransitiveDependencies && component?.allTransitiveDependencies.length>0 && tabType==='private'">
         <div class="common-wrapper">
             <div class="transitive-head">
                 <span class="trans-dropdown">
@@ -228,7 +232,8 @@
                 <span [innerHtml]="component?.allTransitiveDependencies.length" class="badge"></span>
             </div>
 
-            <report-information *ngIf="component.showTransitive" [report]="component.transitiveInfo">
+            <report-information *ngIf="component.showTransitive" [report]="component.transitiveInfo"
+            [tabType]="'private'">
             </report-information>
         </div>
     </div>

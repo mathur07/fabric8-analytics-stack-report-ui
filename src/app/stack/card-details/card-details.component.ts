@@ -99,7 +99,7 @@ export class CardDetailsComponent implements OnChanges {
             description: 'A list of all the analyzed dependencies that flags security, usage, and license issues in your stack and suggests alternate dependencies to replace dependencies with these issues. It also lists dependencies unknown to Dependency Analytics.'
         }
     };
-    
+
     ngOnChanges(changes: SimpleChanges) {
         let summary: any = changes['cardDetails'];
         if (summary) {
@@ -120,7 +120,8 @@ export class CardDetailsComponent implements OnChanges {
             switch (cardType) {
                 case 'security':
                     processFlag = (component.securityDetails && component.securityDetails.totalIssues > 0) ||
-                        (component.allTransitiveDependencies && component.allTransitiveDependencies.length > 0) ||
+                        (component.publicTransitiveDependencies && component.publicTransitiveDependencies.length > 0) ||
+                        (component.privateTransitiveDependencies && component.privateTransitiveDependencies.length > 0) ||
                         (component.publicSecurityDetails && component.publicSecurityDetails.totalIssues > 0) ||
                         (component.privateSecurityDetails && component.privateSecurityDetails.totalIssues > 0)
                     break;
@@ -243,37 +244,52 @@ export class CardDetailsComponent implements OnChanges {
         return action;
     }
 
-    private filterDependenciesWithKnownVulnerabilities(componentDetails: Array<MComponentDetails>): Array<MComponentDetails> {
+    private filterCommonlyKnownVulnerabilities(componentDetails: Array<MComponentDetails>): Array<MComponentDetails> {
+        let components = JSON.parse(JSON.stringify(componentDetails));
         let dependenciesWithKnownVulnerabilities: Array<MComponentDetails> = [];
-        if (componentDetails && componentDetails.length > 0) {
-            componentDetails.forEach(component => {
+
+        
+        if (components && components.length > 0) {
+            components.forEach(component => {
+                component.componentInformation.allTransitiveDependencies = component.componentInformation.publicTransitiveDependencies;
                 if (component.componentInformation.public_vulnerabilities && component.componentInformation.public_vulnerabilities.length > 0) {
+                    component.componentInformation.private_vulnerabilities = [];
                     dependenciesWithKnownVulnerabilities.push(component);
                 }
                 if (component.componentInformation.allTransitiveDependencies && component.componentInformation.allTransitiveDependencies.length > 0) {
                     component.componentInformation.allTransitiveDependencies.forEach(element => {
                         if (element.componentInformation.public_vulnerabilities && element.componentInformation.public_vulnerabilities.length > 0) {
-                            if (dependenciesWithKnownVulnerabilities.indexOf(component) === -1)
+                            element.componentInformation.private_vulnerabilities = [];
+                            if (dependenciesWithKnownVulnerabilities.indexOf(component) === -1) {
+                                component.componentInformation.private_vulnerabilities = [];
                                 dependenciesWithKnownVulnerabilities.push(component)
+                            }
                         }
                     });
 
                 }
             });
         }
+        console.log("dependenciesWithKnownVulnerabilities==>", dependenciesWithKnownVulnerabilities);
+
         return dependenciesWithKnownVulnerabilities;
     }
 
-    private filterDependencieswithSecurityAdvisories(componentDetails: Array<MComponentDetails>): Array<MComponentDetails> {
+    private filterVulnerabilitiesUniqueToSnyk(componentDetails: Array<MComponentDetails>): Array<MComponentDetails> {
+        let components = JSON.parse(JSON.stringify(componentDetails));
+        let index: number;
         let dependencieswithSecurityAdvisories: Array<MComponentDetails> = [];
-        if (componentDetails && componentDetails.length > 0) {
-            componentDetails.forEach(component => {
+        if (components && components.length > 0) {
+            components.forEach(component => {
+                component.componentInformation.allTransitiveDependencies = component.componentInformation.privateTransitiveDependencies;
                 if (component.componentInformation.private_vulnerabilities && component.componentInformation.private_vulnerabilities.length > 0) {
+                    component.componentInformation.public_vulnerabilities = [];
                     dependencieswithSecurityAdvisories.push(component);
                 }
                 if (component.componentInformation.allTransitiveDependencies && component.componentInformation.allTransitiveDependencies.length > 0) {
                     component.componentInformation.allTransitiveDependencies.forEach(element => {
                         if (element.componentInformation.private_vulnerabilities && element.componentInformation.private_vulnerabilities.length > 0) {
+                            element.componentInformation.public_vulnerabilities = [];
                             if (dependencieswithSecurityAdvisories.indexOf(component) === -1)
                                 dependencieswithSecurityAdvisories.push(component)
                         }
@@ -281,8 +297,30 @@ export class CardDetailsComponent implements OnChanges {
                 }
             });
         }
+        console.log("dependencieswithSecurityAdvisories===>", dependencieswithSecurityAdvisories);
+
         return dependencieswithSecurityAdvisories;
     }
+
+    // private transitiveCreator(components: Array<ComponentInformationModel>) {
+    //     let recommendationInformation: MRecommendationInformation = null;
+
+    //     if (components) {
+    //         components.forEach(component => {
+    //             if (component.vulnerable_dependencies && component.vulnerable_dependencies.length > 0) {
+    //                 let vulnerable_dependencies_array = [...component.vulnerable_dependencies]
+    //                 let updated_vulnerable_dependencies_array = [];
+    //                 vulnerable_dependencies_array.forEach(element => {
+    //                     updated_vulnerable_dependencies_array.push(new MComponentDetails(
+    //                         this.getComponentInformation(element, true),
+    //                         recommendationInformation
+    //                     ));
+    //                 });
+    //                 component.allTransitiveDependencies = updated_vulnerable_dependencies_array;
+    //             }
+    //         });
+    //     }
+    // }
 
     private getUIReportInformations(cardType: string): Array<MReportInformation> {
         let reportInformations: Array<MReportInformation> = [];
@@ -306,14 +344,24 @@ export class CardDetailsComponent implements OnChanges {
             components.forEach(component => {
                 if (component.vulnerable_dependencies && component.vulnerable_dependencies.length > 0) {
                     let vulnerable_dependencies_array = [...component.vulnerable_dependencies]
-                    let updated_vulnerable_dependencies_array = [];
+                    let public_vulnerable_dependencies_array = [];
+                    let private_vulnerable_dependencies_array = [];
                     vulnerable_dependencies_array.forEach(element => {
-                        updated_vulnerable_dependencies_array.push(new MComponentDetails(
-                            this.getComponentInformation(element, true),
-                            recommendationInformation
-                        ));
+                        if (element.public_vulnerabilities && element.public_vulnerabilities.length > 0) {
+                            public_vulnerable_dependencies_array.push(new MComponentDetails(
+                                this.getComponentInformation(element, true),
+                                recommendationInformation
+                            ));
+                        }
+                        if (element.private_vulnerabilities && element.private_vulnerabilities.length > 0) {  
+                            private_vulnerable_dependencies_array.push(new MComponentDetails(
+                                this.getComponentInformation(element, true),
+                                recommendationInformation
+                            ));
+                        }
                     });
-                    component.allTransitiveDependencies = updated_vulnerable_dependencies_array;
+                    component.publicTransitiveDependencies = public_vulnerable_dependencies_array;
+                    component.privateTransitiveDependencies = private_vulnerable_dependencies_array;
                 }
             });
         }
@@ -345,8 +393,9 @@ export class CardDetailsComponent implements OnChanges {
                 genericReport.identifier = 'security';
                 genericReport.name = 'Security Issues';
                 // reportInformations.push(genericReport);
+                console.log("genericReport.componentDetails==>>", genericReport.componentDetails);
 
-                const dependenciesWithKnownVulnerabilities: Array<MComponentDetails> = this.filterDependenciesWithKnownVulnerabilities(genericReport.componentDetails);
+                const dependenciesWithKnownVulnerabilities: Array<MComponentDetails> = this.filterCommonlyKnownVulnerabilities(genericReport.componentDetails);
                 dependenciesWithKnownVulnerabilities.forEach(element => {
                     if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
                         element.componentInformation.transitiveInfo = new MReportInformation(
@@ -369,7 +418,7 @@ export class CardDetailsComponent implements OnChanges {
                     'public'
                 ));
 
-                const dependencieswithSecurityAdvisories: Array<MComponentDetails> = this.filterDependencieswithSecurityAdvisories(genericReport.componentDetails);
+                const dependencieswithSecurityAdvisories: Array<MComponentDetails> = this.filterVulnerabilitiesUniqueToSnyk(genericReport.componentDetails);
                 dependencieswithSecurityAdvisories.forEach(element => {
                     if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
                         element.componentInformation.transitiveInfo = new MReportInformation(
@@ -387,7 +436,7 @@ export class CardDetailsComponent implements OnChanges {
                     'comp-direct-security',
                     'Dependencies with Security Advisories',
                     'component',
-                    this.fillColumnHeaders(cardType, 3),
+                    this.fillColumnHeaders(cardType, 2),
                     dependencieswithSecurityAdvisories,
                     'private'
                 ));
@@ -770,7 +819,9 @@ export class CardDetailsComponent implements OnChanges {
                 privateSecurityDetails,
                 this.registrationStatus,
                 false,
-                isTransitive
+                isTransitive,
+                component.publicTransitiveDependencies,
+                component.privateTransitiveDependencies
             );
         }
         return null;
@@ -900,7 +951,8 @@ export class CardDetailsComponent implements OnChanges {
             if (maxIssue) {
                 securityDetails.highestIssue = new MSecurityIssue(
                     maxIssue.CVSS,
-                    maxIssue.CVE
+                    maxIssue.CVE,
+                    ''
                 );
                 securityDetails.progressReport = new MProgressMeter(
                     Number(maxIssue.CVSS) + '/10',
@@ -922,6 +974,7 @@ export class CardDetailsComponent implements OnChanges {
 
         let maxSecurityIssues: number = 0;
         let maxSecurityIssuesID: string = null;
+        let maxSecurityIssuesURL: string = null;
 
         if (vulnerabilities.length > 0) {
             securityDetails.totalIssues = vulnerabilities.length;
@@ -930,6 +983,7 @@ export class CardDetailsComponent implements OnChanges {
                 if (vulnerability.cvss > maxSecurityIssues) {
                     maxSecurityIssues = vulnerability.cvss;
                     maxSecurityIssuesID = vulnerability.id;
+                    maxSecurityIssuesURL = vulnerability.url;
                 }
 
                 vulnerability.cve_ids.forEach(cve => {
@@ -945,7 +999,8 @@ export class CardDetailsComponent implements OnChanges {
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
                 securityDetails.highestIssue = new MSecurityIssue(
                     maxSecurityIssues + '',
-                    maxSecurityIssuesID
+                    maxSecurityIssuesID,
+                    maxSecurityIssuesURL
                 );
             }
 
@@ -971,6 +1026,7 @@ export class CardDetailsComponent implements OnChanges {
 
         let maxSecurityIssues: number = 0;
         let maxSecurityIssuesID: string = null;
+        let maxSecurityIssuesURL: string = null;
 
         if (vulnerabilities.length > 0) {
             securityDetails.totalIssues = vulnerabilities.length;
@@ -979,6 +1035,7 @@ export class CardDetailsComponent implements OnChanges {
                 if (vulnerability.cvss > maxSecurityIssues) {
                     maxSecurityIssues = vulnerability.cvss;
                     maxSecurityIssuesID = vulnerability.id;
+                    maxSecurityIssuesURL = vulnerability.url;
                 }
 
                 vulnerability.cve_ids.forEach(cve => {
@@ -999,7 +1056,8 @@ export class CardDetailsComponent implements OnChanges {
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
                 securityDetails.highestIssue = new MSecurityIssue(
                     maxSecurityIssues + '',
-                    maxSecurityIssuesID
+                    maxSecurityIssuesID,
+                    maxSecurityIssuesURL
                 );
             }
 

@@ -76,7 +76,8 @@ export class MCrowdSourcing {
 export class MSecurityIssue {
     constructor(
         public cvss: string,
-        public cve: string
+        public cve: string,
+        public url: string
     ) { }
 }
 
@@ -162,6 +163,8 @@ export class MComponentInformation {
         public registrationStatus: string = 'freetier',
         public showTransitive: boolean = false,
         public isTransitive: boolean = false,
+        public publicTransitiveDependencies?: Array<MComponentDetails>,
+        public privateTransitiveDependencies?: Array<MComponentDetails>,
     ) { }
 }
 

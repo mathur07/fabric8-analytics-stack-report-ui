@@ -54,6 +54,7 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
             this.component = <MComponentInformation>summary.currentValue;
 
         }
+        console.log("component===>", this.component);
         this.paint();
     }
 

@@ -58,6 +58,8 @@ export class ComponentInformationModel {
     url: string;
     vulnerable_dependencies: Array<any>; // commented
     allTransitiveDependencies?: Array<any>;
+    publicTransitiveDependencies?:Array<any>;
+    privateTransitiveDependencies?:Array<any>;
 
 }
 

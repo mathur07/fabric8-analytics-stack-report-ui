@@ -13,7 +13,7 @@
                         </div>
                         <div *ngSwitchCase="'component'">
                             <!-- Component Names -->
-                            <span class="name" [innerText]="comp?.name"></span>
+                            <a class="name" [href]="comp?.url" target="_blank" [innerText]="comp?.name"></a>
                             <span class="recommendation-reason" [tooltip]="component?.reason"
                                 *ngIf="component?.reason && type === 'recommendation' && comp?.name">Why this
                                 dependency?</span>
@@ -24,36 +24,56 @@
 
                         <div *ngSwitchCase="'cveCount'">
                             <!-- cveCount -->
-                            <span *ngIf="tabType == 'private'"
-                                [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails.totalIssues || 0"></span>
-                            <span *ngIf="tabType == 'public'"
-                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails.totalIssues || 0"></span>
+                            <span
+                                *ngIf="tabType == 'private' && comp?.private_vulnerabilities && comp?.private_vulnerabilities.length > 0"
+                                [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails.totalIssues "></span>
+                            <span
+                                *ngIf="tabType == 'public' && comp?.public_vulnerabilities && comp?.public_vulnerabilities.length > 0"
+                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails.totalIssues "></span>
+                            <span
+                                *ngIf="tabType == 'public' && comp?.public_vulnerabilities && comp?.public_vulnerabilities.length == 0"
+                                [innerText]="'Check Transitives'"></span>
+                            <span
+                                *ngIf="tabType == 'private' && comp?.private_vulnerabilities && comp?.private_vulnerabilities.length == 0"
+                                [innerText]="'Check Transitives'"></span>
+
                         </div>
+
+
                         <div *ngSwitchCase="'highestCVSS'">
                             <!-- highestCVSS -->
-                            <span *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
-                            <ana-progress-meter *ngIf="comp?.hasSecurityIssue && tabType == 'private'"
-                                [config]="comp?.privateSecurityDetails?.progressReport"></ana-progress-meter>
-                            <ana-progress-meter *ngIf="comp?.hasSecurityIssue && tabType == 'public'"
-                                [config]="comp?.publicSecurityDetails?.progressReport"></ana-progress-meter>
+                            <ana-progress-meter
+                                *ngIf="comp?.privateSecurityDetails?.progressReport && tabType == 'private'"
+                                [config]="comp?.privateSecurityDetails?.progressReport "></ana-progress-meter>
+                            <ana-progress-meter
+                                *ngIf="comp?.publicSecurityDetails?.progressReport && tabType == 'public'"
+                                [config]="comp?.publicSecurityDetails?.progressReport "></ana-progress-meter>
+                            <span *ngIf="tabType == 'public' && !comp?.publicSecurityDetails?.progressReport"
+                                [innerText]="'-'"></span>
+                            <span *ngIf="tabType == 'private' && !comp?.privateSecurityDetails?.progressReport"
+                                [innerText]="'-'"></span>
                         </div>
 
                         <div *ngSwitchCase="'cveIdOfH'">
                             <!-- cveIdOfHeighest CVSS -->
-                            <span #public class="name" *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
-                            <a *ngIf="comp?.hasSecurityIssue && tabType == 'private';else public" [href]="comp?.url" target="_blank" class="name"
-                                [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails?.highestIssue?.cve"></a>
-                            <a #public *ngIf="comp?.hasSecurityIssue && tabType == 'public'" class="name" [href]="comp?.url" target="_blank"
-                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails?.highestIssue?.cve"></a>
+                            <a *ngIf="comp?.hasSecurityIssue && tabType == 'private'"
+                                [href]="comp?.privateSecurityDetails?.highestIssue?.url" target="_blank" class="name"
+                                [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails?.highestIssue?.cve || '-'"></a>
+                            <a *ngIf="comp?.hasSecurityIssue && tabType == 'public'" class="name"
+                                [href]="comp?.publicSecurityDetails?.highestIssue?.url" target="_blank"
+                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails?.highestIssue?.cve || '-'"></a>
+                            <span *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
+
                         </div>
 
                         <div *ngSwitchCase="'transCount'">
                             <span class="transCount"
-                                *ngIf="comp?.vulnerable_dependencies && comp?.vulnerable_dependencies.length>0"
-                                [innerText]=comp?.vulnerable_dependencies.length></span>
-                            <span class="name"
-                                *ngIf="comp?.vulnerable_dependencies && comp?.vulnerable_dependencies.length==0"
-                                [innerText]=''></span>
+                                *ngIf="comp?.privateTransitiveDependencies && comp?.privateTransitiveDependencies.length > 0 && tabType==='private'"
+                                [innerText]=comp?.privateTransitiveDependencies.length></span>
+                            <span class="transCount"
+                                *ngIf="comp?.publicTransitiveDependencies && comp?.publicTransitiveDependencies.length > 0 && tabType==='public'"
+                                [innerText]=comp?.publicTransitiveDependencies.length></span>
+                            <span *ngIf="!comp.vulnerable_dependencies" [innerText]="'-'"></span>
                         </div>
                         <!-- Action -->
                         <!-- <div *ngSwitchCase="'action'" class="action">
