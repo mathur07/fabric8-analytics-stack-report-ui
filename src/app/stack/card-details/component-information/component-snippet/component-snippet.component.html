@@ -126,11 +126,13 @@
                         <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
                         <!-- <span [innerText]="cve.severity"></span> -->
                         <!-- </span> -->
-                        <span class="name" [innerText]="cve.title"></span>
+                        <a [href]="generateUrl(cve.url)" target="_blank">
+                            <span class="name" [innerText]="cve.title" title="command/ctrl + click"></span>
+                        </a>
                     </span>
                     <br>
                     <span class="common-container box">
-                        <a href="https://app.snyk.io/signup/?utm_medium=Partner&utm_source=Red-Hat&utm_campaign=Code-Ready-Analytics-2020"
+                        <a href="https://app.snyk.io/signup/?utm_medium=Partner&utm_source=Red-Hat&utm_campaign=Code-Ready-Analytics-2020&utm_content=register"
                             target="_blank" title="command/ctrl + click">
                             <span>
                                 <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
@@ -173,9 +175,9 @@
                         <!-- </span> -->
                         <span class="name" [innerText]="cve.title"></span>
                     </span>
-                    <a class="name" *ngIf="component?.private_vulnerabilities?.length>0" [href]="component.url"
-                        target="_blank">
-                        Sign in to snyk to view more..
+                    <a class="name" *ngIf="component?.private_vulnerabilities?.length>0" [href]="generateUrl(component.url)"
+                        target="_blank" title="command/ctrl + click">
+                        Click here to view to view more..
                     </a>
                 </span>
             </div>
@@ -183,8 +185,8 @@
                 *ngIf="component?.registrationStatus == 'freetier' && (component?.private_vulnerabilities && component?.private_vulnerabilities.length > 0) && tabType=='private'">
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
-                    <a class="name" [href]="component.url" target="_blank">
-                        Sign in to snyk to view</a>
+                    <a class="name" [href]="generateUrl(component.url)" target="_blank" title="command/ctrl + click">
+                        Click here to view</a>
                 </span>
             </div>
         </div>
@@ -248,7 +250,7 @@
             </div>
 
             <report-information *ngIf="component.showTransitive" [report]="component.transitiveInfo"
-                [tabType]="'private'">
+                [tabType]="'private'" [transitive]="true">
             </report-information>
         </div>
     </div>

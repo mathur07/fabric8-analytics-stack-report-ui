@@ -24,6 +24,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
     @Input() genericInformation: MGenericStackInformation;
     @Input() repoInfo: any;
     @Input() tabType: string;
+    @Input() transitive: boolean;
 
     public componentDetails: Array<MComponentDetails> = null;
 

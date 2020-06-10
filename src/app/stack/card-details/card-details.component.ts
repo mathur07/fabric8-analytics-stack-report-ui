@@ -1105,7 +1105,7 @@ export class CardDetailsComponent implements OnChanges {
 
 
             if (registrationStatus == 'freetier') {
-                maxSecurityIssuesID = 'Sign in to snyk to view'
+                maxSecurityIssuesID = 'Click here to view'
             }
 
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
@@ -1372,7 +1372,7 @@ export class CardDetailsComponent implements OnChanges {
             console.log(this.whatCard);
 
             this.registrationStatus = this.report.user_stack_info.registration_status;
-            this.registrationLink = "https://app.snyk.io/signup/?utm_medium=Partner&utm_source=Red-Hat&utm_campaign=Code-Ready-Analytics-2020";
+            this.registrationLink = "https://app.snyk.io/signup/?utm_medium=Partner&utm_source=Red-Hat&utm_campaign=Code-Ready-Analytics-2020&utm_content=register";
             let reports: Array<MReportInformation> = this.getUIReportInformations(this.whatCard);
             this.details = new MCardDetails();
             let { title, description } = this.getTitleAndDescription(this.whatCard);

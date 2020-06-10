@@ -34,7 +34,6 @@ export class RecommendationsModel {
 }
 
 export class ComponentInformationModel {
-    code_metrics: any; // Ignored from strict typing as this is of least importance commented
     dependencies: Array<any>;
     ecosystem: string;
     github: GithubModel;

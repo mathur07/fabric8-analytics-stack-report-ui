@@ -58,6 +58,17 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
         this.paint();
     }
 
+    public generateUrl(url: string): string {
+        if (typeof (url) === "string") {
+            let content: Array<string>;
+            let generatedUrl: string;
+            content = url.split('/vuln/', 2);
+            generatedUrl = url + "?utm_medium=Partner&utm_source=Red%20Hat&utm_campaign=Code-Ready-Analytics-2020&utm_content=vuln/" + content[1];
+            return generatedUrl;
+        }
+        return null;
+    }
+    
     private paint(): void {
         this.githubEntries = [];
         if (this.component) {
