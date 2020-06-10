@@ -1,15 +1,17 @@
 <div class="col-xs-12 analytics-card-details">
 
-    <div class="col-xs-10 pl-0 ml-0">
+    <span [ngClass]="{'col-sm-10 pl-0 ml-0' : this.whatCard=='security' || this.whatCard == 'compDetails'}">
         <h2 [innerText]="details?.title"></h2>
         <p [innerText]="details?.titleDescription"></p>
-    </div>
-    <div class="col-xs-2">
+    </span>
+    <span class="col-sm-2" *ngIf="this.whatCard == 'security' || this.whatCard == 'compDetails'">
         <a [href]="registrationLink" title="Sign up with Snyk" target="_blank">
-            <span class="power">Powered By </span>
-            <img src="/assets/icon/snky-logo.png" alt="snyk-logo" class="logo" />
+            <span class="content-wrapper">
+                <span class="power">Powered By</span> 
+                <img src="/assets/icon/snky-logo.png" alt="snyk-logo" class="logo" />
+            </span>
         </a>
-    </div>
+    </span>
 
     <ng-container *ngIf="details?.reportInformations && details?.reportInformations.length > 1">
         <tabset>
@@ -18,7 +20,9 @@
                 <ng-template tabHeading>
                     <span [innerHtml]="tabz.title"></span>
                     <span *ngIf="this.whatCard == 'security'" [innerHtml]=" tabz.badge || '0'" class="badge"></span>
-                    <span *ngIf="this.whatCard == 'compDetails' || this.whatCard == 'licenses' || this.whatCard == 'insights' " [innerHtml]="tabz?.content?.componentDetails?.length || '0'" class="badge"></span>
+                    <span
+                        *ngIf="this.whatCard == 'compDetails' || this.whatCard == 'licenses' || this.whatCard == 'insights' "
+                        [innerHtml]="tabz?.content?.componentDetails?.length || '0'" class="badge"></span>
                 </ng-template>
                 <report-information [genericInformation]="genericInformation" [report]="tabz.content"
                     [repoInfo]="repoInfo"></report-information>
