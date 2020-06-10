@@ -45,7 +45,7 @@ export class ComponentInformationModel {
     osio_user_count: number;
     replaces: any;
     reason: string;
-    confidence_reason?: number;
+    cooccurrence_probability?: number;
     security: Array<SecurityInformationModel>;
     sentiment: SentimentModel;
     version: string;
@@ -173,7 +173,7 @@ export class UnknownLicensesModel {
 }
 
 export class StackLicenseAnalysisModel {
-    f8a_stack_licenses: Array<string> = []; // commented 
+    recommended_licenses: Array<string> = [];
     status: string;
     conflict_packages: Array<ConflictPackageModel> = [];
     unknown_licenses: UnknownLicensesModel;
@@ -183,7 +183,6 @@ export class StackLicenseAnalysisModel {
     total_licenses: number;
     unknown_dependencies: Array<any>;
     unknown_dependencies_count: number;
-    current_stack_license: any;
 }
 export class UserStackInfoModel {
     analyzed_dependencies: Array<ComponentInformationModel>;

@@ -169,13 +169,13 @@ export class CardDetailsComponent implements OnChanges {
                 comps.forEach((companion: ComponentInformationModel) => {
                     let security = this.getComponentSecurity(companion);
                     let progress: MProgressMeter = null;
-                    if (companion && companion.confidence_reason) {
+                    if (companion && companion.cooccurrence_probability) {
                         progress = new MProgressMeter(
-                            Math.round(companion.confidence_reason) + '%',
-                            Math.round(companion.confidence_reason),
-                            Math.round(companion.confidence_reason) > 50 ? '#6ec664' : 'ORANGE',
+                            Math.round(companion.cooccurrence_probability) + '%',
+                            Math.round(companion.cooccurrence_probability),
+                            Math.round(companion.cooccurrence_probability) > 50 ? '#6ec664' : 'ORANGE',
                             '',
-                            Math.round(companion.confidence_reason)
+                            Math.round(companion.cooccurrence_probability)
                         );
                     }
                     companions.push(new MRecommendationInformation(
@@ -764,13 +764,13 @@ export class CardDetailsComponent implements OnChanges {
                             if (component.name === alternate.replaces[0].name) {
                                 let alterSecurity: MSecurityDetails = this.getComponentSecurity(alternate);
                                 let progress: MProgressMeter = null;
-                                if (alternate && alternate.confidence_reason) {
+                                if (alternate && alternate.cooccurrence_probability) {
                                     progress = new MProgressMeter(
-                                        Math.round(alternate.confidence_reason) + '%',
-                                        Math.round(alternate.confidence_reason),
-                                        Math.round(alternate.confidence_reason) > 50 ? '#6ec664' : 'ORANGE',
+                                        Math.round(alternate.cooccurrence_probability) + '%',
+                                        Math.round(alternate.cooccurrence_probability),
+                                        Math.round(alternate.cooccurrence_probability) > 50 ? '#6ec664' : 'ORANGE',
                                         '',
-                                        Math.round(alternate.confidence_reason)
+                                        Math.round(alternate.cooccurrence_probability)
                                     );
                                 }
                                 recommendationInformation = new MRecommendationInformation(

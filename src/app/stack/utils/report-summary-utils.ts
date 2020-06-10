@@ -269,7 +269,7 @@ export class ReportSummaryUtils {
 
             let stackLicense: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             stackLicense.infoText = 'Suggested License';
-            let stackLicenses = licenseAnalysis.current_stack_license;
+            let stackLicenses = licenseAnalysis.recommended_licenses;
             if (stackLicenses) {
                 if (stackLicenses.length > 0) {
                     stackLicense.infoValue = stackLicenses[0];
