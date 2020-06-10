@@ -118,14 +118,27 @@
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
                     <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
-                        <span class="severity"
-                            [ngClass]="{'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
-                            <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
-                            <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
-                            <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
-                            <span [innerText]="cve.severity"></span>
-                        </span>
+                        <!-- <span class="severity"
+                            [ngClass]="{'critical':cve.severity == 'critical', 'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}"> -->
+                        <span *ngIf="cve.severity == 'critical'" class="circle critical" [innerText]="'C'"></span>
+                        <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
+                        <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
+                        <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
+                        <!-- <span [innerText]="cve.severity"></span> -->
+                        <!-- </span> -->
                         <span class="name" [innerText]="cve.title"></span>
+                    </span>
+                    <br>
+                    <span class="common-container box">
+                        <a href="https://app.snyk.io/signup/?utm_medium=Partner&utm_source=Red-Hat&utm_campaign=Code-Ready-Analytics-2020"
+                            target="_blank" title="command/ctrl + click">
+                            <span>
+                                <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
+                            </span>
+                            <span class="branding">Register for a free
+                                Snyk account to find out which vulnerabilities are known to be
+                                exploitable</span>
+                        </a>
                     </span>
                 </span>
             </div>
@@ -150,13 +163,14 @@
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
                     <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
-                        <span class="severity"
-                            [ngClass]="{'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
-                            <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
-                            <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
-                            <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
-                            <span [innerText]="cve.severity"></span>
-                        </span>
+                        <!-- <span class="severity"
+                            [ngClass]="{'critical':cve.severity == 'critical', 'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}"> -->
+                        <span *ngIf="cve.severity == 'critical'" class="circle critical" [innerText]="'C'"></span>
+                        <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
+                        <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
+                        <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
+                        <!-- <span [innerText]="cve.severity"></span> -->
+                        <!-- </span> -->
                         <span class="name" [innerText]="cve.title"></span>
                     </span>
                     <a class="name" *ngIf="component?.private_vulnerabilities?.length>0" [href]="component.url"
@@ -185,8 +199,9 @@
                 </span>
             </div>
         </div>
-        <div class="common-table component-tags">
-            <div class="common-wrapper">
+        <div class="common-table component-tags"
+            *ngIf="component?.crowdSourcing?.tags && component?.crowdSourcing?.tags?.length > 0">
+            <div class=" common-wrapper">
                 <span class="info-head">Tags:</span>
                 <span *ngIf="component?.crowdSourcing?.tags && component?.crowdSourcing?.tags?.length > 0"
                     class="common-container tags-container">
@@ -233,7 +248,7 @@
             </div>
 
             <report-information *ngIf="component.showTransitive" [report]="component.transitiveInfo"
-            [tabType]="'private'">
+                [tabType]="'private'">
             </report-information>
         </div>
     </div>

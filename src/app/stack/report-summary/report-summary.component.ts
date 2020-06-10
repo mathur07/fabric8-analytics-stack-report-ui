@@ -167,9 +167,9 @@ export class ReportSummaryComponent implements OnChanges {
         let cards: Array<MReportSummaryCard> = [];
         if (this.report) {            
             cards[0] = this.getSecurityReportCard();
-            cards[1] = this.getLicensesReportCard();
-            cards[2] = this.getInsightsReportCard();
-            cards[3] = this.getComponentDetailsReportCard();
+            cards[1] = this.getComponentDetailsReportCard();
+            cards[2] = this.getLicensesReportCard();
+            cards[3] = this.getInsightsReportCard();
         }
         this.reportSummaryCards = cards;
         // Select the first card by default

@@ -343,26 +343,6 @@ export class CardDetailsComponent implements OnChanges {
         return dependencieswithSecurityAdvisories;
     }
 
-    // private transitiveCreator(components: Array<ComponentInformationModel>) {
-    //     let recommendationInformation: MRecommendationInformation = null;
-
-    //     if (components) {
-    //         components.forEach(component => {
-    //             if (component.vulnerable_dependencies && component.vulnerable_dependencies.length > 0) {
-    //                 let vulnerable_dependencies_array = [...component.vulnerable_dependencies]
-    //                 let updated_vulnerable_dependencies_array = [];
-    //                 vulnerable_dependencies_array.forEach(element => {
-    //                     updated_vulnerable_dependencies_array.push(new MComponentDetails(
-    //                         this.getComponentInformation(element, true),
-    //                         recommendationInformation
-    //                     ));
-    //                 });
-    //                 component.allTransitiveDependencies = updated_vulnerable_dependencies_array;
-    //             }
-    //         });
-    //     }
-    // }
-
     private getUIReportInformations(cardType: string): Array<MReportInformation> {
         let reportInformations: Array<MReportInformation> = [];
         let componentDetails: Array<MComponentDetails> = [];
@@ -446,7 +426,7 @@ export class CardDetailsComponent implements OnChanges {
                     if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
                         element.componentInformation.transitiveInfo = new MReportInformation(
                             'comp-direct-security',
-                            'Dependencies with Known Vulnerabilities',
+                            'Commonly Known Vulnerabilities',
                             'component',
                             this.fillColumnHeaders(cardType, 2, true),
                             element.componentInformation.allTransitiveDependencies,
@@ -457,7 +437,7 @@ export class CardDetailsComponent implements OnChanges {
                 });
                 reportInformations.push(new MReportInformation(
                     'comp-direct-security',
-                    'Dependencies with Known Vulnerabilities',
+                    'Commonly Known Vulnerabilities',
                     'component',
                     this.fillColumnHeaders(cardType, 2),
                     dependenciesWithKnownVulnerabilities,
@@ -469,7 +449,7 @@ export class CardDetailsComponent implements OnChanges {
                     if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
                         element.componentInformation.transitiveInfo = new MReportInformation(
                             'comp-direct-security',
-                            'Dependencies with Security Advisories ',
+                            'Vulnerabilities unique to Snyk',
                             'component',
                             this.fillColumnHeaders(cardType, 2, true),
                             element.componentInformation.allTransitiveDependencies,
@@ -480,7 +460,7 @@ export class CardDetailsComponent implements OnChanges {
                 });
                 reportInformations.push(new MReportInformation(
                     'comp-direct-security',
-                    'Dependencies with Security Advisories',
+                    'Vulnerabilities unique to Snyk',
                     'component',
                     this.fillColumnHeaders(cardType, 2),
                     dependencieswithSecurityAdvisories,
@@ -867,11 +847,40 @@ export class CardDetailsComponent implements OnChanges {
                 false,
                 isTransitive,
                 component.publicTransitiveDependencies,
-                component.privateTransitiveDependencies
+                component.privateTransitiveDependencies,
+                this.publicTransitiveCount(component.publicTransitiveDependencies),
+                this.privateTransitiveCount(component.privateTransitiveDependencies),
             );
         }
         return null;
     }
+
+    private publicTransitiveCount(deps: any[]): string {
+        let vulnerabilityCount = 0;
+        if (deps != undefined) {
+            deps.forEach(dep => {
+                vulnerabilityCount += dep.componentInformation.public_vulnerabilities.length;
+            });
+
+            return vulnerabilityCount + '';
+        } else {
+            return null;
+        }
+    }
+
+    private privateTransitiveCount(deps: any[]): string {
+        let vulnerabilityCount = 0;
+        if (deps != undefined) {
+            deps.forEach(dep => {
+                vulnerabilityCount += dep.componentInformation.private_vulnerabilities.length;
+            });
+
+            return vulnerabilityCount + '';
+        } else {
+            return null;
+        }
+    }
+
 
     private getUnknownLicenses(component: ComponentInformationModel): Array<string> {
         let unknownLicenses: Array<string> = [];
@@ -1152,9 +1161,16 @@ export class CardDetailsComponent implements OnChanges {
                 ));
                 headers.push(new MComponentHeaderColumn(
                     'cveCount',
-                    'No. of Vulnerabilities',
+                    'No. of Direct Vulnerabilities',
                     'float-left small'
                 ));
+                if (!transitive) {
+                    headers.push(new MComponentHeaderColumn(
+                        'transCount',
+                        'No. of Transitive Vulnerabilities',
+                        'float-left small'
+                    ));
+                }
                 headers.push(new MComponentHeaderColumn(
                     'highestCVSS',
                     'Highest CVSS Score',
@@ -1166,13 +1182,6 @@ export class CardDetailsComponent implements OnChanges {
                     'float-left medium'
                 ));
 
-                if (!transitive) {
-                    headers.push(new MComponentHeaderColumn(
-                        'transCount',
-                        'Transitive Dependencies Count',
-                        'float-left small'
-                    ));
-                }
                 // headers.push(new MComponentHeaderColumn(
                 //     'action',
                 //     'Action',
@@ -1308,11 +1317,62 @@ export class CardDetailsComponent implements OnChanges {
         return headers;
     }
 
+    private calBadge(report: MReportInformation, name: string): string {
+
+
+        let privateVulnerabilitiesSet = new Set();
+        let publicVulnerabilitiesSet = new Set();
+
+        report.componentDetails.forEach(element => {
+
+            if (element.componentInformation.public_vulnerabilities && element.componentInformation.public_vulnerabilities.length > 0) {
+                element.componentInformation.public_vulnerabilities.forEach(pubDep => {
+                    publicVulnerabilitiesSet.add(pubDep)
+                });
+            }
+            if (element.componentInformation.private_vulnerabilities && element.componentInformation.private_vulnerabilities.length > 0) {
+                element.componentInformation.private_vulnerabilities.forEach(priDep => {
+                    privateVulnerabilitiesSet.add(priDep)
+                });
+            }
+
+            if (element.componentInformation.vulnerable_dependencies && element.componentInformation.vulnerable_dependencies.length > 0) {
+
+                element.componentInformation.vulnerable_dependencies.forEach(tdep => {
+                    if (tdep.public_vulnerabilities && tdep.public_vulnerabilities.length > 0) {
+                        tdep.public_vulnerabilities.forEach(transPubDep => {
+                            publicVulnerabilitiesSet.add(transPubDep)
+                        });
+                    }
+                    if (tdep.private_vulnerabilities && tdep.private_vulnerabilities.length > 0) {
+                        tdep.private_vulnerabilities.forEach(transPriDep => {
+                            privateVulnerabilitiesSet.add(transPriDep)
+                        });
+                    }
+                });
+
+            }
+        });
+
+        if (publicVulnerabilitiesSet.size || privateVulnerabilitiesSet.size) {
+            if (name == "Commonly Known Vulnerabilities") {
+                return publicVulnerabilitiesSet.size + '';
+            }
+            if (name == "Vulnerabilities unique to Snyk") {
+                return privateVulnerabilitiesSet.size + '';
+            }
+        } else {
+            return '0'
+        }
+    }
+
     private paint(): void {
         this.tabs = [];
         if (this.report && this.whatCard) {
+            console.log(this.whatCard);
+
             this.registrationStatus = this.report.user_stack_info.registration_status;
-            this.registrationLink = this.report.registration_link;
+            this.registrationLink = "https://app.snyk.io/signup/?utm_medium=Partner&utm_source=Red-Hat&utm_campaign=Code-Ready-Analytics-2020";
             let reports: Array<MReportInformation> = this.getUIReportInformations(this.whatCard);
             this.details = new MCardDetails();
             let { title, description } = this.getTitleAndDescription(this.whatCard);
@@ -1325,7 +1385,9 @@ export class CardDetailsComponent implements OnChanges {
                 reports.forEach((report: MReportInformation) => {
                     this.tabs.push(new MTab(
                         report.name,
-                        report
+                        report,
+                        false,
+                        this.whatCard === 'security' ? this.calBadge(report, report.name) : '0'
                     ));
                 });
             }

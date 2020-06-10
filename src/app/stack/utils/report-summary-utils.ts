@@ -165,25 +165,9 @@ export class ReportSummaryUtils {
                 totalVulnerabilities
             );
 
-            let publicVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
-            publicVulnerabilities.infoText = "Known Vulnerabilities";
-            publicVulnerabilities.infoValue = publicVulnerabilitiesCount;
-            securityCard.reportSummaryContent.infoEntries.push(
-                publicVulnerabilities
-            );
-
-            let privateVulnerabilities: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
-            privateVulnerabilities.infoText = "Security Advisories";
-            // totaldependenciesEffectedEntry.infoValue = dependenciesEffected;
-            privateVulnerabilities.infoValue = privateVulnerabilitiesCount;
-            securityCard.reportSummaryContent.infoEntries.push(
-                privateVulnerabilities
-            );
-
             let vulnerableDependenciesCount = 0;
             let vulnerableDependencies: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             vulnerableDependencies.infoText = "Vulnerable Dependencies";
-            // totaldependenciesEffectedEntry.infoValue = dependenciesEffected;
             analyzedDependencies.forEach(element => {
                 if (element.public_vulnerabilities.length > 0 || element.private_vulnerabilities.length > 0 || element.vulnerable_dependencies.length > 0) {
                     vulnerableDependenciesCount++;

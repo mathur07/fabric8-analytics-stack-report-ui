@@ -40,3 +40,51 @@
     margin: 0 auto;
     text-align: center;
 }
+.avatar {
+    margin-top: -.2em;
+    margin-left: -.5em;
+    width: 4.5em;
+    height: 4em;
+}
+.snyk-box {
+    justify-content: center;
+    align-items: center;
+    margin: 1.5em auto;
+    position: relative;
+    background-color: #eff2f5;
+    box-shadow: 0 12px 20px 0 rgba(0, 0, 0, .2);
+    color: rgb(236, 125, 125);
+    border: 3px solid #a05f5f;
+    z-index: 2;
+    width: 80%;
+    overflow: auto;
+    padding: 5px;
+    &:hover {
+        box-shadow: 0 16px 24px 0 rgba(0, 0, 0, .2);
+    }
+}
+.ripple {
+    background-position: center;
+    transition: background .8s;
+  }
+  .ripple:hover {
+    background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) center/15000%;
+  }
+  .ripple:active {
+    background-color: #6eb9f7;
+    background-size: 100%;
+    transition: background 0s;
+  }
+
+button {
+    border: none;
+    border-radius: 4px;
+    padding: 6px 9px;
+    font-size: 10px;
+    cursor: pointer;
+    color: white;
+    background-color: #2196f3;
+    box-shadow: 0 0 4px #999;
+    outline: none;
+}
+  

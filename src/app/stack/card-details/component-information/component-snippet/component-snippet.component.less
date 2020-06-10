@@ -112,6 +112,10 @@
         margin-right: 2px;
         font-size: 13px;
         text-transform: capitalize;
+            &.critical {
+                border: 2px solid #8f0eaf;
+                color: #8f0eaf;
+            }
             &.high {
                 border: 2px solid #ac1a46;
                 color: #ac1a46;
@@ -121,8 +125,8 @@
                 color: #ffa500;
             }
             &.low {
-                border: 2px solid #73ad21;
-                color: #73ad21;
+                border: 2px solid #949b8c;
+                color: #949b8c;
             }
     }
     .circle {
@@ -133,6 +137,9 @@
         color: white;
         text-align: center;
         font-weight: bold;
+        &.critical {
+            background-color: #8f0eaf;
+        }
         &.high {
             background-color: #ac1a46;
         }
@@ -140,7 +147,29 @@
             background-color: #ffa500;
         }
         &.low {
-            background-color: #73ad21;
+            background-color: #c2caba;
+        }
+    }
+    .box {
+        margin-left: 2em;
+        margin-top: -.3em;
+        background-color: #eff2f5;
+        padding: .5em 1em;
+    }
+    .branding {
+        font-size: 13px;
+        color: @steelBlue;
+        text-decoration: underline;
+    }
+    .avatar {
+        margin-top: -.2em;
+        margin-left: -.5em;
+        width: 3.5em;
+        height: 2.5em;
+    }
+    a {
+        &:hover {
+            text-decoration: none;
         }
     }
     .name {

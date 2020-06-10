@@ -7,7 +7,7 @@
     <div class="col-xs-2">
         <a [href]="registrationLink" title="Sign up with Snyk" target="_blank">
             <span class="power">Powered By </span>
-            <img src="../../.././assets/icon/snky-logo.png" alt="snyk-logo" class="logo" />
+            <img src="/assets/icon/snky-logo.png" alt="snyk-logo" class="logo" />
         </a>
     </div>
 
@@ -17,7 +17,8 @@
                 [customClass]="tabz.active ? 'active-menu-item' : 'inactive-menu'">
                 <ng-template tabHeading>
                     <span [innerHtml]="tabz.title"></span>
-                    <span [innerHtml]="tabz?.content?.componentDetails?.length || '0'" class="badge"></span>
+                    <span *ngIf="this.whatCard == 'security'" [innerHtml]=" tabz.badge || '0'" class="badge"></span>
+                    <span *ngIf="this.whatCard == 'compDetails' || this.whatCard == 'licenses' || this.whatCard == 'insights' " [innerHtml]="tabz?.content?.componentDetails?.length || '0'" class="badge"></span>
                 </ng-template>
                 <report-information [genericInformation]="genericInformation" [report]="tabz.content"
                     [repoInfo]="repoInfo"></report-information>

@@ -68,12 +68,14 @@
 
                         <div *ngSwitchCase="'transCount'">
                             <span class="transCount"
-                                *ngIf="comp?.privateTransitiveDependencies && comp?.privateTransitiveDependencies.length > 0 && tabType==='private'"
-                                [innerText]=comp?.privateTransitiveDependencies.length></span>
+                                *ngIf="comp?.privateTransitiveDependencies && comp?.privateTransitiveDependencies.length > 0 && tabType === 'private'"
+                                [innerText]="comp?.privateTransitiveVulnerabilities"></span>
                             <span class="transCount"
-                                *ngIf="comp?.publicTransitiveDependencies && comp?.publicTransitiveDependencies.length > 0 && tabType==='public'"
-                                [innerText]=comp?.publicTransitiveDependencies.length></span>
-                            <span *ngIf="!comp.vulnerable_dependencies" [innerText]="'-'"></span>
+                                *ngIf="comp?.publicTransitiveDependencies && comp?.publicTransitiveDependencies.length > 0 && tabType === 'public'"
+                                [innerText]="comp?.publicTransitiveVulnerabilities"></span>
+                            <span *ngIf="comp.publicTransitiveVulnerabilities == null || comp.privateTransitiveVulnerabilities == null" [innerText]="'-'"></span>
+                            <span *ngIf="tabType === 'private' && comp.privateTransitiveVulnerabilities == '0'" [innerText]="'-'"></span>
+                            <span *ngIf="tabType === 'public' && comp.publicTransitiveVulnerabilities == '0'" [innerText]="'-'"></span>                           
                         </div>
                         <!-- Action -->
                         <!-- <div *ngSwitchCase="'action'" class="action">

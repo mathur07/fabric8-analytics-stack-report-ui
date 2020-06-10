@@ -30,9 +30,10 @@ export class ComponentInformationComponent implements OnInit, OnChanges {
     @Input() repoInfo: any;
     @Input() tabType: string;
     public comp: MComponentInformation;
+    publicTransvulnerabilities: number;
 
     constructor(
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.paint();
@@ -41,16 +42,18 @@ export class ComponentInformationComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         let summary: any = changes['component'];
         if (summary) {
-            this.component = <MComponentInformation | MRecommendationInformation> summary.currentValue;
+            this.component = <MComponentInformation | MRecommendationInformation>summary.currentValue;
         }
         if (changes['positions']) {
             this.positions = changes['positions']['currentValue'];
         }
+
         this.paint();
     }
 
+
     public paint(): void {
-        if (this.component) {            
+        if (this.component) {
             if (this.type === 'recommendation') {
                 let c = (<MRecommendationInformation>this.component);
                 this.comp = c && c.componentInformation;

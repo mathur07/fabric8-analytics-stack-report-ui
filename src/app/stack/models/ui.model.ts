@@ -15,7 +15,8 @@ export class MTab {
     constructor(
         public title: string,
         public content: MReportInformation,
-        public active: boolean = false
+        public active: boolean = false,
+        public badge: string
     ) { }
 }
 
@@ -165,6 +166,8 @@ export class MComponentInformation {
         public isTransitive: boolean = false,
         public publicTransitiveDependencies?: Array<MComponentDetails>,
         public privateTransitiveDependencies?: Array<MComponentDetails>,
+        public publicTransitiveVulnerabilities?: string,
+        public privateTransitiveVulnerabilities?: string
     ) { }
 }
 
