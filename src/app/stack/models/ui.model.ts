@@ -114,21 +114,6 @@ export class MWorkItem {
         public url?: string
     ) { }
 }
-
-// export class MShowTransitive {
-//     constructor(
-//         public self: boolean = false,
-//         public details: boolean = false,
-//     ) { }
-
-// }
-// export class MToggler {
-//     constructor(
-//         public self: boolean = false,
-//         public showTransitive: MShowTransitive
-//     ) { }
-// }
-
 export class MComponentInformation {
     constructor(
         public name: string,

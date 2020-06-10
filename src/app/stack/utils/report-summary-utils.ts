@@ -83,12 +83,8 @@ export class ReportSummaryUtils {
 
             let securityIssues: number = 0;
             let dependenciesEffected: number = 0;
-            // let maxIssue: SecurityInformationModel = null,
-            //     temp: SecurityInformationModel = null;
 
             let analyzedDependencies: Array<ComponentInformationModel>;
-            let publicVulnerabilitiesCount: number = 0;
-            let privateVulnerabilitiesCount: number = 0;
             let highCvss: boolean = false;
             let hasVulnerabilities: boolean = false;
 
@@ -138,6 +134,8 @@ export class ReportSummaryUtils {
                 }
 
             });
+            let publicVulnerabilitiesCount: number = 0;
+            let privateVulnerabilitiesCount: number = 0;
 
             publicVulnerabilitiesCount = publicVulnerabilitiesSet.size;
             privateVulnerabilitiesCount = privateVulnerabilitiesSet.size;

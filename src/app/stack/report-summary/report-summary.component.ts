@@ -125,10 +125,7 @@ export class ReportSummaryComponent implements OnChanges {
             const analyzedDirectCount: number = userStackInfo.analyzed_dependencies.length;
             const totalCount: number = unknownCount + analyzedDirectCount;
 
-            let analyzedTransCount: number = 0;
-            userStackInfo.analyzed_dependencies.forEach(dep => {
-                analyzedTransCount += dep.dependencies.length;
-            });
+            const analyzedTransCount: number =  userStackInfo.analyzed_dependencies.reduce((count, dep) => count + dep.dependencies.length, 0);
 
             const isTransitiveSupported: boolean = analyzedTransCount >= 0;
 

@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
-import { Http, Response, Headers, RequestOptions  } from '@angular/http';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 import { WIT_API_URL } from 'ngx-fabric8-wit';
 
-import {StackReportModel} from './models/stack-report.model';
+import { StackReportModel } from './models/stack-report.model';
 
 @Injectable()
 export class StackAnalysesService {
@@ -37,7 +37,7 @@ export class StackAnalysesService {
 
   constructor(
     private http: Http
-  ) {}
+  ) { }
 
   getStackAnalyses(url: string, params?: any): Observable<any> {
     let stackReport: StackReportModel = null;
@@ -45,17 +45,19 @@ export class StackAnalysesService {
       if (params['access_token']) {
         let headers: Headers = new Headers();
         headers.append('Authorization', 'Bearer ' + params['access_token']);
-        headers.append('x-3scale-account-secret','not-set');
+        if (params['devcluster']) {
+          headers.append('x-3scale-account-secret', 'not-set');
+        }
         return this.http.get(url, {
           headers: headers
         })
-        .map(this.extractData)
-        .map((data) => {
-          console.log("response data >>", data);
-          stackReport = data;
-          return stackReport;
-        })
-        .catch(this.handleError);
+          .map(this.extractData)
+          .map((data) => {
+            console.log("response data >>", data);
+            stackReport = data;
+            return stackReport;
+          })
+          .catch(this.handleError);
       }
     }
     return null;

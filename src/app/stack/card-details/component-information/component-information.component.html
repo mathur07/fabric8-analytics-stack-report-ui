@@ -26,10 +26,10 @@
                             <!-- cveCount -->
                             <span
                                 *ngIf="tabType == 'private' && comp?.private_vulnerabilities && comp?.private_vulnerabilities.length > 0"
-                                [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails.totalIssues "></span>
+                                [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails.totalIssues" class="count"></span>
                             <span
                                 *ngIf="tabType == 'public' && comp?.public_vulnerabilities && comp?.public_vulnerabilities.length > 0"
-                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails.totalIssues "></span>
+                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails.totalIssues" class="count"></span>
                             <span
                                 *ngIf="tabType == 'public' && comp?.public_vulnerabilities && comp?.public_vulnerabilities.length == 0"
                                 [innerText]="'Check Transitives'"></span>
@@ -67,10 +67,10 @@
                         </div>
 
                         <div *ngSwitchCase="'transCount'">
-                            <span class="transCount"
+                            <span class="count"
                                 *ngIf="comp?.privateTransitiveDependencies && comp?.privateTransitiveDependencies.length > 0 && tabType === 'private'"
                                 [innerText]="comp?.privateTransitiveVulnerabilities"></span>
-                            <span class="transCount"
+                            <span class="count"
                                 *ngIf="comp?.publicTransitiveDependencies && comp?.publicTransitiveDependencies.length > 0 && tabType === 'public'"
                                 [innerText]="comp?.publicTransitiveVulnerabilities"></span>
                             <span *ngIf="comp.publicTransitiveVulnerabilities == null || comp.privateTransitiveVulnerabilities == null" [innerText]="'-'"></span>

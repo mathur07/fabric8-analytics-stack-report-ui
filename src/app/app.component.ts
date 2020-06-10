@@ -62,9 +62,9 @@ export class AppComponent implements OnInit {
                     this.gateway['config']['api_url'] = apiHost;
                 }
 
-                if(this.gateway['config']['ver']){
+                if (this.gateway['config']['ver']) {
                     this.version = this.gateway['config']['ver'];
-                }else{
+                } else {
                     this.version = 'v1';
                 }
 
