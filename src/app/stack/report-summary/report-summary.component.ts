@@ -125,8 +125,15 @@ export class ReportSummaryComponent implements OnChanges {
             const analyzedDirectCount: number = userStackInfo.analyzed_dependencies.length;
             const totalCount: number = unknownCount + analyzedDirectCount;
 
-            const analyzedTransCount: number =  userStackInfo.analyzed_dependencies.reduce((count, dep) => count + dep.dependencies.length, 0);
+            let analyzedTransSet = new Set();
+            let analyzedTransCount: number;
+            userStackInfo.analyzed_dependencies.forEach(element => {
+                element.dependencies.forEach(tDep => {
+                    analyzedTransSet.add(tDep.name + tDep.version);
+                });
+            });
 
+            analyzedTransCount =  analyzedTransSet.size;
             const isTransitiveSupported: boolean = analyzedTransCount >= 0;
 
             const analyzedEntry: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
@@ -162,7 +169,7 @@ export class ReportSummaryComponent implements OnChanges {
 
     private updateCards(): void {
         let cards: Array<MReportSummaryCard> = [];
-        if (this.report) {            
+        if (this.report) {
             cards[0] = this.getSecurityReportCard();
             cards[1] = this.getComponentDetailsReportCard();
             cards[2] = this.getLicensesReportCard();

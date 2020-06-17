@@ -12,6 +12,8 @@ import {
     MComponentInformation
 } from '../../../models/ui.model';
 
+import { GenerateUrl } from '../../../utils/url-generator';
+
 @Component({
     selector: 'component-snippet',
     styleUrls: ['./component-snippet.component.less'],
@@ -20,10 +22,11 @@ import {
 export class ComponentSnippetComponent implements OnInit, OnChanges {
     @Input() component: MComponentInformation;
     @Input() view: string;
-    @Input() tabType: string; 
+    @Input() tabType: string;
 
     public githubEntries: Array<any> = [];
 
+    public generateUrl = new GenerateUrl();
 
 
     public githubKeys: any = {
@@ -54,21 +57,21 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
             this.component = <MComponentInformation>summary.currentValue;
 
         }
-        console.log("component===>", this.component);
         this.paint();
     }
 
-    public generateUrl(url: string): string {
-        if (typeof (url) === "string") {
-            let content: Array<string>;
-            let generatedUrl: string;
-            content = url.split('/vuln/', 2);
-            generatedUrl = url + "?utm_medium=Partner&utm_source=Red%20Hat&utm_campaign=Code-Ready-Analytics-2020&utm_content=vuln/" + content[1];
-            return generatedUrl;
+    public getUrl(url: string, tabType: string, regitrationStatus?: string): string {
+        if (tabType == 'public') {
+            return this.generateUrl.publicUrl(url);
         }
-        return null;
+        if (tabType == 'private') {
+            return this.generateUrl.privateUrl(url, regitrationStatus);
+        }
+        if (tabType == 'compDetails') {
+            return this.generateUrl.privateUrl(url, regitrationStatus);
+        }
     }
-    
+
     private paint(): void {
         this.githubEntries = [];
         if (this.component) {

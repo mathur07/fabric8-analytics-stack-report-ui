@@ -120,14 +120,14 @@
                     <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
                         <!-- <span class="severity"
                             [ngClass]="{'critical':cve.severity == 'critical', 'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}"> -->
-                        <span *ngIf="cve.severity == 'critical'" class="circle critical" [innerText]="'C'"></span>
-                        <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
-                        <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
-                        <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
+                        <span *ngIf="cve.severity == 'critical'" class="circle critical" [innerText]="'C'" title="Critical"></span>
+                        <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'" title="High"></span>
+                        <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'" title="Medium"></span>
+                        <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'" title="Low"></span>
                         <!-- <span [innerText]="cve.severity"></span> -->
                         <!-- </span> -->
-                        <a [href]="generateUrl(cve.url)" target="_blank">
-                            <span class="name" [innerText]="cve.title" title="command/ctrl + click"></span>
+                        <a [href]="getUrl(cve.url, tabType)" target="_blank">
+                            <span class="name" [innerText]="cve.title" [tooltip]="cve.id" title="command/ctrl + click"></span>
                         </a>
                     </span>
                     <br>
@@ -173,11 +173,13 @@
                         <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
                         <!-- <span [innerText]="cve.severity"></span> -->
                         <!-- </span> -->
-                        <span class="name" [innerText]="cve.title"></span>
+                        <a [href]="getUrl(cve.url, 'public')" target="_blank">
+                            <span class="name" [innerText]="cve.title" [tooltip]="cve.id" title="command/ctrl + click"></span>
+                        </a>
                     </span>
-                    <a class="name" *ngIf="component?.private_vulnerabilities?.length>0" [href]="generateUrl(component.url)"
+                    <a class="name" *ngIf="component?.private_vulnerabilities?.length>0" [href]="getUrl(component.url, tabType, component?.registrationStatus)"
                         target="_blank" title="command/ctrl + click">
-                        Click here to view to view more..
+                        Sign up with Snyk
                     </a>
                 </span>
             </div>
@@ -185,8 +187,8 @@
                 *ngIf="component?.registrationStatus == 'freetier' && (component?.private_vulnerabilities && component?.private_vulnerabilities.length > 0) && tabType=='private'">
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
-                    <a class="name" [href]="generateUrl(component.url)" target="_blank" title="command/ctrl + click">
-                        Click here to view</a>
+                    <a class="name" [href]="getUrl(component.url, tabType, component?.registrationStatus)" target="_blank" title="command/ctrl + click">
+                        Sign up with Snyk</a>
                 </span>
             </div>
         </div>

@@ -22,7 +22,7 @@ import {
     ComponentConflictUnknownModel,
     ConflictPackageModel,
     ReallyUnknownLicenseModel,
-    VulnerabilitiesModel
+    VulnerabilitiesModel,
 } from '../models/stack-report.model';
 
 import {
@@ -48,6 +48,8 @@ import {
     MFeedbackTemplate,
     // MToggler
 } from '../models/ui.model';
+
+import { GenerateUrl } from '../utils/url-generator';
 import { element } from 'protractor';
 
 @Component({
@@ -68,6 +70,8 @@ export class CardDetailsComponent implements OnChanges {
     public registrationLink: string;
 
     public tabs: Array<MTab> = [];
+
+    private generateUrl = new GenerateUrl();
 
     public USER_ACTION: any = {
         'security': 'Log a bug',
@@ -1038,7 +1042,7 @@ export class CardDetailsComponent implements OnChanges {
                 if (vulnerability.cvss > maxSecurityIssues) {
                     maxSecurityIssues = vulnerability.cvss;
                     maxSecurityIssuesID = vulnerability.id;
-                    maxSecurityIssuesURL = vulnerability.url;
+                    maxSecurityIssuesURL = this.generateUrl.publicUrl(vulnerability.url);
                 }
 
                 vulnerability.cve_ids.forEach(cve => {
@@ -1090,7 +1094,7 @@ export class CardDetailsComponent implements OnChanges {
                 if (vulnerability.cvss > maxSecurityIssues) {
                     maxSecurityIssues = vulnerability.cvss;
                     maxSecurityIssuesID = vulnerability.id;
-                    maxSecurityIssuesURL = vulnerability.url;
+                    maxSecurityIssuesURL = this.generateUrl.privateUrl(vulnerability.url, registrationStatus);
                 }
 
                 vulnerability.cve_ids.forEach(cve => {
@@ -1105,7 +1109,7 @@ export class CardDetailsComponent implements OnChanges {
 
 
             if (registrationStatus == 'freetier') {
-                maxSecurityIssuesID = 'Click here to view'
+                maxSecurityIssuesID = 'Sign up with Snyk'
             }
 
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
@@ -1372,7 +1376,7 @@ export class CardDetailsComponent implements OnChanges {
             console.log(this.whatCard);
 
             this.registrationStatus = this.report.user_stack_info.registration_status;
-            this.registrationLink = "https://app.snyk.io/signup/?utm_medium=Partner&utm_source=Red-Hat&utm_campaign=Code-Ready-Analytics-2020&utm_content=register";
+            this.registrationLink = this.generateUrl.regitrationURL;
             let reports: Array<MReportInformation> = this.getUIReportInformations(this.whatCard);
             this.details = new MCardDetails();
             let { title, description } = this.getTitleAndDescription(this.whatCard);
