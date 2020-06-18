@@ -281,7 +281,10 @@ export class ReportSummaryUtils {
                 }
             } else {
                 // Null
-                stackLicense.infoValue = '-';
+                stackLicense.infoValue = 'None';
+                if (licenseAnalysis.status && licenseAnalysis.status.toLowerCase() === 'failure') {
+                    stackLicense.infoValue = 'Unknown';
+                }
             }
             licensesCard.reportSummaryContent.infoEntries.push(stackLicense);
 
@@ -303,7 +306,7 @@ export class ReportSummaryUtils {
             }
             licensesCard.reportSummaryContent.infoEntries.push(unknownLicense);
 
-            if (stackLicense.infoValue !== 'NONE' && stackLicense.infoValue !== 'Unknown') {
+            if (stackLicense.infoValue !== 'None' && stackLicense.infoValue !== 'Unknown') {
                 let restrictiveLicenses: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
                 restrictiveLicenses.infoText = 'Restrictive Licenses';
                 let restrictive = licenseAnalysis.outlier_packages;

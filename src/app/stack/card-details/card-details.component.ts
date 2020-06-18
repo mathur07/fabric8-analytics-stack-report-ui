@@ -65,7 +65,6 @@ export class CardDetailsComponent implements OnChanges {
     public report: ResultInformationModel;
     public whatCard: string;
     public details: MCardDetails = null;
-    public dictionary: Object = null;
     public registrationStatus: string;
     public registrationLink: string;
 

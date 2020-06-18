@@ -56,7 +56,7 @@ export class ComponentInformationComponent implements OnInit, OnChanges {
             let content: Array<string>;
             let generatedUrl: string;
             content = url.split('/vuln/', 2);
-            generatedUrl = url + "?utm_medium=Partner&utm_source=Red%20Hat&utm_campaign=Code-Ready-Analytics-2020&utm_content=vuln/" + content[1];
+            generatedUrl = url + "?utm_medium=Partner&utm_source=RedHat&utm_campaign=Code-Ready-Analytics-2020&utm_content=vuln/" + content[1];
             return generatedUrl;
         }
         return null;
