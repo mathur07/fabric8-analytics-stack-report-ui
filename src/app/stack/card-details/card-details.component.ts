@@ -1318,7 +1318,7 @@ export class CardDetailsComponent implements OnChanges {
         return headers;
     }
 
-    private calBadge(report: MReportInformation, name: string): string {
+    private calculateBadgeInformation(report: MReportInformation, name: string): string {
 
 
         let privateVulnerabilitiesSet = new Set();
@@ -1388,7 +1388,7 @@ export class CardDetailsComponent implements OnChanges {
                         report.name,
                         report,
                         false,
-                        this.whatCard === 'security' ? this.calBadge(report, report.name) : '0'
+                        this.whatCard === 'security' ? this.calculateBadgeInformation(report, report.name) : '0'
                     ));
                 });
             }
