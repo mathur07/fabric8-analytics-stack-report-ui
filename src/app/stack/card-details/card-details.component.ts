@@ -328,14 +328,12 @@ export class CardDetailsComponent implements OnChanges {
                 // nulls sort after anything else
                 if (a.componentInformation.privateSecurityDetails === null || a.componentInformation.privateSecurityDetails.highestIssue === null || a.componentInformation.privateSecurityDetails.highestIssue.cvss === null) {
                     return 1;
-                }
-                else if (b.componentInformation.privateSecurityDetails === null || b.componentInformation.privateSecurityDetails.highestIssue === null || b.componentInformation.privateSecurityDetails.highestIssue.cvss === null) {
+                } else if (b.componentInformation.privateSecurityDetails === null || b.componentInformation.privateSecurityDetails.highestIssue === null || b.componentInformation.privateSecurityDetails.highestIssue.cvss === null) {
                     return -1;
                     // equal items sort equally
                 } else if (a.componentInformation.privateSecurityDetails.highestIssue.cvss === b.componentInformation.privateSecurityDetails.highestIssue.cvss) {
                     return 0;
-                }
-                else if (desc) {
+                } else if (desc) {
                     return parseInt(a.componentInformation.privateSecurityDetails.highestIssue.cvss) < parseInt(b.componentInformation.privateSecurityDetails.highestIssue.cvss) ? 1 : -1;
                 }
             };
