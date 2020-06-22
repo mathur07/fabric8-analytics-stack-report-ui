@@ -15,6 +15,7 @@ import {
     MGenericStackInformation
 } from '../../models/ui.model';
 
+import { GenerateUrl } from '../../utils/url-generator';
 
 @Component({
     selector: 'component-information',
@@ -31,6 +32,8 @@ export class ComponentInformationComponent implements OnInit, OnChanges {
     @Input() tabType: string;
     public comp: MComponentInformation;
     publicTransvulnerabilities: number;
+
+    public generateUrl = new GenerateUrl();
 
     constructor(
     ) { }
@@ -51,15 +54,8 @@ export class ComponentInformationComponent implements OnInit, OnChanges {
         this.paint();
     }
 
-    public generateUrl(url: string): string {
-        if (typeof (url) === "string") {
-            let content: Array<string>;
-            let generatedUrl: string;
-            content = url.split('/vuln/', 2);
-            generatedUrl = url + "?utm_medium=Partner&utm_source=RedHat&utm_campaign=Code-Ready-Analytics-2020&utm_content=vuln/" + content[1];
-            return generatedUrl;
-        }
-        return null;
+    public getInformationUrl(url: string): string {
+            return this.generateUrl.publicUrl(url);
     }
 
     public paint(): void {

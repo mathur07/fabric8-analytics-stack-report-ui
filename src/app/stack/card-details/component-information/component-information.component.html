@@ -13,7 +13,7 @@
                         </div>
                         <div *ngSwitchCase="'component'">
                             <!-- Component Names -->
-                            <a class="name" [href]="generateUrl(comp?.url)" target="_blank" title="command/ctrl + click" [innerText]="comp?.name"></a>
+                            <a class="name" [href]="getInformationUrl(comp?.url)" target="_blank" title="command/ctrl + click" [innerText]="comp?.name"></a>
                             <span class="recommendation-reason" [tooltip]="component?.reason"
                                 *ngIf="component?.reason && type === 'recommendation' && comp?.name">Why this
                                 dependency?</span>

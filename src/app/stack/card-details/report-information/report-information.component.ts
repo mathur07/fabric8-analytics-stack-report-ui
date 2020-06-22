@@ -14,6 +14,8 @@ import {
     MGenericStackInformation
 } from '../../models/ui.model';
 
+import { GenerateUrl } from '../../utils/url-generator';
+
 @Component({
     selector: 'report-information',
     styleUrls: ['./report-information.component.less'],
@@ -25,6 +27,8 @@ export class ReportInformationComponent implements OnInit, OnChanges {
     @Input() repoInfo: any;
     @Input() tabType: string;
     @Input() transitive: boolean;
+
+    public generateUrl = new GenerateUrl();
 
     public componentDetails: Array<MComponentDetails> = null;
 
