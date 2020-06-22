@@ -862,8 +862,7 @@ export class CardDetailsComponent implements OnChanges {
             deps.forEach(dep => {
                 vulnerabilityCount += dep.componentInformation.public_vulnerabilities.length;
             });
-
-            return vulnerabilityCount + '';
+            return vulnerabilityCount.toString();
         } else {
             return null;
         }
@@ -876,7 +875,7 @@ export class CardDetailsComponent implements OnChanges {
                 vulnerabilityCount += dep.componentInformation.private_vulnerabilities.length;
             });
 
-            return vulnerabilityCount + '';
+            return vulnerabilityCount.toString();
         } else {
             return null;
         }
@@ -1357,10 +1356,10 @@ export class CardDetailsComponent implements OnChanges {
 
         if (publicVulnerabilitiesSet.size || privateVulnerabilitiesSet.size) {
             if (name == "Commonly Known Vulnerabilities") {
-                return publicVulnerabilitiesSet.size + '';
+                return publicVulnerabilitiesSet.size.toString();
             }
             if (name == "Vulnerabilities unique to Snyk") {
-                return privateVulnerabilitiesSet.size + '';
+                return privateVulnerabilitiesSet.size .toString();
             }
         } else {
             return '0'
