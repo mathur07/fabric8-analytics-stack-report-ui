@@ -859,9 +859,7 @@ export class CardDetailsComponent implements OnChanges {
     private publicTransitiveCount(deps: any[]): string {
         let vulnerabilityCount = 0;
         if (deps != undefined) {
-            deps.forEach(dep => {
-                vulnerabilityCount += dep.componentInformation.public_vulnerabilities.length;
-            });
+            vulnerabilityCount = deps.reduce((count, dep) => count + dep.componentInformation.public_vulnerabilities.length, 0);
             return vulnerabilityCount.toString();
         } else {
             return null;
@@ -871,10 +869,7 @@ export class CardDetailsComponent implements OnChanges {
     private privateTransitiveCount(deps: any[]): string {
         let vulnerabilityCount = 0;
         if (deps != undefined) {
-            deps.forEach(dep => {
-                vulnerabilityCount += dep.componentInformation.private_vulnerabilities.length;
-            });
-
+            vulnerabilityCount = deps.reduce((count, dep) => count + dep.componentInformation.private_vulnerabilities.length, 0);
             return vulnerabilityCount.toString();
         } else {
             return null;
@@ -1359,7 +1354,7 @@ export class CardDetailsComponent implements OnChanges {
                 return publicVulnerabilitiesSet.size.toString();
             }
             if (name == "Vulnerabilities unique to Snyk") {
-                return privateVulnerabilitiesSet.size .toString();
+                return privateVulnerabilitiesSet.size.toString();
             }
         } else {
             return '0'

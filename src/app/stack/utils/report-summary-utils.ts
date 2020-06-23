@@ -166,11 +166,10 @@ export class ReportSummaryUtils {
             let vulnerableDependenciesCount = 0;
             let vulnerableDependencies: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
             vulnerableDependencies.infoText = "Vulnerable Dependencies";
-            analyzedDependencies.forEach(element => {
-                if (element.public_vulnerabilities.length > 0 || element.private_vulnerabilities.length > 0 || element.vulnerable_dependencies.length > 0) {
-                    vulnerableDependenciesCount++;
-                }
-            });
+
+            vulnerableDependenciesCount = analyzedDependencies.filter((element) => element.public_vulnerabilities.length > 0 || element.private_vulnerabilities.length > 0 || element.vulnerable_dependencies.length > 0)
+                .reduce((count) => count + 1,0)
+
             vulnerableDependencies.infoValue = vulnerableDependenciesCount;
             securityCard.reportSummaryContent.infoEntries.push(
                 vulnerableDependencies
