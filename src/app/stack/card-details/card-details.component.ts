@@ -324,7 +324,7 @@ export class CardDetailsComponent implements OnChanges {
         // sort deps
         function snykCvssOrder(desc) {
 
-            return function (a, b) {
+            return (a, b) => {
                 // nulls sort after anything else
                 if (a.componentInformation.privateSecurityDetails === null || a.componentInformation.privateSecurityDetails.highestIssue === null || a.componentInformation.privateSecurityDetails.highestIssue.cvss === null) {
                     return 1;
