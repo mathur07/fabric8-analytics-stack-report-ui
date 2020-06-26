@@ -62,12 +62,13 @@ export class AppComponent implements OnInit {
                     this.gateway['config']['api_url'] = apiHost;
                 }
 
+                // Separate v2 users 
                 if (this.gateway['config']['ver']) {
                     this.version = this.gateway['config']['ver'];
                 } else {
                     this.version = 'v1';
                 }
-
+                
                 if (this.gateway['user_key']) {
                     this.stackUrl = apiHost + 'api/v2/stack-analyses/' + this.label + '?user_key=' + this.gateway['user_key'];
                 } else {
