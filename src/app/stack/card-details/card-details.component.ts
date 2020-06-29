@@ -87,7 +87,7 @@ export class CardDetailsComponent implements OnChanges {
     public titleAndDescription: any = {
         [this.cardTypes.SECURITY]: {
             title: 'Dependencies with security issues in your stack',
-            description: 'A list of the dependencies affected with common vulnerabilities and exposures (CVE), dependency with the highest common vulnerability score (CVSS), and its CVE ID. You can take corrective actions by reporting the issues.'
+            description: 'A list of the dependencies affected with common vulnerabilities and exposures (CVE), dependency with the highest common vulnerability score (CVSS), and its Vulnerability ID.'
         },
         [this.cardTypes.INSIGHTS]: {
             title: 'Complementary dependencies that can augment your stack',
@@ -1156,13 +1156,13 @@ export class CardDetailsComponent implements OnChanges {
                 ));
                 headers.push(new MComponentHeaderColumn(
                     'cveCount',
-                    'No. of Direct Vulnerabilities',
+                    '# Direct Vulnerabilities',
                     'float-left small'
                 ));
                 if (!transitive) {
                     headers.push(new MComponentHeaderColumn(
                         'transCount',
-                        'No. of Transitive Vulnerabilities',
+                        '# Transitive Vulnerabilities',
                         'float-left small'
                     ));
                 }
@@ -1173,7 +1173,7 @@ export class CardDetailsComponent implements OnChanges {
                 ));
                 headers.push(new MComponentHeaderColumn(
                     'cveIdOfH',
-                    'Highest Vulnerability Severity',
+                    'Highest Severity Vulnerability ',
                     'float-left medium'
                 ));
 
