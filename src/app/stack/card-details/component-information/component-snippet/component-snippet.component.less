@@ -63,7 +63,7 @@
     }
     .transitive-head {
         font-weight: bold;
-        margin-bottom: 10px;
+        margin: 10px 0;
         overflow: hidden;
         position: relative;
         &:after {
@@ -74,8 +74,8 @@
             right: 0;
             display: inline-block;
             width: 100%;
-            margin-left: 280px;
-            margin-bottom: .8em;
+            margin-left: 300px;
+            margin-bottom: 1em;
             border-top: 1px solid #9c9c9c;
         }
         &:hover {
@@ -186,9 +186,7 @@
     .trans-dropdown {
         cursor: pointer;
         font-size: 18px;
-        text-align: center;
         padding-right: 10px;
-        padding-top: 4px;
     }
     .transitive-details {
         float: left;
@@ -241,5 +239,17 @@
         &:after {
             .pseudo-clear;
         }
+    }
+}
+.btn {
+    background-color: #f4511e;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 13px;
+    opacity: .68;
+    transition: .3s;
+    &:hover {
+        opacity: 1;
     }
 }
