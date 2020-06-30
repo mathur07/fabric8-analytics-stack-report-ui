@@ -1018,6 +1018,21 @@ export class CardDetailsComponent implements OnChanges {
         return null;
     }
 
+    private getBgColorofProgressBar(severity: string) {
+        switch (severity) {
+            case 'critical':
+                return '#800101'
+            case 'high':
+                return '#fb3333'
+            case 'medium':
+                return '#ffa500'
+            case 'low':
+                return '#ffd900'
+            default:
+                break;
+        }
+    }
+
     private getPublicVulnerabilityInformation(vulnerabilities: Array<VulnerabilitiesModel>, registrationStatus: string) {
         let cveList: Array<string> = [];
         let securityDetails = new MSecurityDetails();
@@ -1025,6 +1040,7 @@ export class CardDetailsComponent implements OnChanges {
         let maxSecurityIssues: number = 0;
         let maxSecurityIssuesID: string = null;
         let maxSecurityIssuesURL: string = null;
+        let maxSecurityIssuesSeverity: string = null;
 
         if (vulnerabilities.length > 0) {
             securityDetails.totalIssues = vulnerabilities.length;
@@ -1034,6 +1050,7 @@ export class CardDetailsComponent implements OnChanges {
                     maxSecurityIssues = vulnerability.cvss;
                     maxSecurityIssuesID = vulnerability.id;
                     maxSecurityIssuesURL = this.generateUrl.publicUrl(vulnerability.url);
+                    maxSecurityIssuesSeverity = vulnerability.severity;
                 }
 
                 vulnerability.cve_ids.forEach(cve => {
@@ -1048,7 +1065,7 @@ export class CardDetailsComponent implements OnChanges {
 
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
                 securityDetails.highestIssue = new MSecurityIssue(
-                    maxSecurityIssues + '',
+                    maxSecurityIssues.toString(),
                     maxSecurityIssuesID,
                     maxSecurityIssuesURL
                 );
@@ -1058,7 +1075,7 @@ export class CardDetailsComponent implements OnChanges {
                 securityDetails.progressReport = new MProgressMeter(
                     Number(maxSecurityIssues) + '/10',
                     Number(maxSecurityIssues),
-                    Number(maxSecurityIssues) >= 7 ? '#d1011c' : 'ORANGE',
+                    this.getBgColorofProgressBar(maxSecurityIssuesSeverity),
                     '',
                     Number(maxSecurityIssues) * 10
                 );
@@ -1077,6 +1094,7 @@ export class CardDetailsComponent implements OnChanges {
         let maxSecurityIssues: number = 0;
         let maxSecurityIssuesID: string = null;
         let maxSecurityIssuesURL: string = null;
+        let maxSecurityIssuesSeverity: string = null;
 
         if (vulnerabilities.length > 0) {
             securityDetails.totalIssues = vulnerabilities.length;
@@ -1086,6 +1104,7 @@ export class CardDetailsComponent implements OnChanges {
                     maxSecurityIssues = vulnerability.cvss;
                     maxSecurityIssuesID = vulnerability.id;
                     maxSecurityIssuesURL = this.generateUrl.privateUrl(vulnerability.url, registrationStatus);
+                    maxSecurityIssuesSeverity = vulnerability.severity;
                 }
 
                 vulnerability.cve_ids.forEach(cve => {
@@ -1105,7 +1124,7 @@ export class CardDetailsComponent implements OnChanges {
 
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
                 securityDetails.highestIssue = new MSecurityIssue(
-                    maxSecurityIssues + '',
+                    maxSecurityIssues.toString(),
                     maxSecurityIssuesID,
                     maxSecurityIssuesURL
                 );
@@ -1115,7 +1134,7 @@ export class CardDetailsComponent implements OnChanges {
                 securityDetails.progressReport = new MProgressMeter(
                     Number(maxSecurityIssues) + '/10',
                     Number(maxSecurityIssues),
-                    Number(maxSecurityIssues) >= 7 ? '#d1011c' : 'ORANGE',
+                    this.getBgColorofProgressBar(maxSecurityIssuesSeverity),
                     '',
                     Number(maxSecurityIssues) * 10
                 );
