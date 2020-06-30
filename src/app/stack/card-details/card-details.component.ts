@@ -289,7 +289,7 @@ export class CardDetailsComponent implements OnChanges {
                     return 0;
                 }
                 else if (desc) {
-                    return parseInt(a.componentInformation.publicSecurityDetails.highestIssue.cvss) < parseInt(b.componentInformation.publicSecurityDetails.highestIssue.cvss) ? 1 : -1;
+                    return parseFloat(a.componentInformation.publicSecurityDetails.highestIssue.cvss) < parseFloat(b.componentInformation.publicSecurityDetails.highestIssue.cvss) ? 1 : -1;
                 }
             };
 
@@ -334,7 +334,7 @@ export class CardDetailsComponent implements OnChanges {
                 } else if (a.componentInformation.privateSecurityDetails.highestIssue.cvss === b.componentInformation.privateSecurityDetails.highestIssue.cvss) {
                     return 0;
                 } else if (desc) {
-                    return parseInt(a.componentInformation.privateSecurityDetails.highestIssue.cvss) < parseInt(b.componentInformation.privateSecurityDetails.highestIssue.cvss) ? 1 : -1;
+                    return parseFloat(a.componentInformation.privateSecurityDetails.highestIssue.cvss) < parseFloat(b.componentInformation.privateSecurityDetails.highestIssue.cvss) ? 1 : -1;
                 }
             };
 
