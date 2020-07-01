@@ -87,7 +87,7 @@ export class CardDetailsComponent implements OnChanges {
     public titleAndDescription: any = {
         [this.cardTypes.SECURITY]: {
             title: 'Dependencies with security issues in your stack',
-            description: 'A list of the dependencies affected with common vulnerabilities and exposures (CVE), dependency with the highest common vulnerability score (CVSS), and its Vulnerability ID.'
+            description: 'A list of the dependencies affected with common vulnerabilities and exposures (CVE) and vulnerabilities unique to Snyk, dependency with the highest common vulnerability score (CVSS), and its Vulnerability ID.'
         },
         [this.cardTypes.INSIGHTS]: {
             title: 'Complementary dependencies that can augment your stack',
