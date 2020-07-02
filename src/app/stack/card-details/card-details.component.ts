@@ -484,7 +484,7 @@ export class CardDetailsComponent implements OnChanges {
                 break;
             case 'licenses':
                 genericReport.identifier = 'lic-conflicts';
-                genericReport.name = 'Conflicting License(s) Details';
+                genericReport.name = 'Packages with Conflicting License(s)';
                 reportInformations.push(genericReport);
 
                 compDetails = this.getUnknownLicenseComponentDetails();
