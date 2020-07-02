@@ -490,7 +490,7 @@ export class CardDetailsComponent implements OnChanges {
                 compDetails = this.getUnknownLicenseComponentDetails();
                 reportInformations.push(new MReportInformation(
                     'lic-unknown',
-                    'Unknown License(s) Details',
+                    'Packages with Unknown License(s)',
                     'component',
                     this.fillColumnHeaders(cardType, 2),
                     compDetails
