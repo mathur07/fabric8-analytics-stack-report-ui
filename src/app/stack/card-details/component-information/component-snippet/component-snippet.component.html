@@ -120,20 +120,37 @@
                     <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
                         <!-- <span class="severity"
                             [ngClass]="{'critical':cve.severity == 'critical', 'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}"> -->
-                        <span *ngIf="cve.severity == 'critical'" class="circle critical" [innerText]="'C'" title="Critical"></span>
+                        <span *ngIf="cve.severity == 'critical'" class="circle critical" [innerText]="'C'"
+                            title="Critical"></span>
                         <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'" title="High"></span>
-                        <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'" title="Medium"></span>
+                        <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"
+                            title="Medium"></span>
                         <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'" title="Low"></span>
                         <!-- <span [innerText]="cve.severity"></span> -->
                         <!-- </span> -->
-                        <a [href]="getUrl(cve.url, tabType)" target="_blank">
-                            <span class="name" [innerText]="cve.title" [tooltip]="cve.id" title="command/ctrl + click"></span>
-                        </a>
+                        <!-- <a [href]="getUrl(cve.url, tabType)" target="_blank" class="tooltip">
+                            {{cve.title}}
+                            <span class="tooltiptext">hi bob</span>
+                        </a> -->
+                        <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)" target="_blank">{{cve.title}}</a>
+                            <div class="custom-tooltip-text tooltip-content">
+                                <div class="row float-left">
+                                    <div class="col-sm-3 no-wrap">CVSS-Score:</div>
+                                    <div class="col-sm-9">{{cve.cvss}}</div>
+                                </div>
+                                <div class="row float-left">
+                                    <div class="col-sm-3">ID:</div>
+                                    <div class="col-sm-9"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 engrave">(cmd/ctrl + click)</div>
+                                </div>
+                            </div>
+                        </span>
                     </span>
                     <br>
                     <span class="common-container box">
-                        <a [href]="this.generateUrl.regitrationURL"
-                            target="_blank" title="command/ctrl + click">
+                        <a [href]="this.generateUrl.regitrationURL" target="_blank" title="command/ctrl + click">
                             <span>
                                 <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
                             </span>
@@ -172,11 +189,13 @@
                         <!-- <span [innerText]="cve.severity"></span> -->
                         <!-- </span> -->
                         <a [href]="getUrl(cve.url, 'public')" target="_blank">
-                            <span class="name" [innerText]="cve.title" [tooltip]="cve.id" title="command/ctrl + click"></span>
+                            <span class="name" [innerText]="cve.title" [tooltip]="cve.id"
+                                title="command/ctrl + click"></span>
                         </a>
                     </span>
-                    <a class="name" *ngIf="component?.private_vulnerabilities?.length>0" [href]="getUrl(component.url, tabType, component?.registrationStatus)"
-                        target="_blank" title="command/ctrl + click">
+                    <a class="name" *ngIf="component?.private_vulnerabilities?.length>0"
+                        [href]="getUrl(component.url, tabType, component?.registrationStatus)" target="_blank"
+                        title="command/ctrl + click">
                         Sign up with Snyk
                     </a>
                 </span>
@@ -185,7 +204,8 @@
                 *ngIf="component?.registrationStatus == 'freetier' && (component?.private_vulnerabilities?.length > 0) && tabType=='private'">
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
-                    <a class="name" [href]="getUrl(component.url, tabType, component?.registrationStatus)" target="_blank" title="command/ctrl + click">
+                    <a class="name" [href]="getUrl(component.url, tabType, component?.registrationStatus)"
+                        target="_blank" title="command/ctrl + click">
                         Sign up with Snyk</a>
                 </span>
             </div>
