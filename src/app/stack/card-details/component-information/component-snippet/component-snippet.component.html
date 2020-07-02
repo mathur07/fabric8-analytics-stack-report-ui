@@ -135,11 +135,11 @@
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)" target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-text tooltip-content">
                                 <div class="row float-left">
-                                    <div class="col-sm-3 no-wrap">CVSS-Score:</div>
+                                    <div class="col-sm-3">CVSS-Score:</div>
                                     <div class="col-sm-9">{{cve.cvss}}</div>
                                 </div>
                                 <div class="row float-left">
-                                    <div class="col-sm-3">ID:</div>
+                                    <div class="col-sm-3 ">ID:</div>
                                     <div class="col-sm-9"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
                                 </div>
                                 <div class="row">
