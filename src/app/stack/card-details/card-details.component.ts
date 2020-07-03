@@ -294,6 +294,12 @@ export class CardDetailsComponent implements OnChanges {
             };
 
         }
+        dependenciesWithKnownVulnerabilities.forEach(component => {
+            if(component.componentInformation.allTransitiveDependencies) {
+                component.componentInformation.allTransitiveDependencies.sort(cvssOrder(true));
+            }
+        });
+
         dependenciesWithKnownVulnerabilities.sort(cvssOrder(true));
         return dependenciesWithKnownVulnerabilities;
     }
@@ -339,6 +345,13 @@ export class CardDetailsComponent implements OnChanges {
             };
 
         }
+
+        dependencieswithSecurityAdvisories.forEach(component => {
+            if(component.componentInformation.allTransitiveDependencies) {
+                component.componentInformation.allTransitiveDependencies.sort(snykCvssOrder(true));
+            }
+        });
+
         dependencieswithSecurityAdvisories.sort(snykCvssOrder(true));
 
         return dependencieswithSecurityAdvisories;
