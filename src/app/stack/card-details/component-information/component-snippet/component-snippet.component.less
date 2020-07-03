@@ -66,6 +66,7 @@
         margin: 10px 0;
         overflow: hidden;
         position: relative;
+        padding: 2px;
         &:after {
             content:'';
             position: absolute;
@@ -74,13 +75,21 @@
             right: 0;
             display: inline-block;
             width: 100%;
-            margin-left: 300px;
-            margin-bottom: 1em;
+            margin-left: 265px;
+            margin-bottom: 1.1em;
             border-top: 1px solid #9c9c9c;
         }
         &:hover {
             cursor: pointer;
         }
+    }
+    .trans-dropdown {
+        margin-top: 3px;
+        float: left;
+        width: 20px;
+        font-size: 18px;
+        padding-right: 10px;
+        cursor: pointer;
     }
     .license-container {
         span {
@@ -183,11 +192,6 @@
         margin-right: .6em;
         font-size: 13px;
     }
-    .trans-dropdown {
-        cursor: pointer;
-        font-size: 18px;
-        padding-right: 10px;
-    }
     .transitive-details {
         float: left;
         width: 60%;
@@ -243,10 +247,10 @@
 }
 .btn {
     background-color: #f4511e;
-    border: none;
+    border:1px solid #f03e08;
     color: white;
     text-align: center;
-    font-size: 13px;
+    font-size: 11px;
     opacity: .68;
     transition: .3s;
     &:hover {

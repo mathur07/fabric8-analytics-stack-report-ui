@@ -388,8 +388,6 @@ export class CardDetailsComponent implements OnChanges {
             });
         }
 
-        console.log("components ===>>", components);
-
 
 
         if (components) {
@@ -418,10 +416,6 @@ export class CardDetailsComponent implements OnChanges {
             case 'security':
                 genericReport.identifier = 'security';
                 genericReport.name = 'Security Issues';
-                // reportInformations.push(genericReport);
-                console.log("genericReport.componentDetails==>>", genericReport.componentDetails);
-
-
                 let dependenciesWithKnownVulnerabilities: Array<MComponentDetails> = this.filterCommonlyKnownVulnerabilities(genericReport.componentDetails);
                 dependenciesWithKnownVulnerabilities.forEach(element => {
                     if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
