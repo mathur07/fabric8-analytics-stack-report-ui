@@ -126,21 +126,15 @@
                         <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"
                             title="Medium"></span>
                         <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'" title="Low"></span>
-                        <!-- <span [innerText]="cve.severity"></span> -->
-                        <!-- </span> -->
-                        <!-- <a [href]="getUrl(cve.url, tabType)" target="_blank" class="tooltip">
-                            {{cve.title}}
-                            <span class="tooltiptext">hi bob</span>
-                        </a> -->
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)" target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-text tooltip-content">
-                                <div class="row float-left">
-                                    <div class="col-sm-3">CVSS-Score:</div>
-                                    <div class="col-sm-9">{{cve.cvss}}</div>
+                                <div class="row">
+                                    <div class="col-sm-5">CVSS Score:</div>
+                                    <div class="col-sm-7">{{cve.cvss}}</div>
                                 </div>
-                                <div class="row float-left">
-                                    <div class="col-sm-3 ">ID:</div>
-                                    <div class="col-sm-9"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
+                                <div class="row">
+                                    <div class="col-sm-4">Snyk ID:</div>
+                                    <div class="col-sm-8 no-wrap"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12 engrave">(cmd/ctrl + click)</div>
@@ -188,10 +182,21 @@
                         <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
                         <!-- <span [innerText]="cve.severity"></span> -->
                         <!-- </span> -->
-                        <a [href]="getUrl(cve.url, 'public')" target="_blank">
-                            <span class="name" [innerText]="cve.title" [tooltip]="cve.id"
-                                title="command/ctrl + click"></span>
-                        </a>
+                        <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)" target="_blank">{{cve.title}}</a>
+                            <div class="custom-tooltip-text tooltip-content">
+                                <div class="row">
+                                    <div class="col-sm-5">CVSS Score:</div>
+                                    <div class="col-sm-7">{{cve.cvss}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4">Snyk ID:</div>
+                                    <div class="col-sm-8 no-wrap"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 engrave">(cmd/ctrl + click)</div>
+                                </div>
+                            </div>
+                        </span>
                     </span>
                     <a class="name" *ngIf="component?.private_vulnerabilities?.length>0"
                         [href]="getUrl(component.url, tabType, component?.registrationStatus)" target="_blank"
