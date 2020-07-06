@@ -146,7 +146,7 @@ export class ReportSummaryComponent implements OnChanges {
 
             if (isTransitiveSupported) {
                 const analyzedTransEntry: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();
-                analyzedTransEntry.infoText = 'Analyzed Transitive Dependencies';
+                analyzedTransEntry.infoText = 'Transitive Dependencies';
                 analyzedTransEntry.infoValue = analyzedTransCount;
 
                 componentDetailsCard.reportSummaryContent.infoEntries.push(analyzedEntry);
