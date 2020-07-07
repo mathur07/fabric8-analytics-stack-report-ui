@@ -247,19 +247,20 @@
 }
 .custom-tooltip {
     position: relative;
-    display: inline-block;
+    display: block;
     cursor: pointer;
-    .custom-tooltip-text {
-        display: inline-block;
+    .custom-tooltip-wrapper {
+        display: inline-flex;
+        flex-direction: column;
         visibility: hidden;
         background-color: #eee3e3;
+        padding: 7px 2px;
         color: #b1a5a5;
         text-align: left;
         box-sizing: border-box;
-        line-height: 1.8em;
+        line-height: 1.2em;
         border-radius: 6px;
         border: 1px solid #e9c0c0;
-        padding: 5px;
         position: absolute;
         z-index: 1;
         top: 100%;
@@ -281,15 +282,9 @@
             border-top: 1px solid #e9c0c0;
             transform: rotate(45deg);
         }
-        .engrave {
-            color: #eb8585;
-            font-size: 9px;
-            text-align: center;
-            text-shadow: 0px -1px 0px rgba(0, 0, 0, .5);
-        }
     }
     &:hover {
-        .custom-tooltip-text {
+        .custom-tooltip-wrapper {
             visibility: visible;
             opacity: 1;
             transform: translateY(0px);
@@ -298,10 +293,32 @@
     .no-wrap {
         white-space: nowrap;
     }
-    .tooltip-content {
-        color: sienna;
+    .custom-tooltip-text {
         font-size: 10px;
-        padding:0px 10px;
+        padding: 0px 5px;
+    }
+    .head {
+        color: sienna;
+        padding: 0 2px;
+    }
+    .score {
+        color: #4f5a64;
+        padding: 0 2px;
+        font-weight: bold;
+    }
+    .url {
+        padding: 0 2px;
+    }
+    .footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .engrave {
+        text-align: center;
+        color: #eb8585;
+        font-size: 9px;
+        text-shadow: 0px -1px 0px rgba(0, 0, 0, .5);
     }
 }
 .btn {

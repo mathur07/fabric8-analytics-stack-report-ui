@@ -127,17 +127,17 @@
                             title="Medium"></span>
                         <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'" title="Low"></span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)" target="_blank">{{cve.title}}</a>
-                            <div class="custom-tooltip-text tooltip-content">
-                                <div class="row">
-                                    <div class="col-xs-5">CVSS Score:</div>
-                                    <div class="col-xs-7">{{cve.cvss}}</div>
+                            <div class="custom-tooltip-wrapper">
+                                <div class="custom-tooltip-text no-wrap">
+                                    <span class="head">CVSS Score:</span>
+                                    <span class="score">{{cve.cvss}}</span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-4">Snyk ID:</div>
-                                    <div class="col-xs-8"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
+                                <div class="custom-tooltip-text no-wrap">
+                                    <span class="head">Snyk ID:</span>
+                                    <span class="url"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-12 engrave">(cmd/ctrl + click)</div>
+                                <div class="footer no-wrap">
+                                    <span class="engrave">(cmd/ctrl + click)</span>
                                 </div>
                             </div>
                         </span>
@@ -183,17 +183,17 @@
                         <!-- <span [innerText]="cve.severity"></span> -->
                         <!-- </span> -->
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)" target="_blank">{{cve.title}}</a>
-                            <div class="custom-tooltip-text tooltip-content">
-                                <div class="row">
-                                    <div class="col-sm-5">CVSS Score:</div>
-                                    <div class="col-sm-7">{{cve.cvss}}</div>
+                            <div class="custom-tooltip-wrapper">
+                                <div class="custom-tooltip-text no-wrap">
+                                    <span class="head">CVSS Score:</span>
+                                    <span class="score">{{cve.cvss}}</span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-4">Snyk ID:</div>
-                                    <div class="col-sm-8"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
+                                <div class="custom-tooltip-text no-wrap">
+                                    <span class="head">Snyk ID:</span>
+                                    <span class="url"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-12 engrave">(cmd/ctrl + click)</div>
+                                <div class="footer no-wrap">
+                                    <span class="engrave">(cmd/ctrl + click)</span>
                                 </div>
                             </div>
                         </span>
