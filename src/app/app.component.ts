@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
                 }
 
                 // Separate v2 users 
-                if (this.gateway['config']['ver']) {
+                if (this.gateway['config']['ver'] === 'v2') {
                     this.version = this.gateway['config']['ver'];
                 } else {
                     this.version = 'v1';
