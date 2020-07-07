@@ -129,15 +129,15 @@
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)" target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-text tooltip-content">
                                 <div class="row">
-                                    <div class="col-sm-5">CVSS Score:</div>
-                                    <div class="col-sm-7">{{cve.cvss}}</div>
+                                    <div class="col-xs-5">CVSS Score:</div>
+                                    <div class="col-xs-7">{{cve.cvss}}</div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-4">Snyk ID:</div>
-                                    <div class="col-sm-8 no-wrap"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
+                                    <div class="col-xs-4">Snyk ID:</div>
+                                    <div class="col-xs-8"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-12 engrave">(cmd/ctrl + click)</div>
+                                    <div class="col-xs-12 engrave">(cmd/ctrl + click)</div>
                                 </div>
                             </div>
                         </span>
@@ -190,7 +190,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4">Snyk ID:</div>
-                                    <div class="col-sm-8 no-wrap"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
+                                    <div class="col-sm-8"><a [href]="getUrl(cve.url, tabType)" target="_blank" [innerText]="cve.id"></a></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12 engrave">(cmd/ctrl + click)</div>
