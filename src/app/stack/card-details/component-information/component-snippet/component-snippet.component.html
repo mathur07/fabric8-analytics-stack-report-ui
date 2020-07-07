@@ -249,8 +249,8 @@
                     <i [ngClass]="{'fa': true, 'fa-angle-right': !component?.showTransitive, 'fa-angle-down': component?.showTransitive}"
                         aria-hidden="true"></i>
                 </span>
-                <span
-                    [innerText]='component?.showTransitive ? "Hide Transitives with Vulnerabilities":"Show Transitives with Vulnerabilities"'>
+                <span class="btn"
+                    [innerText]='component?.showTransitive ? "Hide Transitives with Vulnerabilities":"View Transitives with Vulnerabilities"'>
                 </span>
                 <span [innerHtml]="component?.allTransitiveDependencies.length" class="badge"></span>
             </div>
@@ -268,8 +268,8 @@
                     <i [ngClass]="{'fa': true, 'fa-angle-right': !component?.showTransitive, 'fa-angle-down': component?.showTransitive}"
                         aria-hidden="true"></i>
                 </span>
-                <span
-                    [innerText]='component?.showTransitive ? "Hide Transitives with Vulnerabilities":"Show Transitives with Vulnerabilities"'>
+                <span class="btn"
+                    [innerText]='component?.showTransitive ? "Hide Transitives with Vulnerabilities":"View Transitives with Vulnerabilities"'>
                 </span>
                 <span [innerHtml]="component?.allTransitiveDependencies.length" class="badge"></span>
             </div>

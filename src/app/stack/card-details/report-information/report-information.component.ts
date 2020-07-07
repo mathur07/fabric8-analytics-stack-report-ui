@@ -138,11 +138,11 @@ export class ReportInformationComponent implements OnInit, OnChanges {
         return (elem && elem.classList && elem.classList.contains('toggler'));
     }
     private checkIfTransitiveToggler(elem: HTMLElement): boolean {
-        if (elem && elem.classList && elem.classList.contains('trans-dropdown')) {
+        if (elem && elem.classList && (elem.classList.contains('transitive-head') || elem.classList.contains('trans-dropdown'))) {
             return true;
         }
         elem = <HTMLElement>elem.parentNode;
-        return (elem && elem.classList && elem.classList.contains('trans-dropdown'));
+        return (elem && elem.classList && (elem.classList.contains('transitive-head') || elem.classList.contains('trans-dropdown')));
     }
 
 

@@ -87,7 +87,7 @@ export class CardDetailsComponent implements OnChanges {
     public titleAndDescription: any = {
         [this.cardTypes.SECURITY]: {
             title: 'Dependencies with security issues in your stack',
-            description: 'A list of the dependencies affected with common vulnerabilities and exposures (CVE), dependency with the highest common vulnerability score (CVSS), and its CVE ID. You can take corrective actions by reporting the issues.'
+            description: 'A list of the dependencies affected with common vulnerabilities and exposures (CVE) and vulnerabilities unique to Snyk, dependency with the highest common vulnerability score (CVSS), and its Vulnerability ID.'
         },
         [this.cardTypes.INSIGHTS]: {
             title: 'Complementary dependencies that can augment your stack',
@@ -289,11 +289,17 @@ export class CardDetailsComponent implements OnChanges {
                     return 0;
                 }
                 else if (desc) {
-                    return parseInt(a.componentInformation.publicSecurityDetails.highestIssue.cvss) < parseInt(b.componentInformation.publicSecurityDetails.highestIssue.cvss) ? 1 : -1;
+                    return parseFloat(a.componentInformation.publicSecurityDetails.highestIssue.cvss) < parseFloat(b.componentInformation.publicSecurityDetails.highestIssue.cvss) ? 1 : -1;
                 }
             };
 
         }
+        dependenciesWithKnownVulnerabilities.forEach(component => {
+            if(component.componentInformation.allTransitiveDependencies) {
+                component.componentInformation.allTransitiveDependencies.sort(cvssOrder(true));
+            }
+        });
+
         dependenciesWithKnownVulnerabilities.sort(cvssOrder(true));
         return dependenciesWithKnownVulnerabilities;
     }
@@ -334,11 +340,18 @@ export class CardDetailsComponent implements OnChanges {
                 } else if (a.componentInformation.privateSecurityDetails.highestIssue.cvss === b.componentInformation.privateSecurityDetails.highestIssue.cvss) {
                     return 0;
                 } else if (desc) {
-                    return parseInt(a.componentInformation.privateSecurityDetails.highestIssue.cvss) < parseInt(b.componentInformation.privateSecurityDetails.highestIssue.cvss) ? 1 : -1;
+                    return parseFloat(a.componentInformation.privateSecurityDetails.highestIssue.cvss) < parseFloat(b.componentInformation.privateSecurityDetails.highestIssue.cvss) ? 1 : -1;
                 }
             };
 
         }
+
+        dependencieswithSecurityAdvisories.forEach(component => {
+            if(component.componentInformation.allTransitiveDependencies) {
+                component.componentInformation.allTransitiveDependencies.sort(snykCvssOrder(true));
+            }
+        });
+
         dependencieswithSecurityAdvisories.sort(snykCvssOrder(true));
 
         return dependencieswithSecurityAdvisories;
@@ -388,8 +401,6 @@ export class CardDetailsComponent implements OnChanges {
             });
         }
 
-        console.log("components ===>>", components);
-
 
 
         if (components) {
@@ -418,10 +429,6 @@ export class CardDetailsComponent implements OnChanges {
             case 'security':
                 genericReport.identifier = 'security';
                 genericReport.name = 'Security Issues';
-                // reportInformations.push(genericReport);
-                console.log("genericReport.componentDetails==>>", genericReport.componentDetails);
-
-
                 let dependenciesWithKnownVulnerabilities: Array<MComponentDetails> = this.filterCommonlyKnownVulnerabilities(genericReport.componentDetails);
                 dependenciesWithKnownVulnerabilities.forEach(element => {
                     if (element.componentInformation.allTransitiveDependencies && element.componentInformation.allTransitiveDependencies.length > 0) {
@@ -484,13 +491,13 @@ export class CardDetailsComponent implements OnChanges {
                 break;
             case 'licenses':
                 genericReport.identifier = 'lic-conflicts';
-                genericReport.name = 'Conflicting License(s) Details';
+                genericReport.name = 'Packages with Conflicting License(s)';
                 reportInformations.push(genericReport);
 
                 compDetails = this.getUnknownLicenseComponentDetails();
                 reportInformations.push(new MReportInformation(
                     'lic-unknown',
-                    'Unknown License(s) Details',
+                    'Packages with Unknown License(s)',
                     'component',
                     this.fillColumnHeaders(cardType, 2),
                     compDetails
@@ -1018,6 +1025,21 @@ export class CardDetailsComponent implements OnChanges {
         return null;
     }
 
+    private getBgColorofProgressBar(severity: string) {
+        switch (severity) {
+            case 'critical':
+                return '#800101'
+            case 'high':
+                return '#fb3333'
+            case 'medium':
+                return '#ffa500'
+            case 'low':
+                return '#ffd900'
+            default:
+                break;
+        }
+    }
+
     private getPublicVulnerabilityInformation(vulnerabilities: Array<VulnerabilitiesModel>, registrationStatus: string) {
         let cveList: Array<string> = [];
         let securityDetails = new MSecurityDetails();
@@ -1025,6 +1047,7 @@ export class CardDetailsComponent implements OnChanges {
         let maxSecurityIssues: number = 0;
         let maxSecurityIssuesID: string = null;
         let maxSecurityIssuesURL: string = null;
+        let maxSecurityIssuesSeverity: string = null;
 
         if (vulnerabilities.length > 0) {
             securityDetails.totalIssues = vulnerabilities.length;
@@ -1034,6 +1057,7 @@ export class CardDetailsComponent implements OnChanges {
                     maxSecurityIssues = vulnerability.cvss;
                     maxSecurityIssuesID = vulnerability.id;
                     maxSecurityIssuesURL = this.generateUrl.publicUrl(vulnerability.url);
+                    maxSecurityIssuesSeverity = vulnerability.severity;
                 }
 
                 vulnerability.cve_ids.forEach(cve => {
@@ -1048,7 +1072,7 @@ export class CardDetailsComponent implements OnChanges {
 
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
                 securityDetails.highestIssue = new MSecurityIssue(
-                    maxSecurityIssues + '',
+                    maxSecurityIssues.toString(),
                     maxSecurityIssuesID,
                     maxSecurityIssuesURL
                 );
@@ -1058,7 +1082,7 @@ export class CardDetailsComponent implements OnChanges {
                 securityDetails.progressReport = new MProgressMeter(
                     Number(maxSecurityIssues) + '/10',
                     Number(maxSecurityIssues),
-                    Number(maxSecurityIssues) >= 7 ? '#d1011c' : 'ORANGE',
+                    this.getBgColorofProgressBar(maxSecurityIssuesSeverity),
                     '',
                     Number(maxSecurityIssues) * 10
                 );
@@ -1077,6 +1101,7 @@ export class CardDetailsComponent implements OnChanges {
         let maxSecurityIssues: number = 0;
         let maxSecurityIssuesID: string = null;
         let maxSecurityIssuesURL: string = null;
+        let maxSecurityIssuesSeverity: string = null;
 
         if (vulnerabilities.length > 0) {
             securityDetails.totalIssues = vulnerabilities.length;
@@ -1086,6 +1111,7 @@ export class CardDetailsComponent implements OnChanges {
                     maxSecurityIssues = vulnerability.cvss;
                     maxSecurityIssuesID = vulnerability.id;
                     maxSecurityIssuesURL = this.generateUrl.privateUrl(vulnerability.url, registrationStatus);
+                    maxSecurityIssuesSeverity = vulnerability.severity;
                 }
 
                 vulnerability.cve_ids.forEach(cve => {
@@ -1105,7 +1131,7 @@ export class CardDetailsComponent implements OnChanges {
 
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
                 securityDetails.highestIssue = new MSecurityIssue(
-                    maxSecurityIssues + '',
+                    maxSecurityIssues.toString(),
                     maxSecurityIssuesID,
                     maxSecurityIssuesURL
                 );
@@ -1115,7 +1141,7 @@ export class CardDetailsComponent implements OnChanges {
                 securityDetails.progressReport = new MProgressMeter(
                     Number(maxSecurityIssues) + '/10',
                     Number(maxSecurityIssues),
-                    Number(maxSecurityIssues) >= 7 ? '#d1011c' : 'ORANGE',
+                    this.getBgColorofProgressBar(maxSecurityIssuesSeverity),
                     '',
                     Number(maxSecurityIssues) * 10
                 );
@@ -1156,13 +1182,13 @@ export class CardDetailsComponent implements OnChanges {
                 ));
                 headers.push(new MComponentHeaderColumn(
                     'cveCount',
-                    'No. of Direct Vulnerabilities',
+                    '# Direct Vulnerabilities',
                     'float-left small'
                 ));
                 if (!transitive) {
                     headers.push(new MComponentHeaderColumn(
                         'transCount',
-                        'No. of Transitive Vulnerabilities',
+                        '# Transitive Vulnerabilities',
                         'float-left small'
                     ));
                 }
@@ -1173,7 +1199,7 @@ export class CardDetailsComponent implements OnChanges {
                 ));
                 headers.push(new MComponentHeaderColumn(
                     'cveIdOfH',
-                    'Highest Vulnerability Severity',
+                    'Highest Severity Vulnerability ',
                     'float-left medium'
                 ));
 
