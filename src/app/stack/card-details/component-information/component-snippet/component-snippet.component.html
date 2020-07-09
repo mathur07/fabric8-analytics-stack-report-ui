@@ -44,8 +44,7 @@
                 </div>
                 <div [ngClass]="{'col-xs-12': component?.currentVersion === '-----'}">
                     <p>Recommended Version</p>
-                    <p *ngIf="(tabType == 'private' || tabType == 'public' || tabType == 'compDetails')" class="info-head" [innerText]="component?.recommended_version"></p>
-                    <p *ngIf="!(tabType == 'private' || tabType == 'public' || tabType == 'compDetails')" class="info-head" [innerText]="component?.latestVersion"></p>
+                    <p class="info-head" [innerText]="(tabType == 'private' || tabType == 'public' || tabType == 'compDetails') ? component?.recommended_version : component?.latestVersion"></p>
                 </div>
             </div>
         </ng-template>
