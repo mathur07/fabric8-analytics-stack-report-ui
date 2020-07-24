@@ -50,7 +50,7 @@ import {
 } from '../models/ui.model';
 
 import { GenerateUrl } from '../utils/url-generator';
-import { element } from 'protractor';
+import { HandleUrl } from '../utils/handle-url'
 
 @Component({
     selector: 'card-details',
@@ -71,7 +71,8 @@ export class CardDetailsComponent implements OnChanges {
     public tabs: Array<MTab> = [];
 
     private generateUrl = new GenerateUrl();
-
+    public handleUrl = new HandleUrl();
+    
     public USER_ACTION: any = {
         'security': 'Log a bug',
         'recommendation': 'Create work item'
