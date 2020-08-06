@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
     public label: string;
     public routerLink: string;
     public version: string;
+    mainUrl: string;
 
     constructor(private route: ActivatedRoute) {
         this.route.paramMap.subscribe((params) => {
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit {
     }
 
     onAppLoad(): void {
+        this.mainUrl = 'https://stack-analytics-report.openshift.io/' + location.hash;
         let url: string = location.hash;
         let id: string = url.replace('#/analyze/', '');
         let splitParams: Array<string> = id.split('?');
@@ -68,7 +70,7 @@ export class AppComponent implements OnInit {
                 } else {
                     this.version = 'v1';
                 }
-                
+
                 if (this.gateway['user_key']) {
                     this.stackUrl = apiHost + 'api/v2/stack-analyses/' + this.label + '?user_key=' + this.gateway['user_key'];
                 } else {

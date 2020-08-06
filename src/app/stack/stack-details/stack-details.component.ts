@@ -57,6 +57,7 @@ export class StackDetailsComponent implements OnChanges {
     @Input() buildNumber;
     @Input() appName;
     @Input() stackResponse;
+    @Input() mainUrl
 
     @ViewChild('crowdModule') modalCrowdModule: any;
 
@@ -225,6 +226,12 @@ export class StackDetailsComponent implements OnChanges {
 
     public handleChangeFilter(filterBy: any): void {
         this.componentFilterBy = filterBy.filterBy;
+    }
+    public copy() {
+        var copyText = document.getElementById("myInput") as HTMLInputElement;
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        document.execCommand("copy");
     }
 
     constructor(private stackAnalysisService: StackAnalysesService) { }
