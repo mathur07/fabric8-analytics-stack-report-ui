@@ -3,7 +3,8 @@ import {
     Input,
     OnChanges,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    TemplateRef
 } from '@angular/core';
 import {
     Observable
@@ -23,8 +24,12 @@ import {
     ResultInformationModel,
     UserStackInfoModel,
     ComponentInformationModel,
-    RecommendationsModel
+    RecommendationsModel,
+    TokenErrorModel,
+    TokenDetailModel,
 } from '../models/stack-report.model';
+
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 /**
  * New Stack Report Revamp - Begin
@@ -227,7 +232,73 @@ export class StackDetailsComponent implements OnChanges {
         this.componentFilterBy = filterBy.filterBy;
     }
 
-    constructor(private stackAnalysisService: StackAnalysesService) { }
+    modalRef: BsModalRef;
+    token: string;
+    tokenerror: TokenErrorModel = {
+        status: false,
+        type: '',
+        length: 0
+    };
+    tokenErrorStatus: boolean = true;
+    tokenDetail: TokenDetailModel = {
+        id: '',
+        status: 'freetier'
+    }
+    tokenAlertsMessage: string;
+
+    constructor(private stackAnalysisService: StackAnalysesService, private modalService: BsModalService) { }
+
+    setTokenStatus() {
+        let resultDetails = 'freetier'
+        this.tokenDetail.id = "";
+        this.tokenDetail.status = resultDetails;
+        switch (resultDetails) {
+            case 'freetier':
+                this.tokenAlertsMessage = 'Unregistered'
+                break;
+            case 'registered':
+                this.tokenAlertsMessage = 'Registered'
+                break;
+            case 'expired':
+                this.tokenAlertsMessage = 'Token Expired'
+                break;
+            default:
+                break;
+        }
+    }
+
+    openModal(template: TemplateRef<any>) {
+        this.modalRef = this.modalService.show(template);
+    }
+
+    checkToken() {
+        this.tokenerror = {
+            status: false,
+            type: '',
+            length: 0
+        };
+        this.tokenerror.length = this.token.length;
+        if (this.token.length === 0 || this.token == undefined) {
+            this.tokenerror.status = true;
+            this.tokenerror.type = '';
+        } else if (this.token.length !== 36) {
+            this.tokenerror.status = true;
+            this.tokenerror.type = "Token length should be of 36 character";
+        } else if (!/^[a-zA-Z0-9-]*$/.test(this.token)) {
+            this.tokenerror.status = true;
+            this.tokenerror.type = "Token can only have [a-zA-Z0-9-]";
+        }
+
+        if (this.tokenerror.status) {
+            this.tokenErrorStatus = true;
+        } else {
+            this.tokenErrorStatus = false;
+        }
+    }
+
+    submit() {
+        console.log("token", this.token);
+    }
 
     /**
      * New Revamp - Begin
@@ -373,6 +444,7 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     private init(): void {
+        this.setTokenStatus()
         let counter = 2;
         if (this.gatewayConfig["modal"]) {
             this.showCrowdModal();
