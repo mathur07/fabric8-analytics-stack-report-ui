@@ -5,8 +5,11 @@ import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
-import { ModalModule } from 'ngx-modal';
+// import { ModalModule } from 'ngx-modal';
 import {TabsModule, AccordionModule} from 'ngx-bootstrap';
+
+import {ModalModule} from 'ngx-bootstrap'
+
 
 import { GlobalConstants } from '../constants/constants.service';
 
@@ -38,7 +41,7 @@ describe ('StackDetailsComponent', () => {
                 CommonModule,
                 HttpModule,
                 FormsModule,
-                ModalModule,
+                ModalModule.forRoot(),
                 // StackLevelModule,
                 // ComponentLevelModule,
                 FeedbackModule,

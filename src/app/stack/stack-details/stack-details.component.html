@@ -1,40 +1,121 @@
 <div class="stack-report">
     <div *ngIf="!error">
-        <tabset *ngIf="dataLoaded">
-            <tab *ngFor="let tabz of tabs" (select)="tabSelection(tabz)" (deselect)="tabDeSelection(tabz)"
-                [customClass]="tabz.active ? 'active-menu-item' : 'inactive-menu'">
-                <ng-template tabHeading>
-                    <i *ngIf="tabz.hasWarning"
-                        [ngClass]="{'pficon-warning-triangle-o': true, 'icon-severe': tabz.severity === 1, 'icon-moderate': tabz.severity === 2}"></i>
-                    <span [innerHtml]="tabz.title" style="margin-left: 5px"></span>
-                </ng-template>
+        <div *ngIf="dataLoaded">
+            <div class="row">
+                <div class="col-md-10">
+                    <i *ngIf="tabs[0].hasWarning"
+                        [ngClass]="{'pficon-warning-triangle-o': true, 'icon-severe': tabs[0].severity === 2, 'icon-moderate': tabs[0].severity === 2}"></i>
+                    <span [innerHtml]="tabs[0].title" style="margin-left: 5px"></span>
+                </div>
+                <div class="col-md-1">
+                    <!-- Modal -->
+                    <button type="button" class="btn btn-sm"
+                        [ngClass]="(this.tokenDetail.status === 'registered') ? 'btn-success': 'btn-warning'"
+                        (click)="openModal(template)"> Snyk Token
+                        <i class="fas fa-fw"
+                            [ngClass]="(this.tokenDetail.status === 'registered') ? 'fa-check-square' : 'fa-exclamation-triangle'"
+                            aria-hidden="true"></i></button>
+                    <ng-template #template>
+                        <div class="modal-header">
+                            <h4 class="modal-title pull-left">Snyk Token Submission</h4>
+                            <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="pf-c-alert pf-m-info pf-m-inline" aria-label="Inline alert">
+                                <div class="pf-c-alert__icon">
+                                    <i class="fas fa-fw fa-info-circle" aria-hidden="true"></i>
+                                </div>
+                                <p class="pf-c-alert__title" style="font-size: .8em;">
+                                    <span class="pf-screen-reader">Info
+                                        alert:</span><span [innerText]="this.tokenAlertsMessage"></span>
+                                </p>
+                            </div>
+                            <br>
+                            <form novalidate class="pf-c-form">
+                                <div class="pf-c-form__group">
+                                    <div class="pf-c-form__group-label">
+                                        <label class="pf-c-form__label" for="help-text-form-name">
+                                            <span class="pf-c-form__label-text">Snyk token :
+                                            </span>
+                                            <span class="pf-c-form__label-required" aria-hidden="true">&#42;</span>
+                                        </label>
+                                    </div>
+                                    <div class="pf-c-form__group-control">
+
+                                        <input class="pf-c-form-control" [ngClass]="{'pf-m-warning' : this.tokenerror.status && this.tokenerror.length !==0,
+                                            'pf-m-success' : !this.tokenerror.status && this.tokenerror.length !==0}"
+                                            type="text" id="help-text-form-comment" name="help-text-form-comment"
+                                            aria-describedby="help-text-form-comment-help" [(ngModel)]="token"
+                                            (keyup)="checkToken()" />
+                                        <p class="pf-c-form__helper-text"
+                                            [ngClass]="(this.tokenErrorStatus) ? 'pf-m-warning' : 'pf-m-success'"
+                                            id="help-text-form-comment-help" aria-live="polite"
+                                            [innerText]="this.tokenerror.type"></p>
+
+                                        <!-- <input class="pf-c-form-control" required type="text" id="help-text-form-token"
+                                            name="help-text-form-token" aria-invalid="true"
+                                            aria-describedby="help-text-form-token-helper"  />
+                                        <p class="pf-c-form__helper-text" id="help-text-form-token-helper"
+                                            aria-live="polite">Token error</p> -->
+                                    </div>
+                                </div>
+                            </form>
+                            <br>
+                            <div class="pf-c-content">
+                                <small>Don’t have one?
+                                    <br>
+                                    Get your free Snyk token from
+                                    <a>here</a>
+                                    and get access to all premium
+                                    fields</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <footer class="pf-c-modal-box__footer">
+                                <button type="button" class="pf-c-button pf-m-small pf-m-primary pf-m-aria-disabled"
+                                    [ngClass]="{'pf-m-aria-disabled':this.tokenErrorStatus }"
+                                    (click)="submit($event)">Submit</button>
+                                &nbsp;
+                                <button type="button" class="pf-c-button pf-m-small pf-m-link"
+                                    (click)="modalRef.hide()">Close</button>
+                            </footer>
+                        </div>
+                    </ng-template>
+                </div>
+                <div class="col-md-1">
+                    <button mat-raised-button color="warn">Warn</button>
+                </div>
+            </div>
+            <div>
                 <!-- Stack Report Design Revamp - BEGIN -->
-                <analytics-report-summary (onCardClick)="handleCardClick($event)" [report]="tabz.content">
+                <analytics-report-summary (onCardClick)="handleCardClick($event)" [report]="tabs[0].content">
                 </analytics-report-summary>
                 <card-details [genericInformation]="genericInformation && genericInformation" *ngIf="cardDetails"
                     [cardDetails]="cardDetails" [repoInfo]="repoInfo"></card-details>
                 <!-- Stack Report Design Revamp - END -->
-            </tab>
-        </tabset>
-    </div>
-    <div *ngIf="!dataLoaded" class="pre-loader">
-        <div class="pre-loader-spinner spinner spinner-lg"></div>
-    </div>
-    <div class="error-msg blank-slate-pf" *ngIf="errorMessage">
-        <div [hidden]="!errorMessage.status">
-            <div class="warning-icon blank-slate-pf-icon">
-                <i class="pficon-warning-triangle-o"></i>
             </div>
-            <h1>
-                <p>{{errorMessage.title}}</p>
-                <p *ngIf="errorMessage.status">{{errorMessage.status}}</p>
-            </h1>
-            <p>
-                Error text: {{errorMessage.message}}
-            </p>
         </div>
-        <div [hidden]="errorMessage.status">
-            <h1>{{errorMessage.message}}</h1>
+        <div *ngIf="!dataLoaded" class="pre-loader">
+            <div class="pre-loader-spinner spinner spinner-lg"></div>
+        </div>
+        <div class="error-msg blank-slate-pf" *ngIf="errorMessage">
+            <div [hidden]="!errorMessage.status">
+                <div class="warning-icon blank-slate-pf-icon">
+                    <i class="pficon-warning-triangle-o"></i>
+                </div>
+                <h1>
+                    <p>{{errorMessage.title}}</p>
+                    <p *ngIf="errorMessage.status">{{errorMessage.status}}</p>
+                </h1>
+                <p>
+                    Error text: {{errorMessage.message}}
+                </p>
+            </div>
+            <div [hidden]="errorMessage.status">
+                <h1>{{errorMessage.message}}</h1>
+            </div>
         </div>
     </div>
-</div>

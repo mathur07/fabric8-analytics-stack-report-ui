@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app.routing';
 
-
 // Imports stackdetailsmodule
 import { StackDetailsModule } from './stack/stack-details/stack-details.module';
 import { BannerComponent } from './banner/banner.component'
