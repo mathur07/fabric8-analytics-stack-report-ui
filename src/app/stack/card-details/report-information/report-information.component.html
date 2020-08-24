@@ -1,6 +1,7 @@
 <div class="analytics-report-information">
 
-    <div class="snyk-box" *ngIf="report?.tabType == 'private' && !this.transitive">
+    <div class="snyk-box"
+        *ngIf="report?.tabType == 'private' && !this.transitive && this.registrationStatus!=='registered'">
         <span class="col-sm-1">
             <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
         </span>
@@ -11,8 +12,8 @@
             Sign up to keep getting these insights and find out more about security risks in your dependencies.
         </span>
         <span class="col-sm-2">
-            <a [href]="this.generateUrl.regitrationURL"
-                target="_blank" title="command/ctrl + click"><button class="ripple">Sign up for a free Snyk account</button></a>
+            <a [href]="this.generateUrl.regitrationURL" target="_blank" title="command/ctrl + click"><button
+                    class="ripple">Sign up for a free Snyk account</button></a>
         </span>
     </div>
 

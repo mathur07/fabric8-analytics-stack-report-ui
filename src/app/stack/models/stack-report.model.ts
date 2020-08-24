@@ -57,8 +57,8 @@ export class ComponentInformationModel {
     url: string;
     vulnerable_dependencies: Array<any>; // commented
     allTransitiveDependencies?: Array<any>;
-    publicTransitiveDependencies?:Array<any>;
-    privateTransitiveDependencies?:Array<any>;
+    publicTransitiveDependencies?: Array<any>;
+    privateTransitiveDependencies?: Array<any>;
 
 }
 
@@ -190,4 +190,8 @@ export class UserStackInfoModel {
     recommendation_ready: boolean;
     registration_status: string;
     unknown_dependencies: Array<any>;
+}
+export class TokenDetailModel {
+    id: string;
+    status: string;
 }

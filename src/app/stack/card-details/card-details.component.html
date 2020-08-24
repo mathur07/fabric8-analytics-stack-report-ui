@@ -7,7 +7,7 @@
     <span class="col-sm-2" *ngIf="this.whatCard == 'security' || this.whatCard == 'compDetails'">
         <a [href]="registrationLink" title="Sign up with Snyk" target="_blank">
             <span class="content-wrapper">
-                <span class="power">Powered By</span> 
+                <span class="power">Powered By</span>
                 <img src="/assets/icon/snky-logo.png" alt="snyk-logo" class="logo" />
             </span>
         </a>
@@ -25,7 +25,7 @@
                         [innerHtml]="tabz?.content?.componentDetails?.length || '0'" class="badge"></span>
                 </ng-template>
                 <report-information [genericInformation]="genericInformation" [report]="tabz.content"
-                    [repoInfo]="repoInfo"></report-information>
+                    [repoInfo]="repoInfo" [registrationStatus]="registrationStatus"></report-information>
 
             </tab>
         </tabset>

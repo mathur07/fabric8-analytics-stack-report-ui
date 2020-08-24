@@ -23,7 +23,8 @@ import {
     ResultInformationModel,
     UserStackInfoModel,
     ComponentInformationModel,
-    RecommendationsModel
+    RecommendationsModel,
+    TokenDetailModel
 } from '../models/stack-report.model';
 
 /**
@@ -102,6 +103,12 @@ export class StackDetailsComponent implements OnChanges {
     private alive = true;
 
     private reportSummaryUtils = new ReportSummaryUtils();
+
+    public tokenDetail: TokenDetailModel = {
+        id: '',
+        status: 'freetier'
+    }
+
 
     /**
      * New Stack Report Revamp - Begin
