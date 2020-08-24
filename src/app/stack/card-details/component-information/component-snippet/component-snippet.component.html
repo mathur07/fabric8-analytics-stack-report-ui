@@ -129,7 +129,7 @@
                                 title="Medium"></span>
                             <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'" title="Low">
                             </span>
-                            <span *ngIf="component?.registrationStatus == 'registered'" [innerText]="cve.severity"></span> <!-- exploit -->
+                            <span *ngIf="component?.registrationStatus == 'registered'" [innerText]="cve.exploit"></span> <!-- exploit -->
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)"
                                 target="_blank">{{cve.title}}</a>
