@@ -1,5 +1,5 @@
 <router-outlet>
     <app-banner *ngIf="label && version=='v1'"></app-banner>
     <stack-details *ngIf="label && version=='v2'" [stack]="stackUrl && stackUrl !== '' && label && stackUrl"
-        [gatewayConfig]="gateway && gateway" style="text-align: left;"></stack-details>
+        [gatewayConfig]="gateway && gateway" [uuid]="uuid && uuid" style="text-align: left;"></stack-details>
 </router-outlet>

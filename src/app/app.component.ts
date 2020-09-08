@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
     public label: string;
     public routerLink: string;
     public version: string;
+    public uuid: string;
 
     constructor(private route: ActivatedRoute) {
         this.route.paramMap.subscribe((params) => {
@@ -62,13 +63,16 @@ export class AppComponent implements OnInit {
                     this.gateway['config']['api_url'] = apiHost;
                 }
 
-                // Separate v2 users 
-                if (this.gateway['config']['ver'] === 'v2') {
+                // Separate v1, v2, v3 users 
+                if (this.gateway['config']['ver'] === 'v3') {
+                    this.version = this.gateway['config']['ver'];
+                    this.uuid = this.gateway['config']['uuid'];
+                } else if (this.gateway['config']['ver'] === 'v2') {
                     this.version = this.gateway['config']['ver'];
                 } else {
                     this.version = 'v1';
                 }
-                
+
                 if (this.gateway['user_key']) {
                     this.stackUrl = apiHost + 'api/v2/stack-analyses/' + this.label + '?user_key=' + this.gateway['user_key'];
                 } else {

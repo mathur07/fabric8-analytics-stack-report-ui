@@ -4,7 +4,8 @@ import {
     OnChanges,
     ViewChild,
     ViewEncapsulation,
-    TemplateRef
+    TemplateRef,
+    Output
 } from '@angular/core';
 import {
     Observable
@@ -62,6 +63,7 @@ export class StackDetailsComponent implements OnChanges {
     @Input() buildNumber;
     @Input() appName;
     @Input() stackResponse;
+    @Input() uuid;
 
     @ViewChild('crowdModule') modalCrowdModule: any;
 
@@ -246,13 +248,39 @@ export class StackDetailsComponent implements OnChanges {
     }
     tokenAlertsMessage: string;
 
+
+    observableToken: Observable<any>;
+
     constructor(private stackAnalysisService: StackAnalysesService, private modalService: BsModalService) { }
 
+    submitToken() {
+        if (!this.tokenErrorStatus) {
+            this.stackAnalysisService.putToken(this.getBaseUrl(this.stack), this.uuid, this.token, this.gatewayConfig);
+
+            console.log('refresh in 5 sec');
+            setTimeout(() => {
+                this.init()
+            }, 5000);
+        }
+
+    }
+
     setTokenStatus() {
-        let resultDetails = 'freetier'
-        this.tokenDetail.id = "";
-        this.tokenDetail.status = resultDetails;
-        switch (resultDetails) {
+
+        // 3620266d-ae88-42ce-bbb0-699f2dd67c49
+        this.observableToken = this.stackAnalysisService.getTokenStatus(this.getBaseUrl(this.stack), this.uuid, this.gatewayConfig);
+
+        this.observableToken.subscribe((res) => {
+            this.tokenDetail = res;
+
+        })
+
+        console.log(this.tokenDetail);
+
+
+        let resultDetails = this.tokenDetail.status;
+
+        switch (resultDetails.toLowerCase()) {
             case 'freetier':
                 this.tokenAlertsMessage = 'Unregistered'
                 break;
@@ -294,10 +322,6 @@ export class StackDetailsComponent implements OnChanges {
         } else {
             this.tokenErrorStatus = false;
         }
-    }
-
-    submit() {
-        console.log("token", this.token);
     }
 
     /**
