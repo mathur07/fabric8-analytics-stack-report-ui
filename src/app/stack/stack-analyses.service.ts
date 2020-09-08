@@ -88,7 +88,6 @@ export class StackAnalysesService {
   }
 
   putToken(url: string, uuid: string, token: string, params?: any): Observable<any> {
-    let tokenStatus: TokenDetailModel = null;
     let getURL = url.concat('user/');
     let body = {
       'user_id': uuid,
