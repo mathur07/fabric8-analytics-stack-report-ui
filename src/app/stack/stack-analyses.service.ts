@@ -3,10 +3,11 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 
 import { WIT_API_URL } from 'ngx-fabric8-wit';
 
-import { StackReportModel } from './models/stack-report.model';
+import { StackReportModel, TokenDetailModel } from './models/stack-report.model';
 
 @Injectable()
 export class StackAnalysesService {
@@ -53,10 +54,58 @@ export class StackAnalysesService {
         })
           .map(this.extractData)
           .map((data) => {
-            console.log("response data >>", data);
             stackReport = data;
             return stackReport;
           })
+          .catch(this.handleError);
+      }
+    }
+    return null;
+  }
+
+  getTokenStatus(url: string, uuid: string, params?: any): Observable<any> {
+    let tokenStatus: TokenDetailModel = null;
+    let getURL = url.concat('user/', uuid);
+    if (params) {
+      if (params['access_token']) {
+        let headers: Headers = new Headers();
+        headers.append('Authorization', 'Bearer ' + params['access_token']);
+        if (params['devcluster']) {
+          headers.append('x-3scale-account-secret', 'not-set');
+        }
+        return this.http.get(getURL, {
+          headers: headers
+        })
+          .map(this.extractTokenData)
+          .map((data) => {
+            tokenStatus = data;
+            return tokenStatus;
+          })
+          .catch(this.handleError);
+      }
+    }
+    return null;
+  }
+
+  putToken(url: string, uuid: string, token: string, params?: any): Observable<any> {
+    let tokenStatus: TokenDetailModel = null;
+    let getURL = url.concat('user/');
+    let body = {
+      'user_id': uuid,
+      'snyk_api_token': token,
+    }
+    if (params) {
+      if (params['access_token']) {
+        let headers: Headers = new Headers();
+        headers.append('Authorization', 'Bearer ' + params['access_token']);
+        if (params['devcluster']) {
+          headers.append('x-3scale-account-secret', 'not-set');
+        }
+        this.http.put(getURL, body, {
+          headers: headers
+        })
+          .toPromise()
+          .then(res => console.log(res.json()))
           .catch(this.handleError);
       }
     }
@@ -85,6 +134,13 @@ export class StackAnalysesService {
     body['statusCode'] = res.status;
     body['statusText'] = res.statusText;
     return body as StackReportModel;
+  }
+
+  private extractTokenData(res: Response) {
+    let body = res.json() || {};
+    body['statusCode'] = res.status;
+    body['statusText'] = res.statusText;
+    return body as TokenDetailModel;
   }
 
   private handleError(error: Response | any) {
