@@ -64,10 +64,6 @@ export class StackAnalysesService {
   }
 
   getTokenStatus(url: string, uuid: string, params?: any) {
-    console.log(params
-    );
-
-    let tokenStatus: TokenDetailModel = null;
     let getURL = url.concat('user/', uuid);
     if (params) {
       if (params['access_token']) {
