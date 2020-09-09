@@ -63,7 +63,10 @@ export class StackAnalysesService {
     return null;
   }
 
-  getTokenStatus(url: string, uuid: string, params?: any): Observable<any> {
+  getTokenStatus(url: string, uuid: string, params?: any) {
+    console.log(params
+    );
+
     let tokenStatus: TokenDetailModel = null;
     let getURL = url.concat('user/', uuid);
     if (params) {
@@ -74,24 +77,23 @@ export class StackAnalysesService {
           headers.append('x-3scale-account-secret', 'not-set');
         }
         return this.http.get(getURL, {
-          headers: headers
+          headers: headers,
+          params: {
+            'user_key': params['user_key']
+          }
         })
           .map(this.extractTokenData)
-          .map((data) => {
-            tokenStatus = data;
-            return tokenStatus;
-          })
-          .catch(this.handleError);
+          .toPromise()
       }
     }
     return null;
   }
 
-  putToken(url: string, uuid: string, token: string, params?: any): Observable<any> {
-    let getURL = url.concat('user/');
+  putToken(url: string, uuid: string, token: string, params?: any) {
+    let getURL = url.concat('user');
     let body = {
       'user_id': uuid,
-      'snyk_api_token': token,
+      'snyk_api_token': token
     }
     if (params) {
       if (params['access_token']) {
@@ -100,12 +102,13 @@ export class StackAnalysesService {
         if (params['devcluster']) {
           headers.append('x-3scale-account-secret', 'not-set');
         }
-        this.http.put(getURL, body, {
-          headers: headers
+        return this.http.put(getURL, body, {
+          headers: headers,
+          params: {
+            'user_key': params['user_key']
+          }
         })
           .toPromise()
-          .then(res => console.log(res.json()))
-          .catch(this.handleError);
       }
     }
     return null;
