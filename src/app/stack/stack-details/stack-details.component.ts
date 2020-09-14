@@ -255,7 +255,7 @@ export class StackDetailsComponent implements OnChanges {
 
     async submitToken() {
         if (!this.tokenErrorStatus) {
-            await this.stackAnalysisService.putToken(this.getBaseUrl(this.stack), '4c2c13be-2f0b-44a0-9e86-18abb3c60a6b', this.token, this.gatewayConfig)
+            await this.stackAnalysisService.putToken(this.getBaseUrl(this.stack), this.uuid, this.token, this.gatewayConfig)
                 .then(res => {
                     console.log(res.status);
                 })
@@ -273,30 +273,34 @@ export class StackDetailsComponent implements OnChanges {
 
     async setTokenStatus() {
 
-        // 3620266d-ae88-42ce-bbb0-699f2dd67c49
-        await this.stackAnalysisService.getTokenStatus(this.getBaseUrl(this.stack), '4c2c13be-2f0b-44a0-9e86-18abb3c60a6b', this.gatewayConfig)
-            .then(res => {
-                this.tokenDetail.id = res.id;
-                this.tokenDetail.status = res.status.toLowerCase();
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        if (this.uuid !== null) {
 
-        let resultDetails = this.tokenDetail.status;
+            await this.stackAnalysisService.getTokenStatus(this.getBaseUrl(this.stack), this.uuid, this.gatewayConfig)
+                .then(res => {
+                    this.tokenDetail.id = res.id;
+                    this.tokenDetail.status = res.status.toLowerCase();
+                })
+                .catch(err => {
+                    console.log(err);
+                });
 
-        switch (resultDetails.toLowerCase()) {
-            case 'freetier':
-                this.tokenAlertsMessage = 'Unregistered'
-                break;
-            case 'registered':
-                this.tokenAlertsMessage = 'Registered'
-                break;
-            case 'expired':
-                this.tokenAlertsMessage = 'Token Expired'
-                break;
-            default:
-                break;
+            let resultDetails = this.tokenDetail.status;
+
+            switch (resultDetails.toLowerCase()) {
+                case 'freetier':
+                    this.tokenAlertsMessage = 'Unregistered'
+                    break;
+                case 'registered':
+                    this.tokenAlertsMessage = 'Registered'
+                    break;
+                case 'expired':
+                    this.tokenAlertsMessage = 'Token Expired'
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            return;
         }
     }
 
@@ -406,7 +410,7 @@ export class StackDetailsComponent implements OnChanges {
                     analyzed_dependencies: element.analyzed_dependencies,
                     ecosystem: element.ecosystem,
                     license_analysis: element.license_analysis,
-                    registration_status: element.registration_status,
+                    registration_status: element.registration_status.toLowerCase(),
                     unknown_dependencies: element.unknown_dependencies
                 }
             })
@@ -486,42 +490,28 @@ export class StackDetailsComponent implements OnChanges {
         } else {
             if (this.stack && this.stack !== '') {
                 this.setTokenStatus()
-                let analysis: Observable<any> = this.stackAnalysisService
-                    .getStackAnalyses(this.stack, this.gatewayConfig);
-
-                if (analysis) {
-                    TimerObservable.create(0, 1000)
-                        .takeWhile(() => this.alive)
-                        .subscribe(() => {
-
-                            if (counter-- === 0) {
-                                this.alive = false;
-                                this.subPolling.unsubscribe();
-                            }
-
-                            this.subPolling = analysis.subscribe((data) => {
-                                this.subPolling.unsubscribe();
-                                this.handleResponse(data);
-                            },
-                                error => {
-                                    let title: string = '';
-                                    if (error.status >= 500) {
-                                        title = 'Something unexpected happened';
-                                    } else if (error.status === 404) {
-                                        title = 'You are looking for something which isn\'t there';
-                                    } else if (error.status === 401) {
-                                        title =
-                                            'You don\'t seem to have sufficient privileges to access this';
-                                    }
-                                    title = 'Report failed'; // Check if just this message is enough.
-                                    this.handleError({
-                                        message: error.statusText,
-                                        status: error.status,
-                                        title: title
-                                    });
-                                });
+                this.stackAnalysisService
+                    .getStackAnalyses(this.stack, this.uuid, this.gatewayConfig)
+                    .then(data => {
+                        this.handleResponse(data);
+                    })
+                    .catch(error => {
+                        let title: string = '';
+                        if (error.status >= 500) {
+                            title = 'Something unexpected happened';
+                        } else if (error.status === 404) {
+                            title = 'You are looking for something which isn\'t there';
+                        } else if (error.status === 401) {
+                            title =
+                                'You don\'t seem to have sufficient privileges to access this';
+                        }
+                        title = 'Report failed'; // Check if just this message is enough.
+                        this.handleError({
+                            message: error.statusText,
+                            status: error.status,
+                            title: title
                         });
-                }
+                    });
             }
         }
     }

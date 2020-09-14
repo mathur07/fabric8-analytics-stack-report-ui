@@ -7,7 +7,7 @@
                         [ngClass]="{'pficon-warning-triangle-o': true, 'icon-severe': tabs[0].severity === 2, 'icon-moderate': tabs[0].severity === 2}"></i>
                     <span [innerHtml]="tabs[0].title" class="text-style margin"></span>
                 </div>
-                <div class="col-md-1">
+                <div *ngIf="this.uuid !== null" class="col-md-1">
                     <!-- Modal -->
                     <button type="button" class="btn btn-sm"
                         [ngClass]="(this.tokenDetail.status === 'registered') ? 'btn-success': 'btn-warning'"
@@ -84,9 +84,6 @@
                             </footer>
                         </div>
                     </ng-template>
-                </div>
-                <div class="col-md-1">
-                    <button type="button" class="btn btn-primary btn-sm">Share</button>
                 </div>
             </div>
             <div>

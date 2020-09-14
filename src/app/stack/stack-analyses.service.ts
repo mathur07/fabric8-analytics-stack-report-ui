@@ -40,12 +40,15 @@ export class StackAnalysesService {
     private http: Http
   ) { }
 
-  getStackAnalyses(url: string, params?: any): Observable<any> {
+  getStackAnalyses(url: string, uuid: string, params?: any) {
     let stackReport: StackReportModel = null;
     if (params) {
       if (params['access_token']) {
         let headers: Headers = new Headers();
         headers.append('Authorization', 'Bearer ' + params['access_token']);
+        if (uuid !== null) {
+          headers.append('UUID', uuid);
+        }
         if (params['devcluster']) {
           headers.append('x-3scale-account-secret', 'not-set');
         }
@@ -53,11 +56,7 @@ export class StackAnalysesService {
           headers: headers
         })
           .map(this.extractData)
-          .map((data) => {
-            stackReport = data;
-            return stackReport;
-          })
-          .catch(this.handleError);
+          .toPromise()
       }
     }
     return null;

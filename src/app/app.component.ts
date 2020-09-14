@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
     public label: string;
     public routerLink: string;
     public version: string;
-    public uuid: string;
+    public uuid: string = null;
 
     constructor(private route: ActivatedRoute) {
         this.route.paramMap.subscribe((params) => {
@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
 
                 // Separate v1, v2, v3 users 
                 if (this.gateway['config']['ver'] === 'v3') {
-                    this.version = this.gateway['config']['ver'];
+                    this.version = 'v2';
                     this.uuid = this.gateway['config']['uuid'];
                 } else if (this.gateway['config']['ver'] === 'v2') {
                     this.version = this.gateway['config']['ver'];
