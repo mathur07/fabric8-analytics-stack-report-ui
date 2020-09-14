@@ -5,7 +5,8 @@
         <p [innerText]="details?.titleDescription"></p>
     </span>
     <span class="col-sm-2" *ngIf="this.whatCard == 'security' || this.whatCard == 'compDetails'">
-        <a [href]="registrationLink" title="Sign up with Snyk" target="_blank">
+        <a [href]="registrationLink" title="Sign up with Snyk" target="_blank"
+            (click)="this.handleUrl.open($event, registrationLink)">
             <span class="content-wrapper">
                 <span class="power">Powered By</span>
                 <img src="/assets/icon/snky-logo.png" alt="snyk-logo" class="logo" />

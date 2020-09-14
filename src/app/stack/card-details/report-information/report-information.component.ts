@@ -15,6 +15,7 @@ import {
 } from '../../models/ui.model';
 
 import { GenerateUrl } from '../../utils/url-generator';
+import { HandleUrl } from '../../utils/handle-url'
 
 @Component({
     selector: 'report-information',
@@ -30,6 +31,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
     @Input() registrationStatus: string;
 
     public generateUrl = new GenerateUrl();
+    public handleUrl = new HandleUrl();
 
     public componentDetails: Array<MComponentDetails> = null;
 
