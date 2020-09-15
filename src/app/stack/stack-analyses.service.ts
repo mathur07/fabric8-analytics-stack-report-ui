@@ -84,7 +84,7 @@ export class StackAnalysesService {
     return null;
   }
 
-  putToken(url: string, uuid: string, token: string, params?: any) {
+  linkSynkTokenWithUserID(url: string, uuid: string, token: string, params?: any) {
     let getURL = url.concat('user');
     let body = {
       'user_id': uuid,

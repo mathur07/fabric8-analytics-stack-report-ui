@@ -255,7 +255,7 @@ export class StackDetailsComponent implements OnChanges {
 
     async submitToken() {
         if (!this.tokenErrorStatus) {
-            await this.stackAnalysisService.putToken(this.getBaseUrl(this.stack), this.uuid, this.token, this.gatewayConfig)
+            await this.stackAnalysisService.linkSynkTokenWithUserID(this.getBaseUrl(this.stack), this.uuid, this.token, this.gatewayConfig)
                 .then(res => {
                     console.log(res.status);
                 })
