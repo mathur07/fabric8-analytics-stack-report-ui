@@ -258,15 +258,25 @@ export class StackDetailsComponent implements OnChanges {
             await this.stackAnalysisService.linkSynkTokenWithUserID(this.getBaseUrl(this.stack), this.uuid, this.token, this.gatewayConfig)
                 .then(res => {
                     console.log(res.status);
+                    console.log('refresh in 5 sec');
+                    setTimeout(() => {
+                        this.init()
+                    }, 5000);
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch(error => {
+                    let title: string = '';
+                    if (error.status >= 500) {
+                        title = 'Something unexpected happened';
+                    } else if (error.status === 400) {
+                        title = 'Bad Request';
+                    } else if (error.status === 401) {
+                        title =
+                            'You don\'t seem to have sufficient privileges to access this - Request unauthorized';
+                    } else {
+                        title = 'Error in Submit token request';
+                    }
+                    console.log(title);
                 });
-
-            console.log('refresh in 5 sec');
-            setTimeout(() => {
-                this.init()
-            }, 5000);
         }
 
     }
@@ -280,8 +290,19 @@ export class StackDetailsComponent implements OnChanges {
                     this.tokenDetail.id = res.id;
                     this.tokenDetail.status = res.status.toLowerCase();
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch(error => {
+                    let title: string = '';
+                    if (error.status >= 500) {
+                        title = 'Something unexpected happened';
+                    } else if (error.status === 404) {
+                        title = 'User Not Found';
+                    } else if (error.status === 401) {
+                        title =
+                            'You don\'t seem to have sufficient privileges to access this';
+                    } else {
+                        title = 'Error in Get Token Status request';
+                    }
+                    console.log(title);
                 });
 
             let resultDetails = this.tokenDetail.status;
@@ -504,8 +525,9 @@ export class StackDetailsComponent implements OnChanges {
                         } else if (error.status === 401) {
                             title =
                                 'You don\'t seem to have sufficient privileges to access this';
+                        } else {
+                            title = 'Report failed';
                         }
-                        title = 'Report failed'; // Check if just this message is enough.
                         this.handleError({
                             message: error.statusText,
                             status: error.status,
