@@ -110,12 +110,6 @@ export class StackDetailsComponent implements OnChanges {
 
     private reportSummaryUtils = new ReportSummaryUtils();
 
-    public tokenDetail: TokenDetailModel = {
-        id: '',
-        status: 'freetier'
-    }
-
-
     /**
      * New Stack Report Revamp - Begin
      */
