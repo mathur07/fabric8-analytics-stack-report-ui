@@ -347,11 +347,7 @@ export class StackDetailsComponent implements OnChanges {
             this.tokenerror.type = "Token can only have [a-zA-Z0-9-]";
         }
 
-        if (this.tokenerror.status) {
-            this.tokenErrorStatus = true;
-        } else {
-            this.tokenErrorStatus = false;
-        }
+        this.tokenErrorStatus = this.tokenerror.status === true;
     }
 
     /**
