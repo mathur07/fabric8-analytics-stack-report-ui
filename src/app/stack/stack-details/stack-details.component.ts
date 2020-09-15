@@ -494,7 +494,6 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     private init(): void {
-        let counter = 2;
         if (this.gatewayConfig["modal"]) {
             this.showCrowdModal();
         }
