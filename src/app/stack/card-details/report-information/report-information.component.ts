@@ -28,6 +28,7 @@ export class ReportInformationComponent implements OnInit, OnChanges {
     @Input() repoInfo: any;
     @Input() tabType: string;
     @Input() transitive: boolean;
+    @Input() registrationStatus: string;
 
     public generateUrl = new GenerateUrl();
     public handleUrl = new HandleUrl();

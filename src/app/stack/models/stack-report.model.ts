@@ -183,6 +183,7 @@ export class StackLicenseAnalysisModel {
     unknown_dependencies: Array<any>;
     unknown_dependencies_count: number;
 }
+
 export class UserStackInfoModel {
     analyzed_dependencies: Array<ComponentInformationModel>;
     ecosystem: string;
@@ -191,11 +192,13 @@ export class UserStackInfoModel {
     registration_status: string;
     unknown_dependencies: Array<any>;
 }
+
 export class TokenErrorModel {
     status: boolean = false;
     type: string = '';
     length: number;
 }
+
 export class TokenDetailModel {
     id: string;
     status: string;

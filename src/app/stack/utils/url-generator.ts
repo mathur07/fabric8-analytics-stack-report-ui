@@ -15,7 +15,7 @@ export class GenerateUrl {
         return null;
     }
     public privateUrl(url: string, regitrationStatus: string): string {
-        if (regitrationStatus === 'freetier') {
+        if (regitrationStatus !== 'registered') {
             return this.regitrationURL;
         }
         else if (typeof (url) === "string") {

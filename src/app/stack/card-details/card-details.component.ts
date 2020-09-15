@@ -1126,7 +1126,7 @@ export class CardDetailsComponent implements OnChanges {
             }
 
 
-            if (registrationStatus == 'freetier') {
+            if (registrationStatus !== 'registered') {
                 maxSecurityIssuesID = 'Sign up with Snyk'
             }
 

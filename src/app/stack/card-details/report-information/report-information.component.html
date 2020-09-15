@@ -1,6 +1,7 @@
 <div class="analytics-report-information">
 
-    <div class="snyk-box" *ngIf="report?.tabType == 'private' && !this.transitive">
+    <div class="snyk-box"
+        *ngIf="report?.tabType == 'private' && !this.transitive && this.registrationStatus!=='registered'">
         <span class="col-sm-1">
             <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
         </span>
