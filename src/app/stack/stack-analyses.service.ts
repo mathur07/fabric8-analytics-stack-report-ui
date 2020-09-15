@@ -77,7 +77,12 @@ export class StackAnalysesService {
             'user_key': params['user_key']
           }
         })
-          .map(this.extractTokenData)
+          .map(res => {
+            let body = res.json() || {};
+            body['statusCode'] = res.status;
+            body['statusText'] = res.statusText;
+            return body as TokenDetailModel;
+          })
           .toPromise()
       }
     }
@@ -131,13 +136,6 @@ export class StackAnalysesService {
     body['statusCode'] = res.status;
     body['statusText'] = res.statusText;
     return body as StackReportModel;
-  }
-
-  private extractTokenData(res: Response) {
-    let body = res.json() || {};
-    body['statusCode'] = res.status;
-    body['statusText'] = res.statusText;
-    return body as TokenDetailModel;
   }
 
   private handleError(error: Response | any) {
