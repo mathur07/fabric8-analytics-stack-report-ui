@@ -321,7 +321,7 @@ export class StackDetailsComponent implements OnChanges {
         } else if (this.token.length !== 36) {
             this.tokenerror.status = true;
             this.tokenerror.type = "Token length should be of 36 character";
-        } else if (!/^[a-zA-Z0-9-]*$/.test(this.token)) {
+        } else if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(this.token)) {
             this.tokenerror.status = true;
             this.tokenerror.type = "Token can only have [a-zA-Z0-9-]";
         }
