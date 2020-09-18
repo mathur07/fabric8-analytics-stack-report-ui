@@ -333,16 +333,11 @@ export class StackDetailsComponent implements OnChanges {
             type: '',
             length: 0
         };
+        
         this.tokenerror.length = this.token.length;
         if (this.token.length === 0 || this.token == undefined) {
             this.tokenerror.status = true;
             this.tokenerror.type = '';
-        } else if (this.token.length !== 36) {
-            this.tokenerror.status = true;
-            this.tokenerror.type = "Token length should be of 36 character";
-        } else if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(this.token)) {
-            this.tokenerror.status = true;
-            this.tokenerror.type = "Token can only have [a-zA-Z0-9-]";
         }
 
         this.tokenErrorStatus = this.tokenerror.status === true;
