@@ -13,7 +13,10 @@
                         </div>
                         <div *ngSwitchCase="'component'">
                             <!-- Component Names -->
-                            <a class="name" [href]="getInformationUrl(comp?.url)" target="_blank" title="command/ctrl + click" [innerText]="comp?.name"></a>
+                            <a *ngIf="tabType === 'private' || tabType === 'public' || tabType === 'compDetails'; else nonUrlName"
+                                class="name" [href]="getInformationUrl(comp?.url)" target="_blank"
+                                title="command/ctrl + click" [innerText]="comp?.name"></a>
+                            <ng-template #nonUrlName><span [innerText]="comp?.name"></span></ng-template>
                             <span class="recommendation-reason" [tooltip]="component?.reason"
                                 *ngIf="component?.reason && type === 'recommendation' && comp?.name">Why this
                                 dependency?</span>
