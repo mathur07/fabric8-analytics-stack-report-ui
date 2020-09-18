@@ -257,11 +257,9 @@ export class StackDetailsComponent implements OnChanges {
         if (!this.tokenErrorStatus) {
             await this.stackAnalysisService.linkSynkTokenWithUserID(this.getBaseUrl(this.stack), this.uuid, this.token, this.gatewayConfig)
                 .then(res => {
-                    console.log(res.status);
-                    console.log('refresh in 5 sec');
-                    setTimeout(() => {
-                        this.init()
-                    }, 5000);
+                    if (res.status === 200) {
+                        this.init();
+                    }
                 })
                 .catch(error => {
                     let title: string = '';
