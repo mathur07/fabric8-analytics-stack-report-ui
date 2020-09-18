@@ -24,14 +24,23 @@
                         </div>
                         <div class="modal-body">
 
-                            <div class="pf-c-alert pf-m-info pf-m-inline" aria-label="Inline alert">
+                            <div class="pf-c-alert pf-m-inline"
+                                [ngClass]="{'pf-m-warning' : this.tokenAlertType == 'yellow', 'pf-m-success' : this.tokenAlertType == 'green','pf-m-danger' : this.tokenAlertType == 'red'}"
+                                aria-label="Inline alert">
                                 <div class="pf-c-alert__icon">
-                                    <i class="fas fa-fw fa-info-circle" aria-hidden="true"></i>
+                                    <i class="fas fa-fw"
+                                        [ngClass]="{'fa-exclamation-triangle' : this.tokenAlertType == 'yellow', 'fa-check-circle' : this.tokenAlertType == 'green','fa-exclamation-circle' : this.tokenAlertType == 'red'}"
+                                        aria-hidden="true"></i>
                                 </div>
                                 <p class="pf-c-alert__title" style="font-size: .8em;">
                                     <span class="pf-screen-reader">Info
                                         alert:</span><span [innerText]="this.tokenAlertsMessage"></span>
                                 </p>
+                                <span *ngIf="this.loaderStatus" class="pf-c-spinner pf-m-md" role="progressbar" aria-valuetext="Loading...">
+                                    <span class="pf-c-spinner__clipper"></span>
+                                    <span class="pf-c-spinner__lead-ball"></span>
+                                    <span class="pf-c-spinner__tail-ball"></span>
+                                </span>
                             </div>
                             <br>
                             <form novalidate class="pf-c-form">
@@ -45,21 +54,9 @@
                                     </div>
                                     <div class="pf-c-form__group-control">
 
-                                        <input class="pf-c-form-control" [ngClass]="{'pf-m-warning' : this.tokenerror.status && this.tokenerror.length !==0,
-                                            'pf-m-success' : !this.tokenerror.status && this.tokenerror.length !==0}"
-                                            type="text" id="help-text-form-comment" name="help-text-form-comment"
-                                            aria-describedby="help-text-form-comment-help" [(ngModel)]="token"
-                                            (keyup)="checkToken()" />
-                                        <p class="pf-c-form__helper-text"
-                                            [ngClass]="(this.tokenErrorStatus) ? 'pf-m-warning' : 'pf-m-success'"
-                                            id="help-text-form-comment-help" aria-live="polite"
-                                            [innerText]="this.tokenerror.type"></p>
-
-                                        <!-- <input class="pf-c-form-control" required type="text" id="help-text-form-token"
-                                            name="help-text-form-token" aria-invalid="true"
-                                            aria-describedby="help-text-form-token-helper"  />
-                                        <p class="pf-c-form__helper-text" id="help-text-form-token-helper"
-                                            aria-live="polite">Token error</p> -->
+                                        <input class="pf-c-form-control" type="text" id="help-text-form-comment"
+                                            name="help-text-form-comment" aria-describedby="help-text-form-comment-help"
+                                            [(ngModel)]="token" (keyup)="checkToken()" />
                                     </div>
                                 </div>
                             </form>

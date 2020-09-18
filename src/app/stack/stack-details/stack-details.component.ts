@@ -247,6 +247,9 @@ export class StackDetailsComponent implements OnChanges {
         status: 'freetier'
     }
     tokenAlertsMessage: string;
+    tokenAlertType: string;
+
+    loaderStatus: boolean = false;
 
 
     observableToken: Observable<any>;
@@ -255,24 +258,39 @@ export class StackDetailsComponent implements OnChanges {
 
     async submitToken() {
         if (!this.tokenErrorStatus) {
+            this.loaderStatus = true;
             await this.stackAnalysisService.linkSynkTokenWithUserID(this.getBaseUrl(this.stack), this.uuid, this.token, this.gatewayConfig)
                 .then(res => {
                     if (res.status === 200) {
                         this.init();
+                        this.loaderStatus = false;
+                        this.token = '';
+                        setTimeout(() => {
+                            this.modalRef.hide();
+                        }, (1000));
                     }
                 })
                 .catch(error => {
                     let title: string = '';
                     if (error.status >= 500) {
-                        title = 'Something unexpected happened';
+                        title = 'Something unexpected happened. Please try again later.';
+                        this.tokenAlertsMessage = 'Something unexpected happened. Please try again later.'
+                        this.tokenAlertType = 'red';
                     } else if (error.status === 400) {
-                        title = 'Bad Request';
+                        title = 'Invalid Token';
+                        this.tokenAlertsMessage = 'Invalid Token'
+                        this.tokenAlertType = 'red';
                     } else if (error.status === 401) {
                         title =
                             'You don\'t seem to have sufficient privileges to access this - Request unauthorized';
+                        this.tokenAlertsMessage = 'Request unauthorized'
+                        this.tokenAlertType = 'red';
                     } else {
-                        title = 'Error in Submit token request';
+                        title = 'Error in Submit Token. Please try again later.';
+                        this.tokenAlertsMessage = 'Error in Submit Token. Please try again later.'
+                        this.tokenAlertType = 'red';
                     }
+                    this.loaderStatus = false;
                     console.log(title);
                 });
         }
@@ -308,12 +326,15 @@ export class StackDetailsComponent implements OnChanges {
             switch (resultDetails.toLowerCase()) {
                 case 'freetier':
                     this.tokenAlertsMessage = 'Unregistered'
+                    this.tokenAlertType = 'yellow';
                     break;
                 case 'registered':
                     this.tokenAlertsMessage = 'Registered'
+                    this.tokenAlertType = 'green';
                     break;
                 case 'expired':
                     this.tokenAlertsMessage = 'Token Expired'
+                    this.tokenAlertType = 'yellow';
                     break;
                 default:
                     break;
@@ -333,7 +354,7 @@ export class StackDetailsComponent implements OnChanges {
             type: '',
             length: 0
         };
-        
+
         this.tokenerror.length = this.token.length;
         if (this.token.length === 0 || this.token == undefined) {
             this.tokenerror.status = true;
