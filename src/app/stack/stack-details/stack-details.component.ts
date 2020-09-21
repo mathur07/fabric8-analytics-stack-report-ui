@@ -345,6 +345,7 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     openModal(template: TemplateRef<any>) {
+        this.token = '';
         this.modalRef = this.modalService.show(template);
     }
 
