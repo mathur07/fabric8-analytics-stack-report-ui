@@ -82,6 +82,17 @@
                         </div>
                     </ng-template>
                 </div>
+                <div class="col-md-1">
+                    <button (click)="share()" type="button"
+                        class="btn btn-sm btn-info custom-tooltip name text-center">Share<i
+                            class="fa fa-share text-style margin" aria-hidden="true"></i>
+                        <div class="custom-tooltip-wrapper">
+                            <div class="custom-tooltip-text">
+                                <span class="url-message">{{this.urlMessage}}</span>
+                            </div>
+                        </div>
+                    </button>
+                </div>
             </div>
             <div>
                 <!-- Stack Report Design Revamp - BEGIN -->

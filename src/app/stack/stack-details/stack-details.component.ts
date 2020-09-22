@@ -108,6 +108,8 @@ export class StackDetailsComponent implements OnChanges {
 
     private alive = true;
 
+    public urlMessage = 'Click to copy Report URL';
+
     private reportSummaryUtils = new ReportSummaryUtils();
 
     /**
@@ -232,6 +234,20 @@ export class StackDetailsComponent implements OnChanges {
 
     public handleChangeFilter(filterBy: any): void {
         this.componentFilterBy = filterBy.filterBy;
+    }
+
+    public share() {
+        let url = location.href;
+        let dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = url;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        this.urlMessage = 'URL Copied!'
+        setTimeout(()=>{
+            this.urlMessage = 'Click to copy Report URL';
+        },(5000))
     }
 
     modalRef: BsModalRef;
