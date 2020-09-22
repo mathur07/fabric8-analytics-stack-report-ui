@@ -18,7 +18,7 @@ import {
     StackLicenseAnalysisModel,
     UserStackInfoModel,
     GithubModel,
-    OutlierInformationModel
+    OutlierInformationModel, TokenDetailModel
 } from '../models/stack-report.model';
 
 import {
@@ -28,6 +28,7 @@ import {
     MReportSummaryTitle
 } from '../models/ui.model';
 import { ReportSummaryUtils } from '../utils/report-summary-utils';
+import { HandleSegmentClick } from '../utils/handle-segment-click';
 
 @Component({
     selector: 'analytics-report-summary',
@@ -36,6 +37,7 @@ import { ReportSummaryUtils } from '../utils/report-summary-utils';
 })
 export class ReportSummaryComponent implements OnChanges {
     @Input() report: ResultInformationModel;
+    @Input() tokenDetail: TokenDetailModel;
     @Output('onCardClick') onCardClick = new EventEmitter<any>();
 
     public reportSummaryCards: Array<MReportSummaryCard> = [];
@@ -44,6 +46,7 @@ export class ReportSummaryComponent implements OnChanges {
     public reportSummaryTitle: MReportSummaryTitle;
     public reportSummaryDescription: string;
     public notification = null;
+    public handleSegmentClick = new HandleSegmentClick();
     private reportSummaryUtils = new ReportSummaryUtils();
 
     constructor() {
@@ -133,7 +136,7 @@ export class ReportSummaryComponent implements OnChanges {
                 });
             });
 
-            analyzedTransCount =  analyzedTransSet.size;
+            analyzedTransCount = analyzedTransSet.size;
             const isTransitiveSupported: boolean = analyzedTransCount >= 0;
 
             const analyzedEntry: MReportSummaryInfoEntry = new MReportSummaryInfoEntry();

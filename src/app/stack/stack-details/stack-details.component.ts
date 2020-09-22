@@ -301,7 +301,7 @@ export class StackDetailsComponent implements OnChanges {
 
             await this.stackAnalysisService.getTokenStatus(this.getBaseUrl(this.stack), this.uuid, this.gatewayConfig)
                 .then(res => {
-                    this.tokenDetail.id = res.id;
+                    this.tokenDetail.id = this.uuid;
                     this.tokenDetail.status = res.status.toLowerCase();
                 })
                 .catch(error => {
