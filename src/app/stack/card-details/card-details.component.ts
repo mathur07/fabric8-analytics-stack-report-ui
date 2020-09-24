@@ -67,6 +67,7 @@ export class CardDetailsComponent implements OnChanges {
     public details: MCardDetails = null;
     public registrationStatus: string;
     public registrationLink: string;
+    public snykVulnerabilityDBLink: string;
 
     public tabs: Array<MTab> = [];
 
@@ -88,7 +89,7 @@ export class CardDetailsComponent implements OnChanges {
     public titleAndDescription: any = {
         [this.cardTypes.SECURITY]: {
             title: 'Dependencies with security issues in your stack',
-            description: 'A list of the dependencies affected with common vulnerabilities and exposures (CVE) and vulnerabilities unique to Snyk, dependency with the highest common vulnerability score (CVSS), and its Vulnerability ID.'
+            description: 'A list of the dependencies affected with common vulnerabilities and exposures (CVE), as well as vulnerabilities only found when using '
         },
         [this.cardTypes.INSIGHTS]: {
             title: 'Complementary dependencies that can augment your stack',
@@ -1127,7 +1128,7 @@ export class CardDetailsComponent implements OnChanges {
 
 
             if (registrationStatus !== 'registered') {
-                maxSecurityIssuesID = 'Sign up with Snyk'
+                maxSecurityIssuesID = 'Sign up for a free Snyk account'
             }
 
             if (maxSecurityIssues && maxSecurityIssues > 0 && maxSecurityIssuesID != null) {
@@ -1394,7 +1395,8 @@ export class CardDetailsComponent implements OnChanges {
             console.log(this.whatCard);
 
             this.registrationStatus = this.report.user_stack_info.registration_status;
-            this.registrationLink = this.generateUrl.regitrationURL;
+            this.registrationLink = this.generateUrl.registrationURL;
+            this.snykVulnerabilityDBLink = this.generateUrl.snykVulnerabilityDBURL;
             let reports: Array<MReportInformation> = this.getUIReportInformations(this.whatCard);
             this.details = new MCardDetails();
             let { title, description } = this.getTitleAndDescription(this.whatCard);

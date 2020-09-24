@@ -2,7 +2,10 @@
 
     <span [ngClass]="{'col-sm-10 pl-0 ml-0' : this.whatCard=='security' || this.whatCard == 'compDetails'}">
         <h2 [innerText]="details?.title"></h2>
-        <p [innerText]="details?.titleDescription"></p>
+        {{details?.titleDescription}}
+        <span *ngIf="this.whatCard == 'security'" ><a [href]="snykVulnerabilityDBLink" target="__blank"
+            (click)="this.handleUrl.open($event, snykVulnerabilityDBLink)">
+            Snyk's vulnerability database</a>.</span>
     </span>
     <span class="col-sm-2" *ngIf="this.whatCard == 'security' || this.whatCard == 'compDetails'">
         <a [href]="registrationLink" title="Sign up with Snyk" target="_blank"

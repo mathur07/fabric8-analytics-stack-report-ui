@@ -147,13 +147,14 @@
                         </span>
                     </span>
                     <br>
-                    <span class="common-container box branding">
+                    <span class="common-container box">
                         <span>
                             <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
                         </span>
-                        <a [href]="this.generateUrl.regitrationURL" target="_blank" title="command/ctrl + click">
-                            Sign in to view exploits
+                        <a [href]="this.generateUrl.registrationURL" target="_blank" title="command/ctrl + click" class="branding-url">
+                            Sign up for a free Snyk account
                         </a>
+                        to find out which vulnerabilities have a publicly known exploits
                     </span>
                 </span>
             </div>
@@ -161,10 +162,14 @@
             <div class="common-wrapper"
                 *ngIf="component?.registrationStatus !== 'registered' && (component?.private_vulnerabilities?.length > 0) && tabType == 'private'">
                 <span class="info-head">Vulnerabilities:</span>
-                <span class="common-container">
-                    <a class="name" [href]="getUrl(component.url, tabType, component?.registrationStatus)"
-                        target="_blank" title="command/ctrl + click">
-                        Sign up with Snyk</a>
+                <span class="common-container box">
+                    <span>
+                        <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
+                    </span>
+                    <a [href]="this.generateUrl.registrationURL" target="_blank" title="command/ctrl + click" class="branding-url">
+                        Sign up for a free Snyk account
+                    </a>
+                    to find out about the vulnerabilities that have been found, and whether any have a publicly known exploit
                 </span>
             </div>
 

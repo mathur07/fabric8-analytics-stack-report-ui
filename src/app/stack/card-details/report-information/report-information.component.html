@@ -6,14 +6,13 @@
             <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
         </span>
         <span class="col-sm-9">
-            Information about vulnerabilities in dependencies is only available after registration for a <b>free</b>
-            Snyk account.
+            These vulnerabilities were found using Snyk's vulnerability database
             <br>
-            Sign up to keep getting these insights and find out more about security risks in your dependencies.
+            <b>Register</b> for a <b>free</b> Snyk account to find out more, including whether any of them have a publicly known exploit.
         </span>
         <span class="col-sm-2">
-            <a [href]="this.generateUrl.regitrationURL" target="_blank" title="command/ctrl + click"
-                (click)="this.handleUrl.open($event, this.generateUrl.regitrationURL)"><button class="ripple">Sign up for
+            <a [href]="this.generateUrl.registrationURL" target="_blank" title="command/ctrl + click"
+                (click)="this.handleUrl.open($event, this.generateUrl.registrationURL)"><button class="ripple">Sign up for
                     a free Snyk account</button></a>
         </span>
     </div>

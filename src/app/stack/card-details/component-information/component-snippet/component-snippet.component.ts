@@ -62,15 +62,15 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
         this.paint();
     }
 
-    public getUrl(url: string, tabType: string, regitrationStatus?: string): string {
+    public getUrl(url: string, tabType: string, registrationStatus?: string): string {
         if (tabType == 'public') {
             return this.generateUrl.publicUrl(url);
         }
         if (tabType == 'private') {
-            return this.generateUrl.privateUrl(url, regitrationStatus);
+            return this.generateUrl.privateUrl(url, registrationStatus);
         }
         if (tabType == 'compDetails') {
-            return this.generateUrl.privateUrl(url, regitrationStatus);
+            return this.generateUrl.privateUrl(url, registrationStatus);
         }
     }
 

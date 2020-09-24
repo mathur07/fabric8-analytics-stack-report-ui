@@ -1,7 +1,9 @@
 export class GenerateUrl {
 
-    public regitrationURL: string = "https://app.snyk.io/signup/?utm_medium=Partner&utm_source=RedHat&utm_campaign=Code-Ready-Analytics-2020&utm_content=Register";
+    public registrationURL: string = "https://app.snyk.io/signup/?utm_medium=Partner&utm_source=RedHat&utm_campaign=Code-Ready-Analytics-2020&utm_content=Register";
 
+    public snykVulnerabilityDBURL:string = "https://snyk.io/product/vulnerability-database/?utm_medium=Partner&utm_source=RedHat&utm_campaign=Code-Ready-Analytics-2020&utm_content=VulnDB"
+    
     private vulUrlSub = "?utm_medium=Partner&utm_source=RedHat&utm_campaign=Code-Ready-Analytics-2020&utm_content=vuln/";
 
     public publicUrl(url: string): string {
@@ -14,9 +16,9 @@ export class GenerateUrl {
         }
         return null;
     }
-    public privateUrl(url: string, regitrationStatus: string): string {
-        if (regitrationStatus !== 'registered') {
-            return this.regitrationURL;
+    public privateUrl(url: string, registrationStatus: string): string {
+        if (registrationStatus !== 'registered') {
+            return this.registrationURL;
         }
         else if (typeof (url) === "string") {
             let content: Array<string>;

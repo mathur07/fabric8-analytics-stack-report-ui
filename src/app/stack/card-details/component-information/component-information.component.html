@@ -59,9 +59,13 @@
 
                         <div *ngSwitchCase="'cveIdOfH'">
                             <!-- cveIdOfHeighest CVSS -->
-                            <a *ngIf="comp?.hasSecurityIssue && tabType == 'private'"
-                                [href]="comp?.privateSecurityDetails?.highestIssue?.url" target="_blank" class="name" title="command/ctrl + click"
-                                [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails?.highestIssue?.cve || '-'"></a>
+                            <span *ngIf="comp?.hasSecurityIssue && tabType == 'private'">
+                                <a  [href]="comp?.privateSecurityDetails?.highestIssue?.url" target="_blank" class="name" title="command/ctrl + click"
+                                    [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails?.highestIssue?.cve || '-'"></a>
+                                    <span *ngIf="comp?.registrationStatus !== 'registered'">
+                                        to <br> learn about the vulnerabilities found
+                                    </span>
+                            </span>
                             <a *ngIf="comp?.hasSecurityIssue && tabType == 'public'" class="name"
                                 [href]="comp?.publicSecurityDetails?.highestIssue?.url" target="_blank" title="command/ctrl + click"
                                 [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails?.highestIssue?.cve || '-'"></a>
