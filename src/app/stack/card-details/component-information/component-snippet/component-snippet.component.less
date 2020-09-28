@@ -2,6 +2,8 @@
 @darkSteelBlue: #386890;
 @greyBg: #eff2f5;
 @pf-black-500: #8b8d8f;
+@md-chip-height: 26px;
+@md-chip-color: #d3d3d3;
 .pseudo-clear {
     content: '';
     clear: both;
@@ -54,9 +56,12 @@
         font-size: 13px;
     }
     .wrapper {
-        display: -webkit-inline-box;
-        line-height: 3em;
+        display: inline-flex;
+        background-color: @greyBg;
+        border: 1px solid #e5eaf0;
+        line-height: 2.8em;
         vertical-align: inherit;
+        margin: 0px 5px 5px 1px;
     }
     .info-head {
         font-weight: bold;
@@ -119,39 +124,16 @@
     }
     .severity {
         padding: 5px 5px 5px 3px;
-        width: 150px;
-        height: 2px;
-        border-radius: 25px;
-        margin-right: 2px;
-        font-size: 16px;
         text-transform: capitalize;
-            &.critical {
-                border: 2px solid #800101;
-                color: #800101;
-            }
-            &.high {
-                border: 2px solid #fb3333;
-                color: #fb3333;
-            }
-            &.medium {
-                border: 2px solid #ffa500;
-                color: #ffa500;
-            }
-            &.low {
-                border: 2px solid #ffd900;
-                color: #ffd900;
-            }
     }
     .circle {
-        width: 15px;
-        height: 15px;
+        display: inline-block;
+        width: @md-chip-height;
         border-radius: 50%;
-        padding: 5px 9px;
-        color: white;
         text-align: center;
+        color: white;
+        margin: 4px 8px 4px 6px;
         font-weight: bold;
-        font-size: 15px;
-        text-transform: capitalize;
         &.critical {
             background-color: #800101;
         }
@@ -329,3 +311,63 @@
         opacity: 1;
     }
 }
+.md-chip {
+    display: inline-block;
+    background: @md-chip-color;
+    padding: 0 12px;
+    margin-right: -3px;
+    border-radius: 32px;
+    font-size: 13px;
+    &.md-chip-hover:hover {
+      background: #ccc;
+    }
+  }
+.md-chip, .md-chip-icon {
+    height: @md-chip-height;
+    line-height: @md-chip-height;
+}
+.md-chip-icon {
+    display: block;
+    float: left;
+    width: @md-chip-height;
+    border-radius: 50%;
+    text-align: center;
+    color: white;
+    margin: 0 8px 0 -12px;
+    font-weight: bold;
+    &.critical {
+        background: #800101;
+    }
+    &.high {
+        background: #fb3333;
+    }
+    &.medium {
+        background: #ffa500;
+    }
+    &.low {
+        background: #ffd900;
+    }
+}
+.md-chip-b {
+    display: inline-block;
+    padding: 0 12px;
+    margin-right: -3px;
+    border-radius: 32px;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    height: @md-chip-height;
+    line-height: @md-chip-height;
+    &.critical {
+        background: #800101;
+    }
+    &.high {
+        background: #fb3333;
+    }
+    &.medium {
+        background: #ffa500;
+    }
+    &.low {
+        background: #ffd900;
+    }
+  }

@@ -157,14 +157,25 @@
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
                     <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
-                        <span class="severity"
+                        <!-- <span class="severity"
                             [ngClass]="{'critical':cve.severity == 'critical', 'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
                             <span *ngIf="cve.severity == 'critical'" class="circle critical" [innerText]="'C'"></span>
                             <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
                             <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
                             <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
                             <span [innerText]="cve.exploit"></span>
+                        </span> -->
+
+                        <span class="md-chips severity">
+                            <span class="md-chip md-chip-hover">
+                                <span *ngIf="cve.severity == 'critical'" class="md-chip-icon critical" [innerText]="'C'"></span>
+                                <span *ngIf="cve.severity == 'high'" class="md-chip-icon high" [innerText]="'H'"></span>
+                                <span *ngIf="cve.severity == 'medium'" class="md-chip-icon medium" [innerText]="'M'"></span>
+                                <span *ngIf="cve.severity == 'low'" class="md-chip-icon low" [innerText]="'L'"></span>
+                              <span> {{cve.exploit}} </span>
+                            </span>
                         </span>
+
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)"
                                 target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-wrapper">
@@ -202,7 +213,7 @@
                                 </div>
                                 <div class="custom-tooltip-text no-wrap">
                                     <span class="head">Snyk ID:</span>
-                                    <span class="url"><a [href]="getUrl(cve.url, tabType)" target="_blank"
+                                    <span class="url"><a [href]="getUrl(cve.url, tabType, 'freetier')" target="_blank"
                                             [innerText]="cve.id"></a></span>
                                 </div>
                                 <div class="footer no-wrap">
@@ -231,7 +242,7 @@
                             title="Medium"></span>
                         <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'" title="Low">
                         </span>
-                        <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)"
+                        <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)"
                                 target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-wrapper">
                                 <div class="custom-tooltip-text no-wrap">
@@ -240,7 +251,7 @@
                                 </div>
                                 <div class="custom-tooltip-text no-wrap">
                                     <span class="head">Snyk ID:</span>
-                                    <span class="url"><a [href]="getUrl(cve.url, tabType)" target="_blank"
+                                    <span class="url"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)" target="_blank"
                                             [innerText]="cve.id"></a></span>
                                 </div>
                                 <div class="footer no-wrap">
@@ -292,7 +303,7 @@
                             <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
                             <span [innerText]="cve.exploit"></span>
                         </span>
-                        <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)"
+                        <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)"
                                 target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-wrapper">
                                 <div class="custom-tooltip-text no-wrap">
@@ -301,7 +312,7 @@
                                 </div>
                                 <div class="custom-tooltip-text no-wrap">
                                     <span class="head">Snyk ID:</span>
-                                    <span class="url"><a [href]="getUrl(cve.url, tabType)" target="_blank"
+                                    <span class="url"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)" target="_blank"
                                             [innerText]="cve.id"></a></span>
                                 </div>
                                 <div class="footer no-wrap">

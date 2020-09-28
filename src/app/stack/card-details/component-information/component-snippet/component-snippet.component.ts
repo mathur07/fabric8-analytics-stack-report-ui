@@ -70,7 +70,11 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
             return this.generateUrl.privateUrl(url, registrationStatus);
         }
         if (tabType == 'compDetails') {
-            return this.generateUrl.privateUrl(url, registrationStatus);
+            if (registrationStatus !== 'registered') {
+                return this.generateUrl.publicUrl(url);
+            } else {
+                return this.generateUrl.privateUrl(url, registrationStatus);
+            }
         }
     }
 
