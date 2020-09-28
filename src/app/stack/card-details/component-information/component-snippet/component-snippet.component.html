@@ -157,15 +157,6 @@
                 <span class="info-head">Vulnerabilities:</span>
                 <span class="common-container">
                     <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
-                        <!-- <span class="severity"
-                            [ngClass]="{'critical':cve.severity == 'critical', 'high':cve.severity == 'high','medium':cve.severity == 'medium','low':cve.severity == 'low'}">
-                            <span *ngIf="cve.severity == 'critical'" class="circle critical" [innerText]="'C'"></span>
-                            <span *ngIf="cve.severity == 'high'" class="circle high" [innerText]="'H'"></span>
-                            <span *ngIf="cve.severity == 'medium'" class="circle medium" [innerText]="'M'"></span>
-                            <span *ngIf="cve.severity == 'low'" class="circle low" [innerText]="'L'"></span>
-                            <span [innerText]="cve.exploit"></span>
-                        </span> -->
-
                         <span class="md-chips severity">
                             <span class="md-chip md-chip-hover">
                                 <span *ngIf="cve.severity == 'critical'" class="md-chip-icon critical" [innerText]="'C'"></span>
