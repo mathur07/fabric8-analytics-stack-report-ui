@@ -42,6 +42,8 @@ import {
     SaveState
 } from '../utils/SaveState';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
+import { GenerateUrl } from '../utils/url-generator';
+import { HandleUrl } from '../utils/handle-url';
 /**
  * New Stack Report Revamp - End
  */
@@ -98,6 +100,10 @@ export class StackDetailsComponent implements OnChanges {
     public feedbackConfig: any = {};
 
     public tabs: Array<any> = [];
+
+    public generateUrl =  new GenerateUrl();
+
+    public handleUrl = new HandleUrl();
 
     private userStackInformationArray: Array<UserStackInfoModel> = [];
     private totalManifests: number;
