@@ -26,7 +26,6 @@ import {
     UserStackInfoModel,
     ComponentInformationModel,
     RecommendationsModel,
-    TokenErrorModel,
     TokenDetailModel,
 } from '../models/stack-report.model';
 
@@ -236,12 +235,6 @@ export class StackDetailsComponent implements OnChanges {
 
     modalRef: BsModalRef;
     token: string;
-    tokenerror: TokenErrorModel = {
-        status: false,
-        type: '',
-        length: 0
-    };
-    tokenErrorStatus: boolean = true;
     tokenDetail: TokenDetailModel = {
         id: '',
         status: 'freetier'
@@ -257,43 +250,42 @@ export class StackDetailsComponent implements OnChanges {
     constructor(private stackAnalysisService: StackAnalysesService, private modalService: BsModalService) { }
 
     async submitToken() {
-        if (!this.tokenErrorStatus) {
-            this.loaderStatus = true;
-            await this.stackAnalysisService.linkSynkTokenWithUserID(this.getBaseUrl(this.stack), this.uuid, this.token, this.gatewayConfig)
-                .then(res => {
-                    if (res.status === 200) {
-                        this.init();
-                        this.loaderStatus = false;
-                        this.token = '';
-                        setTimeout(() => {
-                            this.modalRef.hide();
-                        }, (1000));
-                    }
-                })
-                .catch(error => {
-                    let title: string = '';
-                    if (error.status >= 500) {
-                        title = 'Something unexpected happened. Please try again later.';
-                        this.tokenAlertsMessage = 'Something unexpected happened. Please try again later.'
-                        this.tokenAlertType = 'red';
-                    } else if (error.status === 400) {
-                        title = 'Invalid Token';
-                        this.tokenAlertsMessage = 'Invalid Token'
-                        this.tokenAlertType = 'red';
-                    } else if (error.status === 401) {
-                        title =
-                            'You don\'t seem to have sufficient privileges to access this - Request unauthorized';
-                        this.tokenAlertsMessage = 'Request unauthorized'
-                        this.tokenAlertType = 'red';
-                    } else {
-                        title = 'Error in Submit Token. Please try again later.';
-                        this.tokenAlertsMessage = 'Error in Submit Token. Please try again later.'
-                        this.tokenAlertType = 'red';
-                    }
+
+        this.loaderStatus = true;
+        await this.stackAnalysisService.linkSynkTokenWithUserID(this.getBaseUrl(this.stack), this.uuid, this.token, this.gatewayConfig)
+            .then(res => {
+                if (res.status === 200) {
+                    this.init();
                     this.loaderStatus = false;
-                    console.log(title);
-                });
-        }
+                    this.token = '';
+                    setTimeout(() => {
+                        this.modalRef.hide();
+                    }, (1000));
+                }
+            })
+            .catch(error => {
+                let title: string = '';
+                if (error.status >= 500) {
+                    title = 'Something unexpected happened. Please try again later.';
+                    this.tokenAlertsMessage = 'Something unexpected happened. Please try again later.'
+                    this.tokenAlertType = 'red';
+                } else if (error.status === 400) {
+                    title = 'Invalid Token';
+                    this.tokenAlertsMessage = 'Invalid Token'
+                    this.tokenAlertType = 'red';
+                } else if (error.status === 401) {
+                    title =
+                        'You don\'t seem to have sufficient privileges to access this - Request unauthorized';
+                    this.tokenAlertsMessage = 'Request unauthorized'
+                    this.tokenAlertType = 'red';
+                } else {
+                    title = 'Error in Submit Token. Please try again later.';
+                    this.tokenAlertsMessage = 'Error in Submit Token. Please try again later.'
+                    this.tokenAlertType = 'red';
+                }
+                this.loaderStatus = false;
+                console.log(title);
+            });
 
     }
 
@@ -349,26 +341,8 @@ export class StackDetailsComponent implements OnChanges {
     openModal(template: TemplateRef<any>) {
         this.token = '';
         this.setInfoStatus();
-        this.checkToken()
         this.modalRef = this.modalService.show(template);
     }
-
-    checkToken() {
-        this.tokenerror = {
-            status: false,
-            type: '',
-            length: 0
-        };
-
-        this.tokenerror.length = this.token.length;
-        if (this.token.length === 0 || this.token == undefined) {
-            this.tokenerror.status = true;
-            this.tokenerror.type = '';
-        }
-
-        this.tokenErrorStatus = this.tokenerror.status === true;
-    }
-
     /**
      * New Revamp - Begin
      * https://recommender.api.openshift.io/api/v1/stack-analyses/
