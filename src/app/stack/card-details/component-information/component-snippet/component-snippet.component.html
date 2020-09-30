@@ -197,10 +197,7 @@
                     <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
 
                         <span class="md-chips-b severity">
-                                <span *ngIf="cve.severity == 'critical'" class="md-chip-b critical" [innerText]="'Critical'"></span>
-                                <span *ngIf="cve.severity == 'high'" class="md-chip-b high" [innerText]="'High'"></span>
-                                <span *ngIf="cve.severity == 'medium'" class="md-chip-b medium" [innerText]="'Medium'"></span>
-                                <span *ngIf="cve.severity == 'low'" class="md-chip-b low" [innerText]="'Low'"></span>
+                            <span [ngClass]="['md-chip-b', cve.severity]" [innerText]="cve.severity"></span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)"
                                 target="_blank">{{cve.title}}</a>
