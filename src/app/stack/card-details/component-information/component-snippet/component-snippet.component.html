@@ -93,7 +93,7 @@
                 <span class="common-container">
                     <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
                        
-                        <span class="md-chips-b severity">
+                        <span class="severity">
                             <span [ngClass]="['md-chip-b', cve.severity]" [innerText]="cve.severity"></span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType, 'freetier')"
@@ -196,7 +196,7 @@
                 <span class="common-container">
                     <span *ngFor="let cve of component?.public_vulnerabilities" class="wrapper">
 
-                        <span class="md-chips-b severity">
+                        <span class="severity">
                             <span [ngClass]="['md-chip-b', cve.severity]" [innerText]="cve.severity"></span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)"
