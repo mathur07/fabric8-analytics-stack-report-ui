@@ -12,8 +12,8 @@
         </span>
         <span class="col-sm-2">
             <a [href]="this.generateUrl.registrationURL" target="_blank" title="command/ctrl + click"
-                (click)="this.handleUrl.open($event, this.generateUrl.registrationURL)"><button class="ripple">Sign up for
-                    a free Snyk account</button></a>
+                (click)="this.handleUrl.open($event, this.generateUrl.registrationURL);trackSignUpLink($event,'Sign up for a free Snyk account','Banner')">
+                <button class="ripple">Sign up for a free Snyk account</button></a>
         </span>
     </div>
 

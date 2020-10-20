@@ -1,6 +1,6 @@
 <div class="analytics-summary-report">
     <!-- VERY IMPORTANT NOTE: It is col-xs-3 only for stack-report-ui and no where else as it targets only IDEs -->
     <analytics-summary-card (click)="handleSummaryClick(card)"
-        (click)="this.handleSegmentClick.trackCardClick($event, tokenDetail, card.reportSummaryTitle.titleText)" class="col-xs-3"
+        (click)="trackSummaryCardClick($event, card.reportSummaryTitle.titleText)" class="col-xs-3"
         *ngFor="let card of reportSummaryCards" [card]="card"></analytics-summary-card>
 </div>

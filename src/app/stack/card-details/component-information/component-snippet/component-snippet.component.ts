@@ -13,6 +13,7 @@ import {
 } from '../../../models/ui.model';
 
 import { GenerateUrl } from '../../../utils/url-generator';
+import { trackClick } from '../../../utils/handle-segment-event';
 
 @Component({
     selector: 'component-snippet',
@@ -25,6 +26,8 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
     @Input() tabType: string;
 
     public githubEntries: Array<any> = [];
+
+    public trackSignUp = trackClick;
 
     public generateUrl = new GenerateUrl();
 

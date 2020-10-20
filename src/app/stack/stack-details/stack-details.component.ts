@@ -29,6 +29,8 @@ import {
     TokenDetailModel,
 } from '../models/stack-report.model';
 
+import  { identifyUser, trackClick } from '../utils/handle-segment-event';
+
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 /**
@@ -100,6 +102,8 @@ export class StackDetailsComponent implements OnChanges {
     public feedbackConfig: any = {};
 
     public tabs: Array<any> = [];
+
+    public trackSnykTokenModal = trackClick;
 
     public generateUrl =  new GenerateUrl();
 
@@ -436,6 +440,12 @@ export class StackDetailsComponent implements OnChanges {
         this.tabs = [];
         SaveState.ELEMENTS = [];
         if (data && (!data.hasOwnProperty('error') && Object.keys(data).length !== 0)) {
+
+            /* 
+            identify user by userId and registration_status and
+            push to segment 
+            */
+            identifyUser(this.uuid, data.result[0].user_stack_info.registration_status);
             if (data.hasOwnProperty('result') && data.result instanceof Array &&
                 data.result.length > 0 &&
                 data.result[0].hasOwnProperty('recommendation') && data.result[0].recommendation &&
@@ -493,6 +503,7 @@ export class StackDetailsComponent implements OnChanges {
     }
 
     private init(): void {
+
         if (this.gatewayConfig["modal"]) {
             this.showCrowdModal();
         }

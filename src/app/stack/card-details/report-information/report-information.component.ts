@@ -16,6 +16,7 @@ import {
 
 import { GenerateUrl } from '../../utils/url-generator';
 import { HandleUrl } from '../../utils/handle-url'
+import { trackClick } from '../../utils/handle-segment-event';
 
 @Component({
     selector: 'report-information',
@@ -30,6 +31,8 @@ export class ReportInformationComponent implements OnInit, OnChanges {
     @Input() transitive: boolean;
     @Input() registrationStatus: string;
 
+    public trackSignUpLink = trackClick;
+    
     public generateUrl = new GenerateUrl();
     public handleUrl = new HandleUrl();
 

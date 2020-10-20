@@ -4,12 +4,12 @@
         <h2 [innerText]="details?.title"></h2>
         {{details?.titleDescription}}
         <span *ngIf="this.whatCard == 'security'" ><a [href]="snykVulnerabilityDBLink" target="__blank"
-            (click)="this.handleUrl.open($event, snykVulnerabilityDBLink)">
+            (click)="this.handleUrl.open($event, snykVulnerabilityDBLink);trackLinkClick($event,'Snyk VulnerabilityDB Link')">
             Snyk's vulnerability database</a>.</span>
     </span>
     <span class="col-sm-2" *ngIf="this.whatCard == 'security' || this.whatCard == 'compDetails'">
         <a [href]="registrationLink" target="_blank"
-            (click)="this.handleUrl.open($event, registrationLink)">
+            (click)="this.handleUrl.open($event, registrationLink);trackLinkClick($event,'Powered By Snyk Link')">
             <span class="content-wrapper">
                 <span class="power">Powered By</span>
                 <img src="/assets/icon/snky-logo.png" alt="snyk-logo" class="logo" />
@@ -22,7 +22,9 @@
             <tab *ngFor="let tabz of tabs" (select)="tabz.active = true"
                 [customClass]="tabz.active ? 'active-menu-item' : 'inactive-menu'">
                 <ng-template tabHeading>
-                    <span [innerHtml]="tabz.title"></span>
+                    <span [innerHtml]="tabz.title"
+                    (click)="trackLinkClick($event,tabz.title)"
+                    ></span>
                     <span *ngIf="this.whatCard == 'security'" [innerHtml]=" tabz.badge || '0'" class="badge"></span>
                     <span
                         *ngIf="this.whatCard == 'compDetails' || this.whatCard == 'licenses' || this.whatCard == 'insights' "

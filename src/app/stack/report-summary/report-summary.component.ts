@@ -18,7 +18,7 @@ import {
     StackLicenseAnalysisModel,
     UserStackInfoModel,
     GithubModel,
-    OutlierInformationModel, TokenDetailModel
+    OutlierInformationModel
 } from '../models/stack-report.model';
 
 import {
@@ -28,7 +28,7 @@ import {
     MReportSummaryTitle
 } from '../models/ui.model';
 import { ReportSummaryUtils } from '../utils/report-summary-utils';
-import { HandleSegmentClick } from '../utils/handle-segment-click';
+import  { trackClick } from '../utils/handle-segment-event';
 
 @Component({
     selector: 'analytics-report-summary',
@@ -37,7 +37,6 @@ import { HandleSegmentClick } from '../utils/handle-segment-click';
 })
 export class ReportSummaryComponent implements OnChanges {
     @Input() report: ResultInformationModel;
-    @Input() tokenDetail: TokenDetailModel;
     @Output('onCardClick') onCardClick = new EventEmitter<any>();
 
     public reportSummaryCards: Array<MReportSummaryCard> = [];
@@ -46,7 +45,7 @@ export class ReportSummaryComponent implements OnChanges {
     public reportSummaryTitle: MReportSummaryTitle;
     public reportSummaryDescription: string;
     public notification = null;
-    public handleSegmentClick = new HandleSegmentClick();
+    public trackSummaryCardClick = trackClick;
     private reportSummaryUtils = new ReportSummaryUtils();
 
     constructor() {
@@ -181,6 +180,8 @@ export class ReportSummaryComponent implements OnChanges {
         this.reportSummaryCards = cards;
         // Select the first card by default
         this.handleSummaryClick(cards[0]);
+        // record default entry Segment
+        analytics.track('Security Issues')
     }
 
     private paintView(): void {

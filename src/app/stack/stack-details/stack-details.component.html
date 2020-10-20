@@ -11,7 +11,7 @@
                     <!-- Modal -->
                     <button type="button" class="btn btn-sm"
                         [ngClass]="(this.tokenDetail.status === 'registered') ? 'btn-success': 'btn-warning'"
-                        (click)="openModal(template)"> Snyk Token
+                        (click)="openModal(template);trackSnykTokenModal($event,'Snyk Modal')"> Snyk Token
                         <i class="fas fa-fw"
                             [ngClass]="(this.tokenDetail.status === 'registered') ? 'fa-check-square' : 'fa-exclamation-triangle'"
                             aria-hidden="true"></i></button>
@@ -72,7 +72,7 @@
                                     <br>
                                     Get your free Snyk token from
                                     <a [href]="generateUrl.registrationURL" target="__blank" title="command/ctrl + click"
-                                    (click)="this.handleUrl.open($event, generateUrl.registrationURL)"
+                                    (click)="this.handleUrl.open($event, generateUrl.registrationURL);trackSnykTokenModal($event,'Snyk Modal URL')"
                                     >here</a>
                                     and get access to all premium
                                     fields</small>
@@ -81,10 +81,10 @@
                         <div class="modal-footer">
                             <footer class="pf-c-modal-box__footer">
                                 <button type="button" class="pf-c-button pf-m-small pf-m-primary"
-                                    (click)="submitToken($event)">Submit</button>
+                                    (click)="submitToken($event);trackSnykTokenModal($event,'Snyk Modal Submit')">Submit</button>
                                 &nbsp;
                                 <button type="button" class="pf-c-button pf-m-small pf-m-link"
-                                    (click)="modalRef.hide()">Close</button>
+                                    (click)="modalRef.hide();">Close</button>
                             </footer>
                         </div>
                     </ng-template>

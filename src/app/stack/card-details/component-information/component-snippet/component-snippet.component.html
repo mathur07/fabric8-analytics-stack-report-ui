@@ -97,6 +97,7 @@
                             <span [ngClass]="['md-chip-b', cve.severity]" [innerText]="cve.severity"></span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType, 'freetier')"
+                        (click)="trackSignUp($event,'Vulnerability Title','Dependency Details')"
                                 target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-wrapper">
                                 <div class="custom-tooltip-text no-wrap">
@@ -106,7 +107,8 @@
                                 <div class="custom-tooltip-text no-wrap">
                                     <span class="head">Snyk ID:</span>
                                     <span class="url"><a [href]="getUrl(cve.url, tabType, 'freetier')" target="_blank"
-                                            [innerText]="cve.id"></a></span>
+                                        (click)="trackSignUp($event,'Vulnerability Title','Dependency Details DropDown')"
+                                        [innerText]="cve.id"></a></span>
                                 </div>
                                 <div class="footer no-wrap">
                                     <span class="click">(cmd/ctrl + click)</span>
@@ -116,7 +118,9 @@
                     </span>
                     <a class="name" *ngIf="component?.private_vulnerabilities?.length > 0"
                         [href]="this.generateUrl.registrationURL" target="_blank"
-                        title="command/ctrl + click">
+                        title="command/ctrl + click"
+                        (click)="trackSignUp($event,'Sign up with Snyk','Dependency Details')"
+                        >
                         Sign up with Snyk
                     </a>
                 </span>
@@ -137,6 +141,7 @@
                             </span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)"
+                                (click)="trackSignUp($event,'Vulnerability Title','Dependency Details')"
                                 target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-wrapper">
                                 <div class="custom-tooltip-text no-wrap">
@@ -146,6 +151,7 @@
                                 <div class="custom-tooltip-text no-wrap">
                                     <span class="head">Snyk ID:</span>
                                     <span class="url"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)" target="_blank"
+                                            (click)="trackSignUp($event,'Vulnerability Title','Dependency Details DropDown')"
                                             [innerText]="cve.id"></a></span>
                                 </div>
                                 <div class="footer no-wrap">
@@ -166,6 +172,7 @@
                             </span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)"
+                                (click)="trackSignUp($event,'Vulnerability Title','Dependency Details')"
                                 target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-wrapper">
                                 <div class="custom-tooltip-text no-wrap">
@@ -175,6 +182,7 @@
                                 <div class="custom-tooltip-text no-wrap">
                                     <span class="head">Snyk ID:</span>
                                     <span class="url"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)" target="_blank"
+                                            (click)="trackSignUp($event,'Vulnerability Title','Dependency Details DropDown')"
                                             [innerText]="cve.id"></a></span>
                                 </div>
                                 <div class="footer no-wrap">
@@ -200,6 +208,7 @@
                             <span [ngClass]="['md-chip-b', cve.severity]" [innerText]="cve.severity"></span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)"
+                                (click)="trackSignUp($event,'Vulnerability Title','Commonly Known Vulnerabilities')"
                                 target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-wrapper">
                                 <div class="custom-tooltip-text no-wrap">
@@ -209,6 +218,7 @@
                                 <div class="custom-tooltip-text no-wrap">
                                     <span class="head">Snyk ID:</span>
                                     <span class="url"><a [href]="getUrl(cve.url, tabType)" target="_blank"
+                                            (click)="trackSignUp($event,'Vulnerability Title','Commonly Known Vulnerabilities DropDown')"
                                             [innerText]="cve.id"></a></span>
                                 </div>
                                 <div class="footer no-wrap">
@@ -223,7 +233,8 @@
                             <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
                         </span>
                         <a [href]="this.generateUrl.registrationURL" target="_blank" title="command/ctrl + click"
-                            class="branding-url">
+                                (click)="trackSignUp($event,'Sign up for a free Snyk account','Commonly Known Vulnerabilities')"
+                                class="branding-url" >
                             Sign up for a free Snyk account
                         </a>
                         to find out which vulnerabilities have a publicly known exploits
@@ -239,6 +250,7 @@
                         <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
                     </span>
                     <a [href]="this.generateUrl.registrationURL" target="_blank" title="command/ctrl + click"
+                        (click)="trackSignUp($event,'Sign up for a free Snyk account','Vulnerabilities unique to Snyk')"
                         class="branding-url">
                         Sign up for a free Snyk account
                     </a>
@@ -262,6 +274,7 @@
                             </span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)"
+                                (click)="trackSignUp($event,'Vulnerability Title','Commonly Known Vulnerabilities')"
                                 target="_blank">{{cve.title}}</a>
                             <div class="custom-tooltip-wrapper">
                                 <div class="custom-tooltip-text no-wrap">
@@ -271,6 +284,7 @@
                                 <div class="custom-tooltip-text no-wrap">
                                     <span class="head">Snyk ID:</span>
                                     <span class="url"><a [href]="getUrl(cve.url, tabType)" target="_blank"
+                                            (click)="trackSignUp($event,'Vulnerability Title','Commonly Known Vulnerabilities DropDown')"
                                             [innerText]="cve.id"></a></span>
                                 </div>
                                 <div class="footer no-wrap">
@@ -297,6 +311,7 @@
                         </span>
                     </span>
                     <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)"
+                            (click)="trackSignUp($event,'Vulnerability Title','Vulnerabilities unique to Snyk')"
                             target="_blank">{{cve.title}}</a>
                         <div class="custom-tooltip-wrapper">
                             <div class="custom-tooltip-text no-wrap">
@@ -306,6 +321,7 @@
                             <div class="custom-tooltip-text no-wrap">
                                 <span class="head">Snyk ID:</span>
                                 <span class="url"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)" target="_blank"
+                                        (click)="trackSignUp($event,'Vulnerability Title','Vulnerabilities unique to Snyk DropDown')"
                                         [innerText]="cve.id"></a></span>
                             </div>
                             <div class="footer no-wrap">

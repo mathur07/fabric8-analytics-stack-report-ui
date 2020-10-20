@@ -61,6 +61,8 @@
                             <!-- cveIdOfHeighest CVSS -->
                             <span *ngIf="comp?.hasSecurityIssue && tabType == 'private'">
                                 <a  [href]="comp?.privateSecurityDetails?.highestIssue?.url" target="_blank" class="name" title="command/ctrl + click"
+                                    (click)="comp?.registrationStatus !== 'registered' ? trackSignUp($event,'Sign up for a free Snyk account','Vulnerabilities unique to Snyk') :
+                                    trackSignUp($event,'Highest Severity Vulnerability','Vulnerabilities unique to Snyk')"
                                     [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails?.highestIssue?.cve || '-'"></a>
                                     
                                 <span *ngIf="comp?.registrationStatus !== 'registered' &&  comp?.privateSecurityDetails?.highestIssue?.cve">
@@ -69,6 +71,7 @@
                             </span>
                             <a *ngIf="comp?.hasSecurityIssue && tabType == 'public'" class="name"
                                 [href]="comp?.publicSecurityDetails?.highestIssue?.url" target="_blank" title="command/ctrl + click"
+                                    (click)="trackSignUp($event,'Highest Severity Vulnerability','Commonly known Vulnerabilities')"
                                 [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails?.highestIssue?.cve || '-'"></a>
                             <span *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
 

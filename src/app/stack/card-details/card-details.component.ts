@@ -51,6 +51,7 @@ import {
 
 import { GenerateUrl } from '../utils/url-generator';
 import { HandleUrl } from '../utils/handle-url'
+import { trackClick } from '../utils/handle-segment-event';
 
 @Component({
     selector: 'card-details',
@@ -71,9 +72,11 @@ export class CardDetailsComponent implements OnChanges {
 
     public tabs: Array<MTab> = [];
 
+    public trackLinkClick = trackClick;
+
     private generateUrl = new GenerateUrl();
     public handleUrl = new HandleUrl();
-    
+
     public USER_ACTION: any = {
         'security': 'Log a bug',
         'recommendation': 'Create work item'
@@ -297,7 +300,7 @@ export class CardDetailsComponent implements OnChanges {
 
         }
         dependenciesWithKnownVulnerabilities.forEach(component => {
-            if(component.componentInformation.allTransitiveDependencies) {
+            if (component.componentInformation.allTransitiveDependencies) {
                 component.componentInformation.allTransitiveDependencies.sort(cvssOrder(true));
             }
         });
@@ -349,7 +352,7 @@ export class CardDetailsComponent implements OnChanges {
         }
 
         dependencieswithSecurityAdvisories.forEach(component => {
-            if(component.componentInformation.allTransitiveDependencies) {
+            if (component.componentInformation.allTransitiveDependencies) {
                 component.componentInformation.allTransitiveDependencies.sort(snykCvssOrder(true));
             }
         });

@@ -16,6 +16,7 @@ import {
 } from '../../models/ui.model';
 
 import { GenerateUrl } from '../../utils/url-generator';
+import { trackClick } from '../../utils/handle-segment-event'
 
 @Component({
     selector: 'component-information',
@@ -34,6 +35,8 @@ export class ComponentInformationComponent implements OnInit, OnChanges {
     publicTransvulnerabilities: number;
 
     public generateUrl = new GenerateUrl();
+
+    public trackSignUp = trackClick;
 
     constructor(
     ) { }
