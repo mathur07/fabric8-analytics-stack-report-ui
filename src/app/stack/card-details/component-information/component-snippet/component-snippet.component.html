@@ -108,15 +108,12 @@
                                     <span class="url"><a [href]="getUrl(cve.url, tabType, 'freetier')" target="_blank"
                                             [innerText]="cve.id"></a></span>
                                 </div>
-                                <div class="footer no-wrap">
-                                    <span class="click">(cmd/ctrl + click)</span>
-                                </div>
                             </div>
                         </span>
                     </span>
                     <a class="name" *ngIf="component?.private_vulnerabilities?.length > 0"
                         [href]="this.generateUrl.registrationURL" target="_blank"
-                        title="command/ctrl + click">
+                        >
                         Sign up with Snyk
                     </a>
                 </span>
@@ -148,9 +145,6 @@
                                     <span class="url"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)" target="_blank"
                                             [innerText]="cve.id"></a></span>
                                 </div>
-                                <div class="footer no-wrap">
-                                    <span class="click">(cmd/ctrl + click)</span>
-                                </div>
                             </div>
                         </span>
                     </span>
@@ -176,9 +170,6 @@
                                     <span class="head">Snyk ID:</span>
                                     <span class="url"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)" target="_blank"
                                             [innerText]="cve.id"></a></span>
-                                </div>
-                                <div class="footer no-wrap">
-                                    <span class="click">(cmd/ctrl + click)</span>
                                 </div>
                             </div>
                         </span>
@@ -211,9 +202,6 @@
                                     <span class="url"><a [href]="getUrl(cve.url, tabType)" target="_blank"
                                             [innerText]="cve.id"></a></span>
                                 </div>
-                                <div class="footer no-wrap">
-                                    <span class="click">(cmd/ctrl + click)</span>
-                                </div>
                             </div>
                         </span>
                     </span>
@@ -222,7 +210,7 @@
                         <span>
                             <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
                         </span>
-                        <a [href]="this.generateUrl.registrationURL" target="_blank" title="command/ctrl + click"
+                        <a [href]="this.generateUrl.registrationURL" target="_blank"
                             class="branding-url">
                             Sign up for a free Snyk account
                         </a>
@@ -238,7 +226,7 @@
                     <span>
                         <img src="/assets/icon/snyk-avatar.png" alt="snyk-avatar" class="avatar" />
                     </span>
-                    <a [href]="this.generateUrl.registrationURL" target="_blank" title="command/ctrl + click"
+                    <a [href]="this.generateUrl.registrationURL" target="_blank"
                         class="branding-url">
                         Sign up for a free Snyk account
                     </a>
@@ -273,9 +261,6 @@
                                     <span class="url"><a [href]="getUrl(cve.url, tabType)" target="_blank"
                                             [innerText]="cve.id"></a></span>
                                 </div>
-                                <div class="footer no-wrap">
-                                    <span class="click">(cmd/ctrl + click)</span>
-                                </div>
                             </div>
                         </span>
                     </span>
@@ -307,9 +292,6 @@
                                 <span class="head">Snyk ID:</span>
                                 <span class="url"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)" target="_blank"
                                         [innerText]="cve.id"></a></span>
-                            </div>
-                            <div class="footer no-wrap">
-                                <span class="click">(cmd/ctrl + click)</span>
                             </div>
                         </div>
                     </span>
