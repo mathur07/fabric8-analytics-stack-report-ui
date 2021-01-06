@@ -45,12 +45,12 @@
                     <div
                         *ngIf="component?.public_vulnerabilities?.length > 0 || component?.private_vulnerabilities?.length > 0; else Latest_Version">
                         <p>Recommended Version</p>
-                        <p class="info-head" [innerText]="component?.recommended_version">
+                        <p class="info-head" [innerText]="component?.recommended_version || 'N/A'">
                         </p>
                     </div>
                     <ng-template #Latest_Version>
                         <p>Latest Version</p>
-                        <p class="info-head" [innerText]="component?.latestVersion">
+                        <p class="info-head" [innerText]="component?.latestVersion || 'N/A'">
                         </p>
                     </ng-template>
                 </div>
