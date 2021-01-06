@@ -130,7 +130,7 @@
                                 <span *ngIf="cve.severity == 'high'" class="md-chip-icon high" [innerText]="'H'"></span>
                                 <span *ngIf="cve.severity == 'medium'" class="md-chip-icon medium" [innerText]="'M'"></span>
                                 <span *ngIf="cve.severity == 'low'" class="md-chip-icon low" [innerText]="'L'"></span>
-                              <span> {{cve.exploit}} </span>
+                              <span> {{renameExploit(cve.exploit)}} </span>
                             </span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)"
@@ -156,7 +156,7 @@
                                 <span *ngIf="cve.severity == 'high'" class="md-chip-icon high" [innerText]="'H'"></span>
                                 <span *ngIf="cve.severity == 'medium'" class="md-chip-icon medium" [innerText]="'M'"></span>
                                 <span *ngIf="cve.severity == 'low'" class="md-chip-icon low" [innerText]="'L'"></span>
-                              <span> {{cve.exploit}} </span>
+                              <span> {{renameExploit(cve.exploit)}} </span>
                             </span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)"
@@ -246,7 +246,7 @@
                                 <span *ngIf="cve.severity == 'high'" class="md-chip-icon high" [innerText]="'H'"></span>
                                 <span *ngIf="cve.severity == 'medium'" class="md-chip-icon medium" [innerText]="'M'"></span>
                                 <span *ngIf="cve.severity == 'low'" class="md-chip-icon low" [innerText]="'L'"></span>
-                              <span> {{cve.exploit}} </span>
+                              <span> {{renameExploit(cve.exploit)}} </span>
                             </span>
                         </span>
                         <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType)"
@@ -278,7 +278,7 @@
                             <span *ngIf="cve.severity == 'high'" class="md-chip-icon high" [innerText]="'H'"></span>
                             <span *ngIf="cve.severity == 'medium'" class="md-chip-icon medium" [innerText]="'M'"></span>
                             <span *ngIf="cve.severity == 'low'" class="md-chip-icon low" [innerText]="'L'"></span>
-                          <span> {{cve.exploit}} </span>
+                          <span> {{renameExploit(cve.exploit)}} </span>
                         </span>
                     </span>
                     <span class="custom-tooltip name"><a [href]="getUrl(cve.url, tabType, component?.registrationStatus)"

@@ -28,7 +28,6 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
 
     public generateUrl = new GenerateUrl();
 
-
     public githubKeys: any = {
         contributors: 'Contributors',
         forks: 'Forks',
@@ -55,7 +54,6 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
         let summary: any = changes['component'];
         if (summary) {
             this.component = <MComponentInformation>summary.currentValue;
-
         }
         console.log("component==>>", this.component);
         
@@ -75,6 +73,22 @@ export class ComponentSnippetComponent implements OnInit, OnChanges {
             } else {
                 return this.generateUrl.privateUrl(url, registrationStatus);
             }
+        }
+    }
+
+    /**
+     * replaceNotDefined functional
+     */
+    public renameExploit(exploit: string): string {
+        switch (exploit) {
+            case "Not Defined":
+                return "No known exploit";
+            case "Functional":
+                return "Mature";
+            case "High":
+                return "Mature";
+            default:
+                return exploit
         }
     }
 
