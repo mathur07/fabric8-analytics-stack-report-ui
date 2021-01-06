@@ -59,7 +59,7 @@
 
                         <div *ngSwitchCase="'cveIdOfH'">
                             <!-- cveIdOfHeighest CVSS -->
-                            <span *ngIf="comp?.hasSecurityIssue && tabType == 'private'">
+                            <span *ngIf="comp?.hasSecurityIssue && tabType == 'private'" class="wrap-text">
                                 <a  [href]="comp?.privateSecurityDetails?.highestIssue?.url" target="_blank" class="name"
                                     [innerText]="comp?.privateSecurityDetails && comp?.privateSecurityDetails?.highestIssue?.cve || '-'"></a>
                                     
@@ -67,11 +67,12 @@
                                     to <br> learn about the vulnerabilities found
                                 </span>
                             </span>
-                            <a *ngIf="comp?.hasSecurityIssue && tabType == 'public'" class="name"
-                                [href]="comp?.publicSecurityDetails?.highestIssue?.url" target="_blank"
-                                [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails?.highestIssue?.cve || '-'"></a>
-                            <span *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
-
+                            <span class="wrap-text">
+                                <a *ngIf="comp?.hasSecurityIssue && tabType == 'public'" class="name"
+                                    [href]="comp?.publicSecurityDetails?.highestIssue?.url" target="_blank"
+                                    [innerText]="comp?.publicSecurityDetails && comp?.publicSecurityDetails?.highestIssue?.cve || '-'"></a>
+                                <span *ngIf="!comp?.hasSecurityIssue" [innerText]="'-'"></span>
+                            </span>
                         </div>
 
                         <div *ngSwitchCase="'transCount'">
