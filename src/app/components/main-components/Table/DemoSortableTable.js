@@ -12,10 +12,19 @@ import {
 export default class DemoSortableTable extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props.columns);
     this.state = {
-      columns: props.columns,
-      rows: [props.rows],
+      columns: [
+        { title: "Repositories", transforms: [sortable] },
+        "Branches",
+        { title: "Pull requests", transforms: [sortable] },
+        "Workspaces",
+        "Last Commit",
+      ],
+      rows: [
+        props.rows,
+        ["a", "two", "k", "four", "five"],
+        ["p", "two", "b", "four", "five"],
+      ],
       sortBy: {},
     };
     this.onSort = this.onSort.bind(this);
@@ -43,9 +52,6 @@ export default class DemoSortableTable extends React.Component {
     const { id } = this.props;
     const { columns, rows, sortBy } = this.state;
 
-    const deNestedRows = rows[0].map((_) => _);
-
-    console.log(rows);
     return (
       <Table
         aria-label="Sortable Table"
@@ -53,7 +59,7 @@ export default class DemoSortableTable extends React.Component {
         sortBy={sortBy}
         onSort={this.onSort}
         cells={columns}
-        rows={deNestedRows}
+        rows={rows}
         className="pf-m-no-border-rows"
         id={id}
       >
@@ -65,6 +71,6 @@ export default class DemoSortableTable extends React.Component {
 }
 
 DemoSortableTable.propTypes = {
-  firstColumnRows: PropTypes.array.isRequired,
+  rows: PropTypes.array.isRequired,
   id: PropTypes.string.isRequired,
 };
