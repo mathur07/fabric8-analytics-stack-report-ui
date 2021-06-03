@@ -13,18 +13,8 @@ export default class DemoSortableTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { title: "Repositories", transforms: [sortable] },
-        "Branches",
-        { title: "Pull requests", transforms: [sortable] },
-        "Workspaces",
-        "Last Commit",
-      ],
-      rows: [
-        props.rows,
-        ["a", "two", "k", "four", "five"],
-        ["p", "two", "b", "four", "five"],
-      ],
+      columns: props.columns,
+      rows: props.rows,
       sortBy: {},
     };
     this.onSort = this.onSort.bind(this);

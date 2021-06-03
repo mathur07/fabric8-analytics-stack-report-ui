@@ -91,7 +91,7 @@ const SummaryDonut = () => (
     height={208}
     labels={({ datum }) => `${datum.x}: ${datum.y}%`}
     subTitle="Vul"
-    title="100"
+    title="8"
     width={202}
   />
 );
@@ -99,9 +99,7 @@ const SummaryDonut = () => (
 const OverviewSummary = (props) => (
   <TextContent className="vulnerability-summary">
     <Text>
-      87 direct vulnerabilities in
-      {props.analyzedDependenciesCount}
-      dependencies
+      8 direct vulnerabilities in {props.analyzedDependenciesCount} dependencies
     </Text>
   </TextContent>
 );
@@ -112,12 +110,12 @@ const VersionUpdates = () => (
   </TextContent>
 );
 
-const VulnerabilityCount = () => (
+const VulnerabilityCount = (props: any) => (
   <GridItem span={8}>
     <TextContent className="vulnerability-count-overview">
       <Text>
-        <SecurityIcon />
-        <strong>11</strong> Critical vulnerabilities
+        <SecurityIcon /> {" "}
+        <strong>{props.count}</strong> {props.severity}
       </Text>
     </TextContent>
   </GridItem>
@@ -164,11 +162,9 @@ const OverviewContent = () => {
             </FlexItem>
           </Flex>
         </GridItem>
-        <VulnerabilityCount />
-        <VulnerabilityCount />
-        <VulnerabilityCount />
-        <VulnerabilityCount />
-        <VulnerabilityCount />
+        <VulnerabilityCount count={3} severity="High vulnerabilities" />
+        <VulnerabilityCount count={2} severity="Medium vulnerabbilities" />
+        <VulnerabilityCount count={3} severity="Low vulnerabbilities" />
       </GridItem>
     </Grid>
   );

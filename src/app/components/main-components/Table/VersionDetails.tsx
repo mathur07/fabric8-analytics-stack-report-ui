@@ -1,4 +1,4 @@
-import { ChartDonut } from "@patternfly/react-charts";
+import { ChartDonut, ChartThemeColor } from "@patternfly/react-charts";
 import {
   Flex,
   FlexItem,
@@ -56,89 +56,68 @@ function VersionDetails() {
   };
   const [drawerData, setDrawerData] = useState(drawD);
   const SummaryDonut = () => (
-    <ChartDonut
-      ariaDesc="Average number of pets"
-      ariaTitle="Donut chart example"
-      constrainToVisibleArea
-      data={[
-        { x: "a", y: 35 },
-        { x: "b", y: 55 },
-        { x: "c", y: 10 },
-      ]}
-      height={140}
-      labels={({ datum }) => `${datum.x}: ${datum.y}%`}
-      subTitle="Vul"
-      title="100"
-      width={140}
-    />
+    <div style={{ height: "200px", width: "200px" }}>
+      <ChartDonut
+        ariaDesc="Average number of pets"
+        ariaTitle="Donut chart example"
+        constrainToVisibleArea
+        data={[
+          { x: "a", y: 33 },
+          { x: "b", y: 33 },
+          { x: "c", y: 33 },
+        ]}
+        labels={({ datum }) => `${datum.x}: ${datum.y}%`}
+        legendData={[
+          { name: "Critical: 3" },
+          { name: "High: 5" },
+          { name: "low: 2" },
+        ]}
+        legendOrientation="vertical"
+        legendPosition="right"
+        padding={{
+          bottom: 0,
+          left: 0,
+          right: 140, // Adjusted to accommodate legend
+          top: 0,
+        }}
+        subTitle="Vul"
+        title="10"
+        themeColor={ChartThemeColor.multiOrdered}
+        width={280}
+      />
+    </div>
   );
-  const VulnerabilityCount = () => (
-    <GridItem span={8}>
-      <TextContent className="vulnerability-count-overview">
-        <Text>
-          <SecurityIcon />
-          <strong>11</strong> Critical vulnerabilities
-        </Text>
-      </TextContent>
-    </GridItem>
-  );
-
   return (
     // @ts-ignore
-    <Flex
-      className="example-border"
-      justifyContent={{ default: "justifyContentSpaceBetween" }}
-    >
+    <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
       <FlexItem>
-        <Grid hasGutter>
-          <GridItem>
-            <Flex key="2" direction={{ default: "column" }}>
-              <FlexItem spacer={{ default: "spacerNone" }}>
-                <Split>
-                  <SplitItem>
-                    <Title headingLevel="h6" size="md">
-                      Latest Version
-                      <div>{drawerData.latest_version}</div>
-                    </Title>
-                  </SplitItem>
-                </Split>
-              </FlexItem>
-              <FlexItem spacer={{ default: "spacerNone" }}>
-                <Split>
-                  <Title headingLevel="h6" size="md">
-                    Licence(s) used
-                    <div>{drawerData.licenses}</div>
-                  </Title>
-                </Split>
-              </FlexItem>
-            </Flex>
-          </GridItem>
-        </Grid>
+        <Split>
+          <SplitItem>
+            <Title headingLevel="h6" size="md">
+              Latest Version
+              <div>{drawerData.latest_version}</div>
+            </Title>
+          </SplitItem>
+        </Split>
+        <Split>
+          <Title headingLevel="h6" size="md">
+            Licence(s) used
+            <div>{drawerData.licenses}</div>
+          </Title>
+        </Split>
       </FlexItem>
       <FlexItem>
-        <Grid>
-          <GridItem>
-            <GithubStats
-              contributors={Number(drawerData.github.contributors)}
-              dependentRepos={Number(drawerData.github.dependent_repos)}
-              usage={Number(drawerData.github.used_by.length)}
-              forks={Number(drawerData.github.forks_count)}
-              stars={Number(drawerData.github.stargazers_count)}
-            />
-          </GridItem>
-        </Grid>
+        <GithubStats
+          contributors={Number(drawerData.github.contributors)}
+          dependentRepos={Number(drawerData.github.dependent_repos)}
+          usage={Number(drawerData.github.used_by.length)}
+          forks={Number(drawerData.github.forks_count)}
+          stars={Number(drawerData.github.stargazers_count)}
+        />
       </FlexItem>
+
       <FlexItem>
-        <Grid>
-          <GridItem span={6}>
-            <SummaryDonut />
-          </GridItem>
-          <VulnerabilityCount />
-          <VulnerabilityCount />
-          <VulnerabilityCount />
-          <VulnerabilityCount />
-          <VulnerabilityCount />
-        </Grid>
+        <SummaryDonut />
       </FlexItem>
     </Flex>
   );
