@@ -26,7 +26,7 @@ const Table = () => {
   const { globalState, globalDispatch } = useContext(Context);
   const [rowz, setRowz] = useState([]);
 
-  const [rows, setRowsTest] = useState([]);
+  const [rows, setRows] = useState([]);
   const [childDataTest, setChildDataTest] = useState([]);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const Table = () => {
       return 0;
     });
     // @ts-ignore
-    setRowsTest(rowData);
+    setRows(rowData);
     // eslint-disable-next-line no-console
     console.log(rowData);
   }, [globalState]);
