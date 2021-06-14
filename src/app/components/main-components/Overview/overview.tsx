@@ -114,8 +114,7 @@ const VulnerabilityCount = (props: any) => (
   <GridItem span={8}>
     <TextContent className="vulnerability-count-overview">
       <Text>
-        <SecurityIcon /> {" "}
-        <strong>{props.count}</strong> {props.severity}
+        <SecurityIcon /> <strong>{props.count}</strong> {props.severity}
       </Text>
     </TextContent>
   </GridItem>
