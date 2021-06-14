@@ -14,14 +14,6 @@ import {
   sortable,
 } from "@patternfly/react-table";
 // https://github.com/patternfly/patternfly-react/blob/master/packages/react-table/src/components/Table/examples/DemoSortableTable.js
-import {
-  Divider,
-  Flex,
-  FlexItem,
-  Split,
-  SplitItem,
-} from "@patternfly/react-core";
-import { ExclamationCircleIcon, SecurityIcon } from "@patternfly/react-icons";
 import Context from "../../../store/context";
 import DemoSortableTable from "./DemoSortableTable.js";
 import VersionDetails from "./VersionDetails";
@@ -34,26 +26,86 @@ const Table = () => {
   const { globalState, globalDispatch } = useContext(Context);
   const [rowz, setRowz] = useState([]);
 
+  const [rows, setRowsTest] = useState([]);
+  const [childDataTest, setChildDataTest] = useState([]);
+
   useEffect(() => {
     const analyzedDependencies = globalState.APIData?.analyzed_dependencies;
+    const rowData: ((prevState: never[]) => never[]) | any[][] = [];
     analyzedDependencies?.forEach((dep: any) => {
-      if (dep.private_vulnerabilities || dep.public_vulnerabilities) {
-        const tempArray: string[] = [];
-        tempArray.push(dep.name);
-        tempArray.push("");
-        tempArray.push(dep.version);
-        tempArray.push(
-          dep.private_vulnerabilities.length +
-            dep.public_vulnerabilities.length,
-        );
-        tempArray.push(dep.vulnerable_dependencies.length);
-        tempArray.push(dep.recommended_version);
-
-        // @ts-ignore
-        setRowz((oldArray) => [...oldArray, tempArray]);
+      // eslint-disable-next-line no-console
+      console.log(dep);
+      const tempRowData = [];
+      const tempIssuesData = [];
+      tempRowData.push(dep.name);
+      if (
+        dep.private_vulnerabilities.length ||
+        dep.public_vulnerabilities.length ||
+        dep.vulnerable_dependencies.length
+      ) {
+        tempIssuesData.push("Security Issues");
       }
+      tempRowData.push(tempIssuesData);
+      tempRowData.push(dep.version);
+
+      const directVulnerabilitiesDetailsObj = getVulnerabilitiesDetailsObj(dep);
+      const transitiveVulnerabilitiesDetailsObj = {
+        critical: 0,
+        high: 0,
+        medium: 0,
+        low: 0,
+        total: 0,
+      };
+
+      tempRowData.push(directVulnerabilitiesDetailsObj);
+      tempRowData.push(transitiveVulnerabilitiesDetailsObj);
+      tempRowData.push(dep.recommended_version);
+      rowData.push(tempRowData);
     });
+    // @ts-ignore
+    setRowsTest(rowData);
+    // eslint-disable-next-line no-console
+    console.log(rowData);
   }, [globalState]);
+
+  function getVulnerabilitiesDetailsObj(dep: any) {
+    const VulnerabilitiesDetailsObj = {
+      critical: 0,
+      high: 0,
+      medium: 0,
+      low: 0,
+      total: 0,
+    };
+    const allVuls = [
+      ...dep.public_vulnerabilities,
+      ...dep.private_vulnerabilities,
+    ];
+    if (allVuls.length) {
+      let total = 0;
+      allVuls.forEach((vul: { severity: any }) => {
+        const { severity } = vul;
+        if (severity === "critical") {
+          VulnerabilitiesDetailsObj.critical += 1;
+          total += 1;
+        }
+        if (severity === "high") {
+          VulnerabilitiesDetailsObj.high += 1;
+          total += 1;
+        }
+        if (severity === "medium") {
+          VulnerabilitiesDetailsObj.medium += 1;
+          total += 1;
+        }
+        if (severity === "low") {
+          VulnerabilitiesDetailsObj.low += 1;
+          total += 1;
+        }
+      });
+      VulnerabilitiesDetailsObj.total = total;
+    }
+    return VulnerabilitiesDetailsObj;
+  }
+
   const columns = [
     "Dependencies",
     "Dependency Check",
@@ -62,24 +114,24 @@ const Table = () => {
     "Transitive Vulnerabilities",
     "Recommended Version",
   ];
-  const rows = [
-    [
-      "aniso8601",
-      ["Security Issues", "Exploit present", "Licence conflict"],
-      "1.2.0",
-      { critical: 3, high: 2, medium: 4, low: 2 },
-      { critical: 1, high: 0, medium: 0, low: 4 },
-      "9.0.1",
-    ],
-    [
-      "Seville",
-      [],
-      "1.2.0",
-      { critical: 0, high: 2, medium: 3, low: 2 },
-      { critical: 1, high: 3, medium: 1, low: 4 },
-      "9.0.1",
-    ],
-  ];
+  // const rows = [
+  //   [
+  //     "aniso8601",
+  //     ["Security Issues", "Exploit present", "Licence conflict"],
+  //     "7.2.0",
+  //     { critical: 3, high: 2, medium: 4, low: 2 },
+  //     { critical: 1, high: 0, medium: 0, low: 4 },
+  //     "9.0.1",
+  //   ],
+  //   [
+  //     "Seville",
+  //     [],
+  //     "0.2.0",
+  //     { critical: 0, high: 2, medium: 3, low: 2 },
+  //     { critical: 1, high: 3, medium: 1, low: 4 },
+  //     "0.3.1",
+  //   ],
+  // ];
   // index corresponds to row index, and value corresponds to column index of the expanded, null means no cell is expanded
   const [activeChild, setActiveChild] = React.useState([null, null]);
   // key = row_col of the parent it corresponds to
@@ -196,118 +248,6 @@ const Table = () => {
         />
       ),
     },
-    "2_2": {
-      component: <VersionDetails />,
-    },
-    "2_3": {
-      component: (
-        <DemoSortableTable
-          rows={[
-            ["Man-in-the-Middle (MitM)", "High", "8.8/10", "", ""],
-            ["Cross site scripting (XSS)", "Medium", "5.5/10", "", ""],
-          ]}
-          columns={[
-            { title: "Direct Vulnerability", transforms: [sortable] },
-            "Severity",
-            { title: "CVSS Score", transforms: [sortable] },
-            "",
-            "",
-          ]}
-          id="compound-expansion-table-2_3"
-          key="2_3"
-        />
-      ),
-    },
-    "2_4": {
-      component: (
-        <DemoSortableTable
-          columns={[
-            { title: "Transitive Vulnerability", transforms: [sortable] },
-            "Severity",
-            "CVSS Score",
-            "Transitive dependency",
-            "Current Version",
-            "Latest Version",
-          ]}
-          rows={[
-            [
-              "XML External Entity (XXE) Injection",
-              "High",
-              "8.8/10",
-              "com.fasterxml.jackson.core:jackson-databind",
-              "4.8",
-              "5.8",
-            ],
-            [
-              "Remote Memory Exposure",
-              "Medium",
-              "5.8/10",
-              "org.eclipse.jetty:jetty-server",
-              "4.8",
-              "5.1",
-            ],
-          ]}
-          id="compound-expansion-table-2_4"
-          key="2_4"
-        />
-      ),
-    },
-    "3_2": {
-      component: <VersionDetails />,
-    },
-    "3_3": {
-      component: (
-        <DemoSortableTable
-          rows={[
-            ["Man-in-the-Middle (MitM)", "High", "8.8/10", "", ""],
-            ["Cross site scripting (XSS)", "Medium", "5.5/10", "", ""],
-          ]}
-          columns={[
-            { title: "Direct Vulnerability", transforms: [sortable] },
-            "Severity",
-            { title: "CVSS Score", transforms: [sortable] },
-            "",
-            "",
-          ]}
-          id="compound-expansion-table-3_3"
-          key="3_3"
-        />
-      ),
-    },
-    "3_4": {
-      component: (
-        <DemoSortableTable
-          columns={[
-            { title: "Transitive Vulnerability", transforms: [sortable] },
-            "Severity",
-            "CVSS Score",
-            "Transitive dependency",
-            "Current Version",
-            "Latest Version",
-          ]}
-          rows={[
-            [
-              "XML External Entity (XXE) Injection",
-              "High",
-              "8.8/10",
-              "com.fasterxml.jackson.core:jackson-databind",
-              "4.8",
-              "5.8",
-            ],
-            [
-              "Remote Memory Exposure",
-              "Medium",
-              "5.8/10",
-              "org.eclipse.jetty:jetty-server",
-              "4.8",
-              "5.1",
-            ],
-          ]}
-          id="compound-expansion-table-3_4"
-          key="3_4"
-        />
-      ),
-    },
   };
   const customRender = (cell: {} | null | undefined, index: number) => {
     if (index === 0) {
@@ -349,13 +289,14 @@ const Table = () => {
           ))}
         </Tr>
       </Thead>
-      {rows.map((row, rowIndex) => {
+      {rows?.map((row, rowIndex) => {
         const isRowExpanded = activeChild[rowIndex] !== null;
         return (
           <Tbody key={rowIndex} isExpanded={isRowExpanded}>
             <>
               <Tr>
-                {row.map((cell, cellIndex) => {
+                {/* @ts-ignore */}
+                {row?.map((cell, cellIndex) => {
                   // for this example, only columns 1 - 3 are clickable
                   const compoundExpandParams =
                     cellIndex >= 2 && cellIndex <= 4

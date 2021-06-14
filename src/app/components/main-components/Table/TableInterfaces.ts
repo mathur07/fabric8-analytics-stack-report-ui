@@ -3,4 +3,5 @@ export interface RowDetailType {
   high: number;
   medium: number;
   low: number;
+  total: number;
 }

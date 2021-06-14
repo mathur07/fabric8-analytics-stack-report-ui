@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { stageApiKey, stageApiUrl, localDevURL } from "./constants";
+import { stageApiKey, stageApiUrl, localDevURL, prodApiUrl, prodApiKey } from "./constants";
 import { Logger } from "./logger";
 
 type ApiResponse = {
@@ -13,7 +13,7 @@ async function GetStackDetails(
   uuid: string,
 ): Promise<ApiResponse> {
   const result: ApiResponse = { code: 0, data: {} };
-  const url = `${stageApiUrl}/api/v2/stack-analyses/${requestId}?user_key=${stageApiKey}`;
+  const url = `${prodApiUrl}/api/v2/stack-analyses/${requestId}?user_key=${prodApiKey}`;
   Logger.log(url);
   await getStatus(uuid).then(async (value) => {
     const config = value;
@@ -35,7 +35,7 @@ async function GetStackDetails(
 }
 
 async function getStatus(uuid: string) {
-  const url = `${stageApiUrl}/user/${uuid}?user_key=${stageApiKey}`;
+  const url = `${prodApiUrl}/user/${uuid}?user_key=${prodApiKey}`;
   localStorage.setItem("UUID", uuid);
   let result = {};
   await axios
@@ -72,7 +72,7 @@ async function RegisterUser(
     user_id: uuid,
   };
   let result: Register = { code: 0, data: {} };
-  const url = `${stageApiUrl}/user?user_key=${stageApiKey}`;
+  const url = `${prodApiUrl}/user?user_key=${prodApiKey}`;
   await axios
     .put(url, data)
     .then((res: AxiosResponse) => {
