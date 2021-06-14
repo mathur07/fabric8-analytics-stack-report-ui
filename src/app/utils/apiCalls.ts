@@ -1,6 +1,12 @@
 /* eslint-disable no-console */
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { stageApiKey, stageApiUrl, localDevURL, prodApiUrl, prodApiKey } from "./constants";
+import {
+  stageApiKey,
+  stageApiUrl,
+  localDevURL,
+  prodApiUrl,
+  prodApiKey,
+} from "./constants";
 import { Logger } from "./logger";
 
 type ApiResponse = {

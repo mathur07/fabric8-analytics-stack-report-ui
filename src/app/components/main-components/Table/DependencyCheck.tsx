@@ -15,7 +15,10 @@ function DependencyCheck(props: any) {
     >
       <FlexItem spacer={{ default: "spacerXs" }}>
         {dependencyCheckArray.length ? (
-          dependencyCheckArray.map((issue: any) => <IssueItem prop={issue} />)
+          dependencyCheckArray.map((issue: any, index: number) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <IssueItem key={index} prop={issue} />
+          ))
         ) : (
           <Split hasGutter>
             <SplitItem>

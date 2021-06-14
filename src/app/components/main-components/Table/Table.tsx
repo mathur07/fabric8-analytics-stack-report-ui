@@ -62,6 +62,15 @@ const Table = () => {
       tempRowData.push(dep.recommended_version);
       rowData.push(tempRowData);
     });
+    rowData.sort((b, a) => {
+      if (a[3].total < b[3].total) {
+        return -1;
+      }
+      if (a[3].total > b[3].total) {
+        return 1;
+      }
+      return 0;
+    });
     // @ts-ignore
     setRowsTest(rowData);
     // eslint-disable-next-line no-console
