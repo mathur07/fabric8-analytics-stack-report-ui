@@ -50,7 +50,6 @@ const Table = () => {
       return 0;
     });
     analyzedDependencies?.forEach((dep: any, index: any) => {
-
       // eslint-disable-next-line no-console
       console.log(dep);
       const tempRowData = [];
@@ -89,7 +88,9 @@ const Table = () => {
         (vul: { title: any, severity: any, cvss: any }) => {
           const tempDepRowData = [];
           tempDepRowData.push(vul.title);
-          tempDepRowData.push(vul.severity[0].toUpperCase() + vul.severity.slice(1));
+          tempDepRowData.push(
+            vul.severity[0].toUpperCase() + vul.severity.slice(1),
+          );
           tempDepRowData.push(vul.cvss);
           childRowData.push(tempDepRowData);
         },
@@ -143,7 +144,6 @@ const Table = () => {
       };
       // @ts-ignore
       childDataObj = { ...childDataObj, ...child };
-      console.log(childDataObj);
     });
     // @ts-ignore
     setRows(rowData);
