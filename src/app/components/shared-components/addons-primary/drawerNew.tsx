@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Divider,
   Drawer,
   DrawerActions,
   DrawerCloseButton,
@@ -17,6 +18,7 @@ import {
   SplitItem,
   Title,
 } from "@patternfly/react-core";
+import "./addons.scss";
 import Utils from "src/app/utils/utility";
 import GithubStats from "./github_stats";
 import ComposableTableMisc from "./addonstable";
@@ -82,37 +84,40 @@ const DrawerFC = () => {
         </DrawerActions>
       </DrawerHead>
       <DrawerPanelBody>
-        <Grid hasGutter>
-          <GridItem span={6}>
+        <Flex>
+          <FlexItem>
             <Flex key="2" direction={{ default: "column" }}>
               <FlexItem spacer={{ default: "spacerNone" }}>
                 <Split>
-                  <SplitItem>
+                  <Title headingLevel="h6" size="md">
                     Latest Version
-                    <div>{drawerData.latest_version}</div>
-                  </SplitItem>
+                    <div className="font">{drawerData.latest_version}</div>
+                  </Title>
                 </Split>
               </FlexItem>
               <FlexItem spacer={{ default: "spacerNone" }}>
                 <Split>
                   <Title headingLevel="h6" size="md">
                     Licence(s) used
-                    <div>{drawerData.licenses.toString()}</div>
+                    <div className="font">{drawerData.licenses.toString()}</div>
                   </Title>
                 </Split>
               </FlexItem>
             </Flex>
-          </GridItem>
-          <GridItem span={6}>
-            <GithubStats
-              contributors={Number(drawerData.github.contributors)}
-              dependentRepos={Number(drawerData.github.dependent_repos)}
-              usage={Number(drawerData.github.used_by.length)}
-              forks={Number(drawerData.github.forks_count)}
-              stars={Number(drawerData.github.stargazers_count)}
-            />
-          </GridItem>
-        </Grid>
+          </FlexItem>
+          <Divider isVertical />
+          <FlexItem align={{ default: "alignRight" }}>
+            <Flex key="2" direction={{ default: "column" }}>
+              <GithubStats
+                contributors={Number(drawerData.github.contributors)}
+                dependentRepos={Number(drawerData.github.dependent_repos)}
+                usage={Number(drawerData.github.used_by.length)}
+                forks={Number(drawerData.github.forks_count)}
+                stars={Number(drawerData.github.stargazers_count)}
+              />
+            </Flex>
+          </FlexItem>
+        </Flex>
       </DrawerPanelBody>
     </DrawerPanelContent>
   );

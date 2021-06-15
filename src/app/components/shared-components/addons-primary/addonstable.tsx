@@ -20,16 +20,17 @@ import {
 } from "@patternfly/react-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
+import { submitFeedback } from "../../../utils/apiCalls";
 
 const TextTable = (data: string) => {
   return <TableText wrapModifier="wrap">{data}</TableText>;
 };
 
 const ProgressBar = (data: number) => {
-  const title = String(data).concat("%");
+  const title = String(Math.ceil(data)).concat("%");
   return (
     <Progress
-      value={data}
+      value={Math.ceil(data)}
       title={title}
       size={ProgressSize.sm}
       measureLocation={ProgressMeasureLocation.none}
@@ -37,11 +38,19 @@ const ProgressBar = (data: number) => {
   );
 };
 
-const FeedbackButtons = () => {
+const FeedbackButtons = (data: any, name: string) => {
   return (
     <div>
-      <Button variant="link" icon={<FontAwesomeIcon icon={faThumbsUp} />} />
-      <Button variant="link" icon={<FontAwesomeIcon icon={faThumbsDown} />} />
+      <Button
+        onClick={(event) => submitFeedback(data, true, name)}
+        variant="link"
+        icon={<FontAwesomeIcon icon={faThumbsUp} />}
+      />
+      <Button
+        onClick={(event) => submitFeedback(data, false, name)}
+        variant="link"
+        icon={<FontAwesomeIcon icon={faThumbsDown} />}
+      />
     </div>
   );
 };
@@ -62,7 +71,7 @@ const GenerateRows = (data: any) => {
     const result = [
       { title: TextTable(element.name), drawer: element.drawer },
       { title: ProgressBar(element.progress) },
-      { title: FeedbackButtons() },
+      { title: FeedbackButtons(element.drawer, element.name) },
     ];
     rowsData.push(result);
   });
