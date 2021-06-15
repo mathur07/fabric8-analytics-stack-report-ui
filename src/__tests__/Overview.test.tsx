@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import OverviewCard from "../app/components/main-components/Overview/overview";
+import OverviewCard from "../app/components/main-components/Overview/Overview";
 import { GetStackDetails } from "../app/utils/apiCalls";
 
 describe("<App />", () => {
