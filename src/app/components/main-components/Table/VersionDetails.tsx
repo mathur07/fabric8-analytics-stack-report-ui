@@ -11,50 +11,10 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { SecurityIcon } from "@patternfly/react-icons";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import GithubStats from "../../shared-components/addons-primary/github_stats";
 
-function VersionDetails() {
-  const drawD = {
-    name: "org.apache.commons:commons-lang3",
-    licenses: "Apache License,version2.0",
-    latest_version: "2.0.0",
-    github: {
-      contributors: "32",
-      dependent_projects: "22",
-      dependent_repos: "5",
-      first_release_date: null,
-      forks_count: "101",
-      issues: {
-        month: {
-          closed: 2,
-          opened: 1,
-        },
-        year: {
-          closed: 9,
-          opened: 8,
-        },
-      },
-      latest_release_duration: "2017-03-07 15:32:13",
-      open_issues_count: "0",
-      pull_requests: {
-        month: {
-          closed: 12,
-          opened: 12,
-        },
-        year: {
-          closed: 84,
-          opened: 84,
-        },
-      },
-      size: "N/A",
-      stargazers_count: "387",
-      total_releases: "18",
-      used_by: [],
-      watchers: "23",
-    },
-  };
-  const [drawerData, setDrawerData] = useState(drawD);
+function VersionDetails({ dep }: any) {
   const SummaryDonut = () => (
     <div style={{ height: "200px", width: "200px" }}>
       <ChartDonut
@@ -89,36 +49,36 @@ function VersionDetails() {
   );
   return (
     // @ts-ignore
-    <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+    <Flex justifyContent={{ default: "justifyContentSpaceEvenly" }}>
       <FlexItem>
         <Split>
           <SplitItem>
             <Title headingLevel="h6" size="md">
               Latest Version
-              <div>{drawerData.latest_version}</div>
+              <div>{dep.latest_version}</div>
             </Title>
           </SplitItem>
         </Split>
         <Split>
           <Title headingLevel="h6" size="md">
             Licence(s) used
-            <div>{drawerData.licenses}</div>
+            <div>{dep.licenses}</div>
           </Title>
         </Split>
       </FlexItem>
       <FlexItem>
         <GithubStats
-          contributors={Number(drawerData.github.contributors)}
-          dependentRepos={Number(drawerData.github.dependent_repos)}
-          usage={Number(drawerData.github.used_by.length)}
-          forks={Number(drawerData.github.forks_count)}
-          stars={Number(drawerData.github.stargazers_count)}
+          contributors={Number(dep.github.contributors)}
+          dependentRepos={Number(dep.github.dependent_repos)}
+          usage={Number(dep.github.used_by.length)}
+          forks={Number(dep.github.forks_count)}
+          stars={Number(dep.github.stargazers_count)}
         />
       </FlexItem>
 
-      <FlexItem>
+      {/* <FlexItem>
         <SummaryDonut />
-      </FlexItem>
+      </FlexItem> */}
     </Flex>
   );
 }

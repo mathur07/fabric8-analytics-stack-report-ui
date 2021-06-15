@@ -125,17 +125,12 @@ const Table = () => {
           component: (
             <DemoSortableTable
               columns={[
-                {
-                  title: "Direct Vulnerability",
-                  transforms: [sortable],
-                },
+                { title: "Transitive Vulnerability", transforms: [sortable] },
                 "Severity",
-                {
-                  title: "CVSS Score",
-                  transforms: [sortable],
-                },
-                "",
-                "",
+                "CVSS Score",
+                "Transitive dependency",
+                "Current Version",
+                "Latest Version",
               ]}
               rows={childRowData}
             />
