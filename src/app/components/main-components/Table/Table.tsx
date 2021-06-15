@@ -84,7 +84,16 @@ const Table = () => {
       rowData.push(tempRowData);
 
       const childRowData: any[][] = [];
-      dep.public_vulnerabilities?.forEach(
+      let totalVulnerabilities = [];
+      if (globalState.APIData?.registration_status === "FREETIER") {
+        totalVulnerabilities = dep.public_vulnerabilities;
+      } else {
+        totalVulnerabilities = [
+          ...dep.public_vulnerabilities,
+          ...dep.private_vulnerabilities,
+        ];
+      }
+      totalVulnerabilities?.forEach(
         (vul: { title: any, severity: any, cvss: any }) => {
           const tempDepRowData = [];
           tempDepRowData.push(vul.title);
