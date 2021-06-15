@@ -57,7 +57,9 @@ function VulnerabilitiesRowDetails(props: RowDetailType) {
             </Split>
           </FlexItem>
         </Flex>
-      ) : null}
+      ) : (
+        "-"
+      )}
     </div>
   );
 }

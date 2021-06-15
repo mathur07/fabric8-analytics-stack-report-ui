@@ -27,12 +27,30 @@ const Table = () => {
   const [rowz, setRowz] = useState([]);
 
   const [rows, setRows] = useState([]);
-  const [childDataTest, setChildDataTest] = useState([]);
+  const [childData, setChildDataTest] = useState({});
 
   useEffect(() => {
     const analyzedDependencies = globalState.APIData?.analyzed_dependencies;
     const rowData: ((prevState: never[]) => never[]) | any[][] = [];
-    analyzedDependencies?.forEach((dep: any) => {
+    let childDataObj = {};
+    // @ts-ignore
+    analyzedDependencies?.sort((b, a) => {
+      if (
+        a.public_vulnerabilities.length + a.private_vulnerabilities.length <
+        b.public_vulnerabilities.length + b.private_vulnerabilities.length
+      ) {
+        return -1;
+      }
+      if (
+        a.public_vulnerabilities.length + a.private_vulnerabilities.length >
+        b.public_vulnerabilities.length + b.private_vulnerabilities.length
+      ) {
+        return 1;
+      }
+      return 0;
+    });
+    analyzedDependencies?.forEach((dep: any, index: any) => {
+
       // eslint-disable-next-line no-console
       console.log(dep);
       const tempRowData = [];
@@ -59,22 +77,78 @@ const Table = () => {
 
       tempRowData.push(directVulnerabilitiesDetailsObj);
       tempRowData.push(transitiveVulnerabilitiesDetailsObj);
-      tempRowData.push(dep.recommended_version);
+      if (dep.recommended_version !== "") {
+        tempRowData.push(dep.recommended_version);
+      } else {
+        tempRowData.push("N/A");
+      }
       rowData.push(tempRowData);
-    });
-    rowData.sort((b, a) => {
-      if (a[3].total < b[3].total) {
-        return -1;
-      }
-      if (a[3].total > b[3].total) {
-        return 1;
-      }
-      return 0;
+
+      const childRowData: any[][] = [];
+      dep.public_vulnerabilities?.forEach(
+        (vul: { title: any, severity: any, cvss: any }) => {
+          const tempDepRowData = [];
+          tempDepRowData.push(vul.title);
+          tempDepRowData.push(vul.severity[0].toUpperCase() + vul.severity.slice(1));
+          tempDepRowData.push(vul.cvss);
+          childRowData.push(tempDepRowData);
+        },
+      );
+      const childArrayLength = index;
+      const child = {
+        [`${childArrayLength}_2`]: {
+          // @ts-ignore
+          component: <VersionDetails dep={dep} />,
+        },
+        [`${childArrayLength}_3`]: {
+          component: (
+            <DemoSortableTable
+              columns={[
+                {
+                  title: "Direct Vulnerability",
+                  transforms: [sortable],
+                },
+                "Severity",
+                {
+                  title: "CVSS Score",
+                  transforms: [sortable],
+                },
+                "",
+                "",
+              ]}
+              rows={childRowData}
+            />
+          ),
+        },
+        [`${childArrayLength}_4`]: {
+          component: (
+            <DemoSortableTable
+              columns={[
+                {
+                  title: "Direct Vulnerability",
+                  transforms: [sortable],
+                },
+                "Severity",
+                {
+                  title: "CVSS Score",
+                  transforms: [sortable],
+                },
+                "",
+                "",
+              ]}
+              rows={childRowData}
+            />
+          ),
+        },
+      };
+      // @ts-ignore
+      childDataObj = { ...childDataObj, ...child };
+      console.log(childDataObj);
     });
     // @ts-ignore
     setRows(rowData);
-    // eslint-disable-next-line no-console
-    console.log(rowData);
+    // @ts-ignore
+    setChildDataTest(childDataObj);
   }, [globalState]);
 
   function getVulnerabilitiesDetailsObj(dep: any) {
@@ -144,120 +218,116 @@ const Table = () => {
   // index corresponds to row index, and value corresponds to column index of the expanded, null means no cell is expanded
   const [activeChild, setActiveChild] = React.useState([null, null]);
   // key = row_col of the parent it corresponds to
-  const childData = {
-    "0_2": {
-      component: <VersionDetails />,
-    },
-    "0_3": {
-      component: (
-        <DemoSortableTable
-          rows={[
-            ["Man-in-the-Middle (MitM)", "High", "8.8/10", "", ""],
-            ["Cross site scripting (XSS)", "Medium", "5.5/10", "", ""],
-          ]}
-          columns={[
-            { title: "Direct Vulnerability", transforms: [sortable] },
-            "Severity",
-            { title: "CVSS Score", transforms: [sortable] },
-            "",
-            "",
-          ]}
-          id="compound-expansion-table-0_3"
-          key="0_3"
-        />
-      ),
-    },
-    "0_4": {
-      component: (
-        <DemoSortableTable
-          columns={[
-            { title: "Transitive Vulnerability", transforms: [sortable] },
-            "Severity",
-            "CVSS Score",
-            "Transitive dependency",
-            "Current Version",
-            "Latest Version",
-          ]}
-          rows={[
-            [
-              "XML External Entity (XXE) Injection",
-              "High",
-              "8.8/10",
-              "com.fasterxml.jackson.core:jackson-databind",
-              "4.8",
-              "5.8",
-            ],
-            [
-              "Remote Memory Exposure",
-              "Medium",
-              "5.8/10",
-              "org.eclipse.jetty:jetty-server",
-              "4.8",
-              "5.1",
-            ],
-          ]}
-          id="compound-expansion-table-0_4"
-          key="0_4"
-        />
-      ),
-    },
-    "1_2": {
-      component: <VersionDetails />,
-    },
-    "1_3": {
-      component: (
-        <DemoSortableTable
-          rows={[
-            ["Man-in-the-Middle (MitM)", "High", "8.8/10", "", ""],
-            ["Cross site scripting (XSS)", "Medium", "5.5/10", "", ""],
-          ]}
-          columns={[
-            { title: "Direct Vulnerability", transforms: [sortable] },
-            "Severity",
-            { title: "CVSS Score", transforms: [sortable] },
-            "",
-            "",
-          ]}
-          id="compound-expansion-table-1_3"
-          key="1_3"
-        />
-      ),
-    },
-    "1_4": {
-      component: (
-        <DemoSortableTable
-          columns={[
-            { title: "Transitive Vulnerability", transforms: [sortable] },
-            "Severity",
-            "CVSS Score",
-            "Transitive dependency",
-            "Current Version",
-            "Latest Version",
-          ]}
-          rows={[
-            [
-              "XML External Entity (XXE) Injection",
-              "High",
-              "8.8/10",
-              "com.fasterxml.jackson.core:jackson-databind",
-              "4.8",
-              "5.8",
-            ],
-            [
-              "Remote Memory Exposure",
-              "Medium",
-              "5.8/10",
-              "org.eclipse.jetty:jetty-server",
-              "4.8",
-              "5.1",
-            ],
-          ]}
-          id="compound-expansion-table-1_4"
-          key="1_4"
-        />
-      ),
-    },
-  };
+  // const childData = {
+  //   "0_2": {
+  //     component: <VersionDetails />,
+  //   },
+  //   "0_3": {
+  //     component: (
+  //       <DemoSortableTable
+  //         rows={[
+  //           ["Man-in-the-Middle (MitMM)", "High", "8.8/10", "sny", ""],
+  //           ["Cross site scripting (XSS)", "Medium", "5.5/10", "", ""],
+  //         ]}
+  //         columns={[
+  //           { title: "Direct Vulnerability", transforms: [sortable] },
+  //           "Severity",
+  //           { title: "CVSS Score", transforms: [sortable] },
+  //           "",
+  //           "",
+  //         ]}
+  //       />
+  //     ),
+  //   },
+  //   "0_4": {
+  //     component: (
+  //       <DemoSortableTable
+  //         columns={[
+  //           { title: "Transitive Vulnerability", transforms: [sortable] },
+  //           "Severity",
+  //           "CVSS Score",
+  //           "Transitive dependency",
+  //           "Current Version",
+  //           "Latest Version",
+  //         ]}
+  //         rows={[
+  //           [
+  //             "XML External Entity (XXE) Injection",
+  //             "High",
+  //             "8.8/10",
+  //             "com.fasterxml.jackson.core:jackson-databind",
+  //             "4.8",
+  //             "5.8",
+  //           ],
+  //           [
+  //             "Remote Memory Exposure",
+  //             "Medium",
+  //             "5.8/10",
+  //             "org.eclipse.jetty:jetty-server",
+  //             "4.8",
+  //             "5.1",
+  //           ],
+  //         ]}
+  //       />
+  //     ),
+  //   },
+  //   "1_2": {
+  //     component: <VersionDetails />,
+  //   },
+  //   "1_3": {
+  //     component: (
+  //       <DemoSortableTable
+  //         rows={[
+  //           ["Man-in-the-Middle (MitM)", "High", "8.8/10", "", ""],
+  //           ["Cross site scripting (XSS)", "Medium", "5.5/10", "", ""],
+  //         ]}
+  //         columns={[
+  //           { title: "Direct Vulnerability", transforms: [sortable] },
+  //           "Severity",
+  //           { title: "CVSS Score", transforms: [sortable] },
+  //           "",
+  //           "",
+  //         ]}
+  //         id="compound-expansion-table-1_3"
+  //         key="1_3"
+  //       />
+  //     ),
+  //   },
+  //   "1_4": {
+  //     component: (
+  //       <DemoSortableTable
+  //         columns={[
+  //           { title: "Transitive Vulnerability", transforms: [sortable] },
+  //           "Severity",
+  //           "CVSS Score",
+  //           "Transitive dependency",
+  //           "Current Version",
+  //           "Latest Version",
+  //         ]}
+  //         rows={[
+  //           [
+  //             "XML External Entity (XXE) Injection",
+  //             "High",
+  //             "8.8/10",
+  //             "com.fasterxml.jackson.core:jackson-databind",
+  //             "4.8",
+  //             "5.8",
+  //           ],
+  //           [
+  //             "Remote Memory Exposure",
+  //             "Medium",
+  //             "5.8/10",
+  //             "org.eclipse.jetty:jetty-server",
+  //             "4.8",
+  //             "5.1",
+  //           ],
+  //         ]}
+  //         id="compound-expansion-table-1_4"
+  //         key="1_4"
+  //       />
+  //     ),
+  //   },
+  // };
   const customRender = (cell: {} | null | undefined, index: number) => {
     if (index === 0) {
       return <h6>{cell}</h6>;
